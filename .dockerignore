@@ -1,0 +1,3 @@
+venv/
+*.sql
+.mypy_cache

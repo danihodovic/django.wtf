@@ -1,0 +1,36 @@
+---
+version: '2.4'
+services:
+  postgres:
+    image: postgres:11-alpine
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    volumes:
+      - /data
+      - ./db_dump:/tmp/db_dump
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.0
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+
+  test_py: &common
+    image: registry.gitlab.com/django_apps/django_apps
+    command: sh -c 'exit 0'
+    working_dir: /app/
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+
+  test_js:
+    <<: *common
+    image: registry.gitlab.com/django_apps/django_apps:test_js
+    volumes:
+      - /app/node_modules
+      - .:/app/
