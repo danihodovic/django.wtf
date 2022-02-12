@@ -1,3 +1,4 @@
+# pylint: disable=no-self-use
 import pytest
 from django.urls import reverse
 

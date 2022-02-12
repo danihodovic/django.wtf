@@ -1,5 +1,0 @@
----
-extends: stylelint-config-airbnb
-rules:
-  selector-max-id: 1
-  number-leading-zero: always

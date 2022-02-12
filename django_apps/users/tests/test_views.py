@@ -1,20 +1,18 @@
+# pylint: disable=no-self-use,too-few-public-methods
 import pytest
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.middleware import MessageMiddleware
 from django.contrib.sessions.middleware import SessionMiddleware
+from django.http import HttpRequest, HttpResponseRedirect
 from django.test import RequestFactory
 from django.urls import reverse
 
 from django_apps.users.forms import UserChangeForm
 from django_apps.users.models import User
 from django_apps.users.tests.factories import UserFactory
-from django_apps.users.views import (
-    UserRedirectView,
-    UserUpdateView,
-    user_detail_view,
-)
+from django_apps.users.views import UserRedirectView, UserUpdateView, user_detail_view
 
 pytestmark = pytest.mark.django_db
 
@@ -27,6 +25,9 @@ class TestUserUpdateView:
         fixture db access -- this is a work-in-progress for now:
         https://github.com/pytest-dev/pytest-django/pull/258
     """
+
+    def dummy_get_response(self, request: HttpRequest):
+        return None
 
     def test_get_success_url(self, user: User, rf: RequestFactory):
         view = UserUpdateView()
@@ -51,8 +52,8 @@ class TestUserUpdateView:
         request = rf.get("/fake-url/")
 
         # Add the session/message middleware to the request
-        SessionMiddleware().process_request(request)
-        MessageMiddleware().process_request(request)
+        SessionMiddleware(self.dummy_get_response).process_request(request)
+        MessageMiddleware(self.dummy_get_response).process_request(request)
         request.user = user
 
         view.request = request
@@ -93,5 +94,6 @@ class TestUserDetailView:
         response = user_detail_view(request, username=user.username)
         login_url = reverse(settings.LOGIN_URL)
 
+        assert isinstance(response, HttpResponseRedirect)
         assert response.status_code == 302
         assert response.url == f"{login_url}?next=/fake-url/"

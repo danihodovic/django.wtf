@@ -2,35 +2,21 @@
 version: '2.4'
 services:
   postgres:
-    image: postgres:11-alpine
+    image: postgres:14
     ports:
       - '5432:5432'
     environment:
-      - POSTGRES_DB
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
+      POSTGRES_DB: django-apps
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     volumes:
-      - /data
+      - pgdata:/var/lib/postgresql/data
       - ./db_dump:/tmp/db_dump
 
-  mailhog:
-    image: mailhog/mailhog:v1.0.0
+  redis:
+    image: redis:6
     ports:
-      - '1025:1025'
-      - '8025:8025'
+      - '6379:6379'
 
-  test_py: &common
-    image: registry.gitlab.com/django_apps/django_apps
-    command: sh -c 'exit 0'
-    working_dir: /app/
-    env_file:
-      - .env
-    volumes:
-      - .:/app
-
-  test_js:
-    <<: *common
-    image: registry.gitlab.com/django_apps/django_apps:test_js
-    volumes:
-      - /app/node_modules
-      - .:/app/
+volumes:
+  pgdata:

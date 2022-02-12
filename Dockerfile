@@ -1,4 +1,4 @@
-FROM python:3.7-alpine
+FROM python:3.8.8
 
 RUN apk update \
   # psycopg2 dependencies
@@ -11,15 +11,14 @@ RUN apk update \
   # Ability to install packages via git
   && apk add git
 
-COPY ./requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+RUN pip install poetry==1.1.4 #!COMMIT
+COPY pyproject.toml poetry.lock /app/
+RUN poetry config virtualenvs.create false && poetry install --no-interaction #!COMMIT
 
 RUN mkdir /root/.ptpython
 COPY .ptpython_config.py /root/.ptpython/config.py
 
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONBREAKPOINT pudb.set_trace
-
 WORKDIR /app
-
 COPY . /app/
+
+CMD ["gunicorn", "-b", "0.0.0.0:80", "config.wsgi", "--timeout", "90"]

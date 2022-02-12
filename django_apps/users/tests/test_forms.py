@@ -1,8 +1,9 @@
 """
 Module for all Form Tests.
 """
+# pylint: disable=no-self-use,too-few-public-methods
 import pytest
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from django_apps.users.forms import UserCreationForm
 from django_apps.users.models import User
