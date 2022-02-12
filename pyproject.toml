@@ -49,4 +49,4 @@ build-backend = "poetry.masonry.api"
 
 [tool.black]
 skip_numeric_underscore_normalization = true
-exclude = ".*(venv|virtualenv|migrations|node_modules|s3)"
+exclude = ".*(venv|virtualenv|.poetry|migrations|node_modules)"
