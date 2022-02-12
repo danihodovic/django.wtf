@@ -1,3 +1,6 @@
-venv/
+.poetry
+venv
+.venv
+.virtualenv
 *.sql
 .mypy_cache

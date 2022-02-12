@@ -120,6 +120,19 @@ local pythonPipeline = pipelineCommon {
         'pytest --cov=django_apps django_apps',
       ],
     },
+    {
+      name: 'Push Docker image',
+      image: 'plugins/docker',
+      depends_on: ['test_python'],
+      settings: {
+        username: 'depode',
+        password: { from_secret: 'docker_registry_password' },
+        repo: 'registry.depode.com/django-apps',
+        registry: 'registry.depode.com',
+        cache_from: 'registry.depode.com/django-apps:cache',
+        tags: ['cache', '${DRONE_COMMIT_SHA:0:7}'],
+      },
+    },
     rebuildCache,
   ],
 };
