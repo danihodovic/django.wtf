@@ -111,7 +111,7 @@ local pythonPipeline = pipelineCommon {
     common {
       name: 'pylint',
       commands+: [
-        'pylint django_apps config',
+        'pylint django_apps',
       ],
     },
     common {
