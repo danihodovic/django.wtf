@@ -137,5 +137,66 @@ local pythonPipeline = pipelineCommon {
   ],
 };
 
+local promote = pipelineCommon {
+  name: 'trigger-production',
+  depends_on: [
+    'python',
+  ],
+  trigger: {
+    branch: [
+      'master',
+    ],
+    event: [
+      'push',
+    ],
+  },
+  steps: [
+    {
+      name: 'promote-production',
+      image: 'danihodovic/drone-promote',
+      settings: {
+        drone_token: {
+          from_secret: 'drone_token',
+        },
+        target: 'production',
+      },
+    },
+  ],
+};
 
-pythonPipeline
+local deploy = pipelineCommon {
+  depends_on: [
+    'python',
+  ],
+  trigger: {
+    event: [
+      'promote',
+    ],
+    target: 'production',
+  },
+  steps: [
+    {
+      name: 'deploy',
+      image: 'honeylogic/tanka',
+      environment: {
+        AGE_PRIVATE_KEY: {
+          from_secret: 'AGE_PRIVATE_KEY',
+        },
+      },
+      commands: [
+        'export GIT_COMMIT=$(git rev-parse --short HEAD)',
+        'git clone https://github.com/danihodovic/depode-infra.git',
+        'cd depode-infra',
+        'echo $AGE_PRIVATE_KEY > ~/.config/sops/age/keys.txt',
+        'task apply-prod -- tanka/environments/default/django_apps.jsonnet $GIT_COMMIT',
+      ],
+    },
+  ],
+};
+
+
+[
+  pythonPipeline,
+  promote,
+  deploy,
+]
