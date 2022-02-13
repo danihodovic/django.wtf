@@ -1,6 +1,7 @@
 [MASTER]
 load-plugins=pylint_django, pylint_celery
 django-settings-module=config.settings.base
+ignore=manage.py,.ptpython_config.py
 
 [FORMAT]
 max-line-length=120
