@@ -4,3 +4,4 @@ venv
 .virtualenv
 *.sql
 .mypy_cache
+.drone.jsonnet
