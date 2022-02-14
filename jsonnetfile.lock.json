@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "dependencies": [
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/honeylogic-io/utils-libsonnet.git",
+          "subdir": "lib"
+        }
+      },
+      "version": "c965b5e0181e51d30541c99b5cac1021251af9ef",
+      "sum": "ds6yBxBo4Mq4XuKptdZAWcVfebKRrlT5REqE3kd8ES0="
+    }
+  ],
+  "legacyImports": false
+}
