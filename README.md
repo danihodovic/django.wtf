@@ -11,6 +11,12 @@ git clone git@github.com:danihodovic/django_apps.git
 cd django_apps
 ```
 
+Add the direnv file
+```
+echo 'dotenv' > .envrc
+direnv allow
+```
+
 Install the python version
 ```
 PYTHON_CONFIGURE_OPTS=--enable-shared pyenv install $(cat .python-version)
