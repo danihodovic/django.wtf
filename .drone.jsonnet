@@ -1,13 +1,19 @@
-local pipelineCommon = {
-  kind: 'pipeline',
-  type: 'docker',
-};
+local drone = import 'vendor/github.com/honeylogic-io/utils-libsonnet/lib/drone.libsonnet';
 
-local cacheCommon = {
-  image: 'danihodovic/drone-cache',
+local cacheStepCommon = {
+  image: 'meltwater/drone-cache',
+  environment: {
+    AWS_ACCESS_KEY_ID: {
+      from_secret: 'AWS_ACCESS_KEY_ID',
+    },
+    AWS_SECRET_ACCESS_KEY: {
+      from_secret: 'AWS_SECRET_ACCESS_KEY',
+    },
+  },
   settings: {
-    backend: 'filesystem',
     cache_key: '{{ .Repo.Name }}_{{ checksum "poetry.lock" }}',
+    region: 'eu-central-1',
+    bucket: 'depode-ci-cache',
     mount: [
       '.poetry',
       '.poetry-cache',
@@ -16,14 +22,8 @@ local cacheCommon = {
   volumes: [{ name: 'cache', path: '/tmp/cache' }],
 };
 
-local restoreCache = cacheCommon {
-  name: 'restore-python-cache',
-  settings+: {
-    restore: true,
-  },
-};
-local rebuildCache = cacheCommon {
-  name: 'rebuild-python-cache',
+local rebuildCacheStep = cacheStepCommon {
+  name: 'rebuild-cache',
   depends_on: [
     'install-python-deps',
   ],
@@ -32,36 +32,15 @@ local rebuildCache = cacheCommon {
   },
 };
 
-local common = {
-  depends_on: ['install-python-deps'],
-  image: 'python:3.8',
-  environment: {
-    POETRY_CACHE_DIR: '/drone/src/.poetry-cache',
-    POETRY_VIRTUALENVS_IN_PROJECT: 'false',
-    DJANGO_SETTINGS_MODULE: 'config.settings.test',
-    DATABASE_URL: 'postgres://postgres:postgres@postgres:5432/django-apps',
-    CELERY_BROKER_URL: 'redis://redis:6379/0',
+local restoreCacheStep = cacheStepCommon {
+  name: 'restore-cache',
+  settings+: {
+    restore: true,
   },
-  commands: [
-    '. .poetry/env && . $(poetry env info -p)/bin/activate',
-  ],
 };
 
-local pythonPipeline = pipelineCommon {
-  name: 'python',
-  trigger: {
-    event: [
-      'push',
-    ],
-  },
-  volumes: [
-    {
-      name: 'cache',
-      host: {
-        path: '/tmp/drone-cache',
-      },
-    },
-  ],
+
+local pythonPipelineWithoutCache = drone.pythonPipeline.new({
   services: [
     {
       name: 'postgres',
@@ -77,53 +56,33 @@ local pythonPipeline = pipelineCommon {
       image: 'redis:6-alpine',
     },
   ],
+  environment: {
+    POETRY_CACHE_DIR: '/drone/src/.poetry-cache',
+    POETRY_VIRTUALENVS_IN_PROJECT: 'false',
+    DJANGO_SETTINGS_MODULE: 'config.settings.test',
+    DATABASE_URL: 'postgres://postgres:postgres@postgres:5432/django-apps',
+    CELERY_BROKER_URL: 'redis://redis:6379/0',
+  },
+}, 'python:3.8');
+
+local pythonPipeline = pythonPipelineWithoutCache {
+  steps: [restoreCacheStep] + pythonPipelineWithoutCache.steps + [rebuildCacheStep],
+};
+
+local pushImagePipeline = {
+  name: 'push-image',
+  depends_on: ['python'],
+  kind: 'pipeline',
+  type: 'docker',
+  trigger: {
+    event: [
+      'push',
+    ],
+  },
   steps: [
-    restoreCache,
-    common {
-      name: 'install-python-deps',
-      depends_on: [
-        restoreCache.name,
-      ],
-      environment: {
-        POETRY_CACHE_DIR: '/drone/src/.poetry-cache',
-        POETRY_VIRTUALENVS_IN_PROJECT: 'false',
-      },
-      commands: [
-        |||
-          export POETRY_HOME=$DRONE_WORKSPACE/.poetry
-          if [ ! -d "$POETRY_HOME" ]; then
-            curl -fsS -o /tmp/get-poetry.py https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py
-            python /tmp/get-poetry.py -y
-          fi
-        |||,
-        '. .poetry/env',
-        'poetry install --no-root',
-      ],
-    },
-    common {
-      name: 'lint-python',
-      commands+: [
-        'black . --check',
-        'isort --check-only .',
-        'mypy  .',
-      ],
-    },
-    common {
-      name: 'pylint',
-      commands+: [
-        'pylint django_apps',
-      ],
-    },
-    common {
-      name: 'test_python',
-      commands+: [
-        'pytest --cov=django_apps django_apps',
-      ],
-    },
     {
       name: 'Push Docker image',
       image: 'plugins/docker',
-      depends_on: ['test_python'],
       settings: {
         username: 'depode',
         password: { from_secret: 'docker_registry_password' },
@@ -133,11 +92,10 @@ local pythonPipeline = pipelineCommon {
         tags: ['cache', '${DRONE_COMMIT_SHA:0:7}'],
       },
     },
-    rebuildCache,
   ],
 };
 
-local promote = pipelineCommon {
+local promote = drone.dockerPipeline {
   name: 'trigger-production',
   depends_on: [
     'python',
@@ -164,7 +122,7 @@ local promote = pipelineCommon {
   ],
 };
 
-local deploy = pipelineCommon {
+local deploy = drone.dockerPipeline {
   depends_on: [
     'python',
   ],
@@ -198,5 +156,6 @@ local deploy = pipelineCommon {
 [
   pythonPipeline,
   promote,
+  pushImagePipeline,
   deploy,
 ]
