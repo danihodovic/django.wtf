@@ -3,8 +3,7 @@ version: '2.4'
 services:
   postgres:
     image: postgres:14
-    ports:
-      - '5432:5432'
+    network_mode: host
     environment:
       POSTGRES_DB: django-apps
       POSTGRES_USER: postgres
@@ -15,8 +14,7 @@ services:
 
   redis:
     image: redis:6
-    ports:
-      - '6379:6379'
+    network_mode: host
 
 volumes:
   pgdata:
