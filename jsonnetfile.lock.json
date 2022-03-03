@@ -4,12 +4,12 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/honeylogic-io/utils-libsonnet.git",
-          "subdir": "lib"
+          "remote": "https://github.com/danihodovic/drone-jsonnet.git",
+          "subdir": ""
         }
       },
-      "version": "c965b5e0181e51d30541c99b5cac1021251af9ef",
-      "sum": "ds6yBxBo4Mq4XuKptdZAWcVfebKRrlT5REqE3kd8ES0="
+      "version": "fce27817266e51b9a21b1bbc031f89cd10215803",
+      "sum": "nFznEKCQCgWyXA24ZdXqu3CFcy57rojZ6cK67FSEugg="
     }
   ],
   "legacyImports": false
