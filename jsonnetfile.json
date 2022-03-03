@@ -4,8 +4,7 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/honeylogic-io/utils-libsonnet.git",
-          "subdir": "lib"
+          "remote": "https://github.com/danihodovic/drone-jsonnet.git"
         }
       },
       "version": "master"

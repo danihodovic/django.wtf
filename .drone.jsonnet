@@ -1,4 +1,4 @@
-local drone = import 'vendor/github.com/honeylogic-io/utils-libsonnet/lib/drone.libsonnet';
+local drone = import 'vendor/github.com/danihodovic/drone-jsonnet/python.libsonnet';
 
 local cacheStepCommon = {
   image: 'meltwater/drone-cache',

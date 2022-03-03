@@ -1,27 +1,26 @@
 local pythonStepCommon = {
   depends_on: ['install-python-deps'],
+  volumes: [
+    { name: 'cache', path: '/tmp/cache' },
+  ],
   commands: [
-    '. .poetry/env && . $(poetry env info -p)/bin/activate',
+    '. .poetry/cache/virtualenvs/*/bin/activate',
   ],
 };
 
 local installDepsStep = pythonStepCommon {
   name: 'install-python-deps',
   depends_on: ['restore-cache'],
-  environment: {
-    POETRY_CACHE_DIR: '/drone/src/.poetry-cache',
-    POETRY_VIRTUALENVS_IN_PROJECT: 'false',
-  },
   commands: [
     |||
       export POETRY_HOME=$DRONE_WORKSPACE/.poetry
+      export POETRY_CACHE_DIR=$POETRY_HOME/cache
       if [ ! -d "$POETRY_HOME" ]; then
-        curl -fsS -o /tmp/get-poetry.py https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py
-        python /tmp/get-poetry.py -y
+        curl -fsS -o /tmp/install-poetry.py https://install.python-poetry.org
+        python /tmp/install-poetry.py -y
       fi
     |||,
-    '. .poetry/env',
-    'poetry install --no-root',
+    '$POETRY_HOME/bin/poetry install --no-root',
   ],
 };
 
@@ -50,7 +49,7 @@ local pylintStep = pythonStepCommon {
 
 local testStep = pythonStepCommon {
   name: 'test',
-  commands+: ['pytest --ignore .poetry --cov'],
+  commands+: ['pytest --ignore=.poetry --cov'],
 };
 
 
@@ -69,6 +68,14 @@ local pipelineCommon(image) = {
       host: {
         path: '/tmp/cache',
       },
+    },
+    {
+      name: 'poetry',
+      temp: {},
+    },
+    {
+      name: 'poetry-cache',
+      temp: {},
     },
   ],
   steps: [
