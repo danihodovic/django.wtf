@@ -67,8 +67,11 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "constance",
+    "constance.backends.database",
     "django_extensions",
     "django_celery_beat",
+    "django_toolshed",
     "widget_tweaks",
 ]
 
@@ -282,3 +285,10 @@ SOCIALACCOUNT_ADAPTER = "django_apps.users.adapters.SocialAccountAdapter"
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
+CONSTANCE_CONFIG = {
+    "GITHUB_TOKEN": (
+        "",
+        "The Github token to use when scraping the GH API",
+    ),
+}
