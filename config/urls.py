@@ -14,7 +14,7 @@ urlpatterns: List[Any] = [
     path("accounts/", include("allauth.urls")),
     # Health checks
     path("health/", include("health_check.urls")),
-    # Your stuff: custom urls includes go here
+    path("", include("django_apps.core.urls")),
 ] + static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
 )  # type: ignore
