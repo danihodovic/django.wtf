@@ -21,8 +21,8 @@ RUN poetry config virtualenvs.create false && poetry install --no-interaction #!
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONBREAKPOINT pudb.set_trace
 
-# COPY nl_backend/theme/static_src/package.json nl_backend/theme/static_src/package-lock.json /app/nl_backend/theme/static_src/
-# RUN cd /app/nl_backend/theme/static_src && npm install
+COPY django_apps/theme/static_src/package.json django_apps/theme/static_src/package-lock.json /app/django_apps/theme/static_src/
+RUN cd /app/django_apps/theme/static_src && npm install
 
 COPY . /app/
 # RUN CELERY_BROKER_URL=bar python manage.py tailwind build --no-input

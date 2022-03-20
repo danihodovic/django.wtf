@@ -72,12 +72,14 @@ THIRD_PARTY_APPS = [
     "django_extensions",
     "django_celery_beat",
     "django_toolshed",
+    "tailwind",
     "widget_tweaks",
 ]
 
 LOCAL_APPS = [
     "django_apps.users",
     "django_apps.core",
+    "django_apps.theme",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -292,3 +294,4 @@ CONSTANCE_CONFIG = {
         "The Github token to use when scraping the GH API",
     ),
 }
+TAILWIND_APP_NAME = "theme"

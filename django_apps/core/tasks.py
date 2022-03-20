@@ -4,7 +4,7 @@ import requests
 from celery import current_app as app
 from constance import config
 
-from .models import Contributor, Profile, Repository, RepositoryStars
+from django_apps.core.models import Contributor, Profile, Repository, RepositoryStars
 
 
 def http_client():

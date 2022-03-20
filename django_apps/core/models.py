@@ -32,6 +32,10 @@ class Repository(TimeStampedModel):
     watchers = models.PositiveIntegerField()
     stars = models.PositiveIntegerField()
 
+    @property
+    def url(self):
+        return f"https://github.com/{self.full_name}"
+
 
 class Contributor(TimeStampedModel):
     profile = models.ForeignKey(
