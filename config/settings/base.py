@@ -69,6 +69,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "constance",
     "constance.backends.database",
+    "django_browser_reload",
     "django_extensions",
     "django_celery_beat",
     "django_toolshed",
@@ -294,4 +295,4 @@ CONSTANCE_CONFIG = {
         "The Github token to use when scraping the GH API",
     ),
 }
-TAILWIND_APP_NAME = "theme"
+TAILWIND_APP_NAME = "django_apps.theme"
