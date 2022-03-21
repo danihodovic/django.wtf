@@ -25,7 +25,7 @@ COPY django_apps/theme/static_src/package.json django_apps/theme/static_src/pack
 RUN cd /app/django_apps/theme/static_src && npm install
 
 COPY . /app/
-# RUN CELERY_BROKER_URL=bar python manage.py tailwind build --no-input
+RUN CELERY_BROKER_URL=bar python manage.py tailwind build --no-input
 
 # Install the app itself so we can import from it
 RUN poetry install --no-interaction
