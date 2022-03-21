@@ -1,8 +1,10 @@
+import logging
 from datetime import date
 
 import requests
 from celery import current_app as app
 from constance import config
+from django.utils.http import urlencode
 
 from django_apps.core.models import Contributor, Profile, Repository, RepositoryStars
 
@@ -13,18 +15,21 @@ def http_client():
     return s
 
 
-@app.task()
-def index_repositories():
-    http = http_client()
-    res = http.get(
-        "https://api.github.com/search/repositories",
-        params=dict(
-            q="topic:django stars:>25 pushed:>2021-01-01 is:public",
-            sort="stars",
-            order="desc",
-            per_page=100,
-        ),
+first_url = "https://api.github.com/search/repositories?" + urlencode(
+    dict(
+        q="topic:django stars:>25 pushed:>2021-01-01 is:public",
+        sort="stars",
+        order="desc",
+        per_page=100,
     )
+)
+
+
+@app.task()
+def index_repositories(url=first_url):
+    http = http_client()
+    logging.info(f"GET {url=}")
+    res = http.get(url)
     res.raise_for_status()
     data = res.json()
     for repository_data in data["items"]:
@@ -55,6 +60,11 @@ def index_repositories():
             defaults=dict(stars=repository_data["stargazers_count"]),
         )
         index_contributors(repository.full_name)
+
+    if "next" in res.links:
+        next_url = res.links["next"]["url"]
+        if next_url != url:
+            index_repositories(url=next_url)
 
 
 @app.task()
