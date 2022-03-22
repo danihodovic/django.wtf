@@ -296,3 +296,19 @@ CONSTANCE_CONFIG = {
     ),
 }
 TAILWIND_APP_NAME = "django_apps.theme"
+
+SHELL_PLUS_MODEL_IMPORTS_RESOLVER = (
+    "django_extensions.collision_resolvers.AppNameSuffixCustomOrderCR"
+)
+SHELL_PLUS_PRE_IMPORTS = [
+    (
+        "django_apps.core.tasks",
+        (
+            "index_repositories",
+            "index_contributors",
+            "index_repo_contributors",
+            "categorize_repositories",
+            "categorize_repository",
+        ),
+    ),
+]

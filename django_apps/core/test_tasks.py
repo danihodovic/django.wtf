@@ -1,7 +1,7 @@
 import pytest
 
 from .models import Repository
-from .tasks import index_repositories
+from .tasks import index_contributors, index_repositories
 
 pytestmark = pytest.mark.django_db
 
@@ -21,6 +21,9 @@ def test_index_repositories(mocked_responses):
                     "watchers": 1,
                     "open_issues": 4,
                     "stargazers_count": 2,
+                    "archived": False,
+                    "topics": ["django"],
+                    "description": "Hello",
                     "owner": {
                         "id": 11,
                         "login": "danihodovic",
@@ -54,6 +57,7 @@ def test_index_repositories(mocked_responses):
     )
 
     index_repositories()
+    index_contributors()
     repos = Repository.objects.all()
     assert len(repos) == 1
     repo = repos[0]
