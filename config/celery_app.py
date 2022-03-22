@@ -15,9 +15,17 @@ app = Celery("django_apps")
 app.config_from_object("django.conf:settings", namespace="CELERY")
 
 app.conf.beat_schedule = {
-    "index-github-repositories": {
+    "index-repositories": {
         "task": "django_apps.core.tasks.index_repositories",
         "schedule": crontab(minute=0, hour=0),
+    },
+    "index-contributors": {
+        "task": "django_apps.core.tasks.index_contributors",
+        "schedule": crontab(minute=0, hour=1),
+    },
+    "categorize-repositories": {
+        "task": "django_apps.core.tasks.categorize_repositories",
+        "schedule": crontab(minute=0, hour=1),
     },
 }
 

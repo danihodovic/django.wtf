@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from model_utils.models import TimeStampedModel
 
@@ -6,6 +7,11 @@ class UserType(models.TextChoices):
     USER = ("User", "User")
     ORGANIZATION = ("Organization", "Organization")
     BOT = ("Bot", "Bot")
+
+
+class RepositoryType(models.TextChoices):
+    PROJECT = ("project", "project")
+    APP = ("app", "app")
 
 
 class Profile(TimeStampedModel):
@@ -31,10 +37,19 @@ class Repository(TimeStampedModel):
     open_issues = models.PositiveIntegerField()
     watchers = models.PositiveIntegerField()
     stars = models.PositiveIntegerField()
+    archived = models.BooleanField(null=True)
+    description = models.CharField(max_length=600, null=True)
+    topics = ArrayField(models.CharField(max_length=50), null=True)
+    type = models.CharField(
+        max_length=30, choices=RepositoryType.choices, null=True, blank=True
+    )
 
     @property
     def url(self):
         return f"https://github.com/{self.full_name}"
+
+    def __repr__(self):
+        return f"<Repository: {self.full_name}>"
 
 
 class Contributor(TimeStampedModel):
