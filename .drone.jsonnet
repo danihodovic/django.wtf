@@ -14,10 +14,7 @@ local cacheStepCommon = {
     cache_key: '{{ .Repo.Name }}_{{ checksum "poetry.lock" }}',
     region: 'eu-central-1',
     bucket: 'depode-ci-cache',
-    mount: [
-      '.poetry',
-      '.poetry-cache',
-    ],
+    mount: ['.poetry'],
   },
   volumes: [{ name: 'cache', path: '/tmp/cache' }],
 };
