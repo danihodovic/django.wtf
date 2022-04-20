@@ -58,6 +58,7 @@ local pythonPipelineWithoutCache = drone.pythonPipeline.new({
     POETRY_VIRTUALENVS_IN_PROJECT: 'false',
     DJANGO_SETTINGS_MODULE: 'config.settings.test',
     DATABASE_URL: 'postgres://postgres:postgres@postgres:5432/django-apps',
+    REDIS_URL: 'redis://redis:6379/',
     CELERY_BROKER_URL: 'redis://redis:6379/0',
   },
 }, 'python:3.8');
