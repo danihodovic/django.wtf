@@ -74,6 +74,9 @@ class RepositoryStars(models.Model):
     created_at = models.DateField()
     stars = models.PositiveIntegerField()
 
+    class Meta:
+        unique_together = [["repository", "created_at"]]
+
 
 class ProfileFollowers(models.Model):
     profile = models.ForeignKey(
