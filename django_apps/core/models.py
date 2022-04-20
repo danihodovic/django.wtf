@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from model_utils.models import TimeStampedModel
@@ -50,6 +52,15 @@ class Repository(TimeStampedModel):
 
     def __repr__(self):
         return f"<Repository: {self.full_name}>"
+
+    def stars_since(self, td: timedelta, date=None):
+        if date is None:
+            date = datetime.today().date()
+        previous_date = date - td
+        previous_stars = RepositoryStars.objects.get(
+            created_at=previous_date, repository=self
+        )
+        return self.stars - previous_stars.stars
 
 
 class Contributor(TimeStampedModel):

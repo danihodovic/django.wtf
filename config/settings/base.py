@@ -42,6 +42,12 @@ DATABASES = {"default": env.db("DATABASE_URL")}
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 # https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-DEFAULT_AUTO_FIELD
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+# CACHEOPS
+# ------------------------------------------------------------------------------
+CACHEOPS_REDIS = env("REDIS_URL")
+CACHEOPS = {
+    "*.*": {"timeout": 60 * 60},
+}
 # URLS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#root-urlconf
@@ -67,6 +73,7 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "cacheops",
     "constance",
     "constance.backends.database",
     "django_browser_reload",
