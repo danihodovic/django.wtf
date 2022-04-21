@@ -17,20 +17,37 @@ class IndexView(TemplateView):
             "-stars"
         )
         context = super().get_context_data(**kwargs)
+        context["trending_apps"] = trending_repositories(type=RepositoryType.APP)[0:10]
+        context["categories"] = [
+            ("auth", "⚿"),
+            ("api", "⚘"),
+            ("admin", "⚙"),
+            ("email", "@"),
+        ]
+        context["trending_developers"] = [
+            ("danihodovic", 44),
+            ("adinhodovic", 30),
+            ("denishodovic", 12),
+            ("senadacomor", 9),
+            ("janabuco", 7),
+            ("bobgreat", 4),
+            ("dingobingo", 4),
+        ]
         context["apps"] = apps
         context["projects"] = projects
         return context
 
 
 @cached_as(RepositoryStars, timeout=60 * 60 * 24)
-def trending_repositories():
+def trending_repositories(**filters):
     trending = []
-    for repo in Repository.objects.filter(stars__gte=20):
+    for repo in Repository.objects.filter(stars__gte=20, **filters):
         try:
             stars_in_the_last_week = repo.stars_since(timedelta(days=12))
         except ObjectDoesNotExist:
             logging.debug(f"No previous stars found for {repo=}")
             continue
-        trending.append((repo.full_name, stars_in_the_last_week))
+        setattr(repo, "stars_lately", stars_in_the_last_week)
+        trending.append(repo)
 
-    return sorted(trending, key=lambda e: e[1], reverse=True)
+    return sorted(trending, key=lambda e: e.stars_lately, reverse=True)
