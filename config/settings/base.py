@@ -80,6 +80,7 @@ THIRD_PARTY_APPS = [
     "django_extensions",
     "django_celery_beat",
     "django_toolshed",
+    "import_export",
     "tailwind",
     "widget_tweaks",
 ]
@@ -319,3 +320,7 @@ SHELL_PLUS_PRE_IMPORTS = [
         ),
     ),
 ]
+
+# django-import-export
+# ------------------------------------------------------------------------------
+IMPORT_EXPORT_USE_TRANSACTIONS = True
