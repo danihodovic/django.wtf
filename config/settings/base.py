@@ -324,3 +324,6 @@ SHELL_PLUS_PRE_IMPORTS = [
 # django-import-export
 # ------------------------------------------------------------------------------
 IMPORT_EXPORT_USE_TRANSACTIONS = True
+IMPORT_EXPORT_SKIP_ADMIN_LOG = True
+IMPORT_EXPORT_TMP_STORAGE_CLASS = "import_export.tmp_storages.CacheStorage"
+IMPORT_EXPORT_CHUNK_SIZE = 1000
