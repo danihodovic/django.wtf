@@ -81,6 +81,7 @@ THIRD_PARTY_APPS = [
     "django_celery_beat",
     "django_toolshed",
     "import_export",
+    "meta",
     "tailwind",
     "widget_tweaks",
 ]
@@ -329,3 +330,6 @@ IMPORT_EXPORT_CHUNK_SIZE = 1000
 # only if django version >= 3.0
 X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
+# django-meta
+# ------------------------------------------------------------------------------
+META_USE_TITLE_TAG = True

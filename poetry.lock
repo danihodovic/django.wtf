@@ -709,14 +709,24 @@ tablib = {version = ">=3.0.0", extras = ["html", "ods", "xls", "xlsx", "yaml"]}
 
 [[package]]
 name = "django-meta"
-version = "1.7.0"
+version = "2.0.1.dev0"
 description = "Pluggable app for handling webpage meta tags and OpenGraph properties"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.5"
+develop = false
 
 [package.dependencies]
 six = "*"
+
+[package.extras]
+docs = ["django (<3.1)"]
+
+[package.source]
+type = "git"
+url = "https://github.com/ivanchenkodmitry/django-meta"
+reference = "patch-1"
+resolved_reference = "ef6e94b91f2f933e85792ea7d5a354f0a3a17720"
 
 [[package]]
 name = "django-model-utils"
@@ -2029,7 +2039,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "74b0fe02ad8f0194fed4e30785255a9319ac4a3769c599197dcddbb006c67140"
+content-hash = "406dffa31b8a8d16001f864a4b322ef87ee5aeb9013aeba4aca17e108ec0c23d"
 
 [metadata.files]
 amqp = [
@@ -2413,10 +2423,7 @@ django-import-export = [
     {file = "django-import-export-2.8.0.tar.gz", hash = "sha256:33c37b2921ef84e2cd9aa0eb76d04a7c2b538c9d04cb1ed97ac32600876cab30"},
     {file = "django_import_export-2.8.0-py3-none-any.whl", hash = "sha256:31d7dcfba22251e3ef93accb7da844f58c4d78585db9dd7dae37bb76f939da2c"},
 ]
-django-meta = [
-    {file = "django-meta-1.7.0.tar.gz", hash = "sha256:6930e4a5f87f0aec47b0639143f05541dc0bc75ac2b21b21b1986812c7f02e48"},
-    {file = "django_meta-1.7.0-py2.py3-none-any.whl", hash = "sha256:0c1ea4d000afaea36983e42ff59aeb77c943073d304ff9e58b04041fb02d629a"},
-]
+django-meta = []
 django-model-utils = [
     {file = "django-model-utils-4.2.0.tar.gz", hash = "sha256:e7a95e102f9c9653427eadab980d5d59e1dea972913b9c9e01ac37f86bba0ddf"},
     {file = "django_model_utils-4.2.0-py3-none-any.whl", hash = "sha256:a768a25c80514e0ad4e4a6f9c02c44498985f36c5dfdea47b5b1e8cf994beba6"},
