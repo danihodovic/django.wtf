@@ -1,10 +1,11 @@
 from django.contrib import admin
+from import_export.admin import ImportExportModelAdmin
 
 from .models import Profile, ProfileFollowers, Repository, RepositoryStars
 
 
 @admin.register(Repository)
-class RepositoryAdmin(admin.ModelAdmin):
+class RepositoryAdmin(ImportExportModelAdmin):
     list_display = (
         "id",
         "full_name",
@@ -17,14 +18,14 @@ class RepositoryAdmin(admin.ModelAdmin):
 
 
 @admin.register(RepositoryStars)
-class RepositoryStarsAdmin(admin.ModelAdmin):
+class RepositoryStarsAdmin(ImportExportModelAdmin):
     list_display = ("repository", "created_at", "stars")
     list_filter = ()
     date_hierarchy = "created_at"
 
 
 @admin.register(Profile)
-class ProfileAdmin(admin.ModelAdmin):
+class ProfileAdmin(ImportExportModelAdmin):
     list_display = (
         "login",
         "type",
@@ -33,7 +34,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 @admin.register(ProfileFollowers)
-class ProfileFollowersAdmin(admin.ModelAdmin):
+class ProfileFollowersAdmin(ImportExportModelAdmin):
     list_display = ("profile", "followers")
     list_filter = ()
     date_hierarchy = "created_at"
