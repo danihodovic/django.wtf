@@ -308,19 +308,13 @@ TAILWIND_APP_NAME = "django_apps.theme"
 SHELL_PLUS_MODEL_IMPORTS_RESOLVER = (
     "django_extensions.collision_resolvers.AppNameSuffixCustomOrderCR"
 )
-SHELL_PLUS_PRE_IMPORTS = [
-    (
-        "django_apps.core.tasks",
-        (
-            "index_repositories",
-            "index_contributors",
-            "index_repo_contributors",
-            "categorize_repositories",
-            "categorize_repository",
-        ),
-    ),
+SHELL_PLUS_IMPORTS = [
+    "from django_apps.core.models import RepositoryType",
+    "from django_apps.core.views import trending_repositories",
+    "from django_apps.core.tasks import index_repositories, index_contributors"
+    "from django_apps.core.tasks import categorize_repositories"
+    "from django_apps.core.tasks import categorize_repository",
 ]
-
 # django-import-export
 # ------------------------------------------------------------------------------
 IMPORT_EXPORT_USE_TRANSACTIONS = True
