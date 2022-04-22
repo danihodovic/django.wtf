@@ -1,8 +1,9 @@
 {% extends "core/base.html" %}
 {% block content %}
-	<div class="flex flex-col content-center self-center pt-5 md:w-10/12">
-		<div class="flex w-full p-6 bg-white border rounded gap-0 justify-evenly basis-0 grow shrink-0">
-			<div>
+	<div class="flex flex-col content-center self-center pt-5 md:w-11/12">
+		<div class="flex w-full p-6 bg-white border rounded gap-8 justify-evenly">
+
+			<div class="grow-0 basis-1/3">
 				<div class="text-xl font-bold border-b-4 border-indigo-500 ">🔥Trending packages</div>
 				<ul>
 					{% for repo in trending_apps %}
@@ -16,9 +17,10 @@
 					{% endfor %}
 				</ul>
 			</div>
-			<div>
+
+			<div class="grow-0 basis-1/3">
 				<div class="text-xl font-bold border-b-4 border-red-500">🔨Categories</div>
-				<div class="flex pt-3 gap-2">
+				<div class="flex flex-wrap pt-3 gap-2">
 					{% for category in categories %}
 					<a href="{% url "core:category-detail" name=category.name %}" class="px-4 py-2 text-lg border rounded hover:bg-slate-100">
 							<span class="text-xl">{{ category.emoji }}</span>
@@ -27,7 +29,8 @@
 					{% endfor %}
 				</div>
 			</div>
-			<div>
+
+			<div class="grow-0 basis-1/3">
 				<div class="text-xl font-bold border-b-4 border-teal-500">🤸Trending developers</div>
 				<ul>
 					{% for developer in trending_developers %}
