@@ -24,6 +24,9 @@ class Profile(TimeStampedModel):
     )
     avatar_url = models.URLField()
 
+    def __str__(self):
+        return f"<Profile: {self.login}>"
+
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=50, unique=True)
@@ -62,6 +65,9 @@ class Repository(TimeStampedModel):
     def __repr__(self):
         return f"<Repository: {self.full_name}>"
 
+    def __str__(self):
+        return self.__repr__()
+
     def stars_since(self, td: timedelta, date=None):
         if date is None:
             date = datetime.today().date()
@@ -97,6 +103,9 @@ class RepositoryStars(models.Model):
     class Meta:
         unique_together = [["repository", "created_at"]]
 
+    def __str__(self):
+        return f"<RepositoryStars {self.repository.full_name} at {self.created_at}>"
+
 
 class ProfileFollowers(models.Model):
     profile = models.ForeignKey(
@@ -113,3 +122,6 @@ class ProfileFollowers(models.Model):
             "profile",
             "created_at",
         )
+
+    def __str__(self):
+        return f"<ProfileFollowers {self.profile.login} at {self.created_at}>"
