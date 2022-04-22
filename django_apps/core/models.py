@@ -25,6 +25,14 @@ class Profile(TimeStampedModel):
     avatar_url = models.URLField()
 
 
+class Category(TimeStampedModel):
+    name = models.CharField(max_length=50, unique=True)
+    emoji = models.CharField(max_length=5)
+
+    def __str__(self):
+        return f"<Category: {self.name}>"
+
+
 class Repository(TimeStampedModel):
     github_id = models.PositiveIntegerField()
     owner = models.ForeignKey(
@@ -33,6 +41,7 @@ class Repository(TimeStampedModel):
         related_name="repositories",
         related_query_name="repository",
     )
+    categories = models.ManyToManyField(Category)
     name = models.CharField(max_length=100)
     full_name = models.CharField(max_length=100, unique=True)
     forks = models.PositiveIntegerField()

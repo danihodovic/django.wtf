@@ -311,8 +311,8 @@ SHELL_PLUS_MODEL_IMPORTS_RESOLVER = (
 SHELL_PLUS_IMPORTS = [
     "from django_apps.core.models import RepositoryType",
     "from django_apps.core.views import trending_repositories",
-    "from django_apps.core.tasks import index_repositories, index_contributors"
-    "from django_apps.core.tasks import categorize_repositories"
+    "from django_apps.core.tasks import index_repositories, index_contributors",
+    "from django_apps.core.tasks import categorize_repositories",
     "from django_apps.core.tasks import categorize_repository",
 ]
 # django-import-export

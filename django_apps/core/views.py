@@ -3,9 +3,11 @@ from datetime import timedelta
 
 from cacheops import cached_as
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.paginator import Paginator
 from django.views.generic.base import TemplateView
+from django.views.generic.detail import DetailView
 
-from .models import Repository, RepositoryStars, RepositoryType
+from .models import Category, Repository, RepositoryStars, RepositoryType
 
 
 class IndexView(TemplateView):
@@ -18,12 +20,7 @@ class IndexView(TemplateView):
         )
         context = super().get_context_data(**kwargs)
         context["trending_apps"] = trending_repositories(type=RepositoryType.APP)[0:10]
-        context["categories"] = [
-            ("auth", "⚿"),
-            ("api", "⚘"),
-            ("admin", "⚙"),
-            ("email", "@"),
-        ]
+        context["categories"] = Category.objects.all()
         context["trending_developers"] = [
             ("danihodovic", 44),
             ("adinhodovic", 30),
@@ -35,6 +32,26 @@ class IndexView(TemplateView):
         ]
         context["apps"] = apps
         context["projects"] = projects
+        return context
+
+
+class CategoryView(DetailView):
+    model = Category
+
+    def get_object(self, *args, **kwargs):
+        return Category.objects.get(name=self.kwargs.get("name"))
+
+    def get_context_data(self, *, _=None, **kwargs):  # pylint: disable=arguments-differ
+        context = super().get_context_data()
+        category = self.kwargs.get("name")
+        repos_by_category = Repository.objects.filter(categories__name=category)
+        repos_by_topics = Repository.objects.filter(topics__contains=[category])
+        repos = repos_by_category.union(repos_by_topics)
+        repos = repos.order_by("-stars")
+        paginator = Paginator(repos, 25)
+        page_number = self.request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        context["repositories"] = page_obj
         return context
 
 
