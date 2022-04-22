@@ -3,7 +3,13 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
-from .models import Profile, ProfileFollowers, Repository, RepositoryStars
+from .models import Category, Profile, ProfileFollowers, Repository, RepositoryStars
+
+
+@admin.register(Category)
+class CategoryAdmin(ImportExportModelAdmin):
+    list_display = ("id", "name", "emoji")
+    search_fields = ("name",)
 
 
 @admin.register(Repository)
@@ -16,7 +22,7 @@ class RepositoryAdmin(ImportExportModelAdmin):
         "type",
     )
     list_filter = ("type",)
-    search_fields = ("name",)
+    search_fields = ("name", "topics", "categories__name")
 
 
 @admin.register(RepositoryStars)
@@ -50,6 +56,14 @@ class ProfileResource(resources.ModelResource):
         use_bulk = True
 
 
+class CategoryResource(resources.ModelResource):
+    class Meta:
+        model = Category
+        instance_loader = "import_export.instance_loaders.CachedInstanceLoader"
+        skip_diff = True
+        use_bulk = True
+
+
 class RepositoryResource(resources.ModelResource):
     class Meta:
         model = Repository
@@ -64,3 +78,6 @@ class RepositoryStarsResource(resources.ModelResource):
         instance_loader = "import_export.instance_loaders.CachedInstanceLoader"
         skip_diff = True
         use_bulk = True
+
+    def get_queryset(self):
+        return super().get_queryset().select_related("repository")

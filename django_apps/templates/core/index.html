@@ -1,21 +1,5 @@
-{% load tailwind_tags %}
-
-<!doctype html>
-<html lang="en-US">
-<head>
-	<meta charset="UTF-8">
-	<title>django.wtf</title>
-  {% tailwind_css %}
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Akshar:wght@300;400&display=swap" rel="stylesheet">
-</head>
-<body class="flex flex-col content-center justify-center bg-slate-100 font-akshar">
-	<div class="flex p-4 px-12 bg-white md:py-6 justify-between">
-		<span class="text-3xl ">🎔 django.wtf</span>
-		<span class="text-xl">the unofficial django package index</span>
-	</div>
+{% extends "core/base.html" %}
+{% block content %}
 	<div class="flex flex-col content-center self-center pt-5 md:w-10/12">
 		<div class="flex w-full p-6 bg-white border rounded gap-0 justify-evenly basis-0 grow shrink-0">
 			<div>
@@ -23,7 +7,7 @@
 				<ul>
 					{% for repo in trending_apps %}
 					<li class="flex content-center justify-between pt-1 border-b">
-						<a class="hover:text-cyan-800 leading-8" href="{{ repo.url }}">{{ repo.full_name }}</a>
+						<a class="leading-8" href="{{ repo.url }}">{{ repo.full_name }}</a>
 						<div>
 							<span class="pl-6 text-lg">⚝ </span>
 							<span>{{ repo.stars_lately }}</span>
@@ -36,10 +20,10 @@
 				<div class="text-xl font-bold border-b-4 border-red-500">🔨Categories</div>
 				<div class="flex pt-3 gap-2">
 					{% for category in categories %}
-						<div class="px-4 py-2 text-lg border rounded hover:bg-slate-100">
-							<span class="text-xl">{{ category.1 }}</span>
-							<span class="uppercase">{{ category.0 }}</span>
-						</div>
+					<a href="{% url "core:category-detail" name=category.name %}" class="px-4 py-2 text-lg border rounded hover:bg-slate-100">
+							<span class="text-xl">{{ category.emoji }}</span>
+							<span class="uppercase">{{ category.name }}</span>
+						</a>
 					{% endfor %}
 				</div>
 			</div>
@@ -59,39 +43,4 @@
 			</div>
 		</div>
 	</div>
-
-  {# <div class="fflex justify-center> #}
-	{# 	<div> #}
-	{# 		APPS #}
-	{# 		<ul class="ttext-gray-900 bg-white border border-gray-200 rounded-lg> #}
-	{# 			{% for repo in apps %} #}
-	{# 			<a href="{{ repo.url }}" target="_blank"> #}
-	{# 				<li class="fflex flex-row justify-between w-full px-6 py-2 border-b border-gray-200 rounded-t-lg transition-opacity hover:opacity-50> #}
-	{# 					<span class="mmr-3 text-sm>{{ repo.full_name }}</span> #}
-	{# 					<span class="text-xs py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-blue-600 text-white rounded-full "> #}
-	{# 						{{ repo.stars }} #}
-	{# 					</span> #}
-	{# 				</li> #}
-	{# 				</a> #}
-	{# 			{% endfor %} #}
-	{# 		</ul> #}
-	{# 	</div> #}
-  {#  #}
-	{# 	<div> #}
-	{# 		PROJECTS #}
-	{# 		<ul class="ttext-gray-900 bg-white border border-gray-200 rounded-lg> #}
-	{# 			{% for repo in projects %} #}
-	{# 			<a href="{{ repo.url }}" target="_blank"> #}
-	{# 				<li class="fflex flex-row justify-between w-full px-6 py-2 border-b border-gray-200 rounded-t-lg transition-opacity hover:opacity-50> #}
-	{# 					<span class="mmr-3 text-sm>{{ repo.full_name }}</span> #}
-	{# 					<span class="text-xs py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-blue-600 text-white rounded-full "> #}
-	{# 						{{ repo.stars }} #}
-	{# 					</span> #}
-	{# 				</li> #}
-	{# 				</a> #}
-	{# 			{% endfor %} #}
-	{# 		</ul> #}
-	{# 	</div> #}
-	{# </div> #}
-</body>
-</html>
+{% endblock %}

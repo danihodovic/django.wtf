@@ -1,0 +1,24 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="p-4 bg-white border rounded">
+  <table class="w-full table-auto text-left">
+    <thead class="mb-4 text-lg font-bold">
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Stars</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for repo in repositories %}
+      <tr class="border-b leading-10">
+        <td><a href="{{ repo.url }}">{{ repo.full_name }}</a></td>
+        <td>{{ repo.description }}</td>
+        <td>{{ repo.stars }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
