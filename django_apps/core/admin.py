@@ -24,12 +24,18 @@ class RepositoryAdmin(ImportExportModelAdmin):
     list_filter = ("type",)
     search_fields = ("name", "topics", "categories__name")
 
+    def get_readonly_fields(self, request, obj=None):
+        return [f.name for f in self.model._meta.fields if f != "categories"]
+
 
 @admin.register(RepositoryStars)
 class RepositoryStarsAdmin(ImportExportModelAdmin):
     list_display = ("repository", "created_at", "stars")
     list_filter = ()
     date_hierarchy = "created_at"
+
+    def get_readonly_fields(self, request, obj=None):
+        return [f.name for f in self.model._meta.fields]
 
 
 @admin.register(Profile)
@@ -39,6 +45,9 @@ class ProfileAdmin(ImportExportModelAdmin):
         "type",
     )
     list_filter = ()
+
+    def get_readonly_fields(self, request, obj=None):
+        return [f.name for f in self.model._meta.fields]
 
 
 @admin.register(ProfileFollowers)
