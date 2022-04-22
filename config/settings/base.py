@@ -91,7 +91,9 @@ LOCAL_APPS = [
     "django_apps.theme",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+INSTALLED_APPS = (
+    ["admin_interface", "colorfield"] + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+)
 
 # MIGRATIONS
 # ------------------------------------------------------------------------------
@@ -321,3 +323,9 @@ IMPORT_EXPORT_USE_TRANSACTIONS = True
 IMPORT_EXPORT_SKIP_ADMIN_LOG = True
 IMPORT_EXPORT_TMP_STORAGE_CLASS = "import_export.tmp_storages.CacheStorage"
 IMPORT_EXPORT_CHUNK_SIZE = 1000
+
+# django-admin-interface
+# ------------------------------------------------------------------------------
+# only if django version >= 3.0
+X_FRAME_OPTIONS = "SAMEORIGIN"
+SILENCED_SYSTEM_CHECKS = ["security.W019"]
