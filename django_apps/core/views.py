@@ -50,7 +50,8 @@ class CategoryView(MetadataMixin, DetailView):
         paginator = Paginator(repos, 25)
         page_number = self.request.GET.get("page")
         page_obj = paginator.get_page(page_number)
-        context["repositories"] = page_obj
+        context["page_obj"] = page_obj
+        context["category"] = self.get_object()
         return context
 
     def get_meta_title(self, context=None):
