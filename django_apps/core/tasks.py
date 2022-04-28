@@ -45,18 +45,8 @@ def http_client():
     return s
 
 
-first_url = "https://api.github.com/search/repositories?" + urlencode(
-    dict(
-        q="topic:django stars:>25 pushed:>2021-06-01 is:public",
-        sort="stars",
-        order="desc",
-        per_page=100,
-    )
-)
-
-
 @app.task()
-def index_repositories(url=first_url):
+def index_repositories(url):
     logging.info(f"GET {url=}")
     http = http_client()
     res = http.get(url)

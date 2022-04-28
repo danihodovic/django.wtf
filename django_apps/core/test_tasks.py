@@ -1,5 +1,6 @@
 import pytest
 
+from .github_api_urls import search_repos_by_topic_url
 from .models import Repository
 from .tasks import index_contributors, index_repositories
 
@@ -56,7 +57,7 @@ def test_index_repositories(mocked_responses):
         ],
     )
 
-    index_repositories()
+    index_repositories(search_repos_by_topic_url)
     index_contributors()
     repos = Repository.objects.all()
     assert len(repos) == 1
