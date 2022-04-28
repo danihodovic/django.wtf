@@ -4,6 +4,7 @@ from datetime import date
 import requests
 from celery import current_app as app
 from constance import config
+from django.db.utils import DataError
 from django.utils.http import urlencode
 from requests.adapters import HTTPAdapter
 from requests.exceptions import HTTPError
@@ -45,52 +46,49 @@ def http_client():
     return s
 
 
-first_url = "https://api.github.com/search/repositories?" + urlencode(
-    dict(
-        q="topic:django stars:>25 pushed:>2021-06-01 is:public",
-        sort="stars",
-        order="desc",
-        per_page=100,
-    )
-)
-
-
 @app.task()
-def index_repositories(url=first_url):
+def index_repositories(url):
     logging.info(f"GET {url=}")
     http = http_client()
     res = http.get(url)
     data = res.json()
     for repository_data in data["items"]:
-        owner = repository_data["owner"]
-        profile, _ = Profile.objects.update_or_create(
-            github_id=owner["id"],
-            defaults={
-                "login": owner["login"],
-                "type": owner["type"],
-                "avatar_url": owner["avatar_url"],
-            },
-        )
-        repository, _ = Repository.objects.update_or_create(
-            github_id=repository_data["id"],
-            defaults=dict(
-                owner=profile,
-                name=repository_data["name"],
-                full_name=repository_data["full_name"],
-                forks=repository_data["forks"],
-                watchers=repository_data["watchers"],
-                open_issues=repository_data["open_issues"],
-                stars=repository_data["stargazers_count"],
-                archived=repository_data["archived"],
-                topics=repository_data["topics"],
-                description=repository_data["description"],
-            ),
-        )
-        RepositoryStars.objects.update_or_create(
-            repository=repository,
-            created_at=date.today(),
-            defaults=dict(stars=repository_data["stargazers_count"]),
-        )
+        try:
+            owner = repository_data["owner"]
+            profile, _ = Profile.objects.update_or_create(
+                github_id=owner["id"],
+                defaults={
+                    "login": owner["login"],
+                    "type": owner["type"],
+                    "avatar_url": owner["avatar_url"],
+                },
+            )
+
+            repository, created = Repository.objects.update_or_create(
+                github_id=repository_data["id"],
+                defaults=dict(
+                    owner=profile,
+                    name=repository_data["name"],
+                    full_name=repository_data["full_name"],
+                    forks=repository_data["forks"],
+                    watchers=repository_data["watchers"],
+                    open_issues=repository_data["open_issues"],
+                    stars=repository_data["stargazers_count"],
+                    archived=repository_data["archived"],
+                    topics=repository_data["topics"],
+                    description=repository_data["description"],
+                ),
+            )
+            action = "Created" if created else "Updated"
+            logging.info(f"{action} {repository=}")
+
+            RepositoryStars.objects.update_or_create(
+                repository=repository,
+                created_at=date.today(),
+                defaults=dict(stars=repository_data["stargazers_count"]),
+            )
+        except DataError:
+            logging.exception(f"DataError for {repository=}")
 
     if "next" in res.links:
         next_url = res.links["next"]["url"]

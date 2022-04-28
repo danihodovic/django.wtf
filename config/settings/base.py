@@ -317,6 +317,8 @@ SHELL_PLUS_IMPORTS = [
     "from django_apps.core.tasks import index_repositories, index_contributors",
     "from django_apps.core.tasks import categorize_repositories",
     "from django_apps.core.tasks import categorize_repository",
+    "from django_apps.core.github_api_urls import search_repos_by_topic_url",
+    "from django_apps.core.github_api_urls import search_repos_by_keyword_url",
 ]
 # django-import-export
 # ------------------------------------------------------------------------------
