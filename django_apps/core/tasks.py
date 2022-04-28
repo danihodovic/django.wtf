@@ -61,7 +61,8 @@ def index_repositories(url):
                 "avatar_url": owner["avatar_url"],
             },
         )
-        repository, _ = Repository.objects.update_or_create(
+
+        repository, created = Repository.objects.update_or_create(
             github_id=repository_data["id"],
             defaults=dict(
                 owner=profile,
@@ -76,6 +77,9 @@ def index_repositories(url):
                 description=repository_data["description"],
             ),
         )
+        action = "Created" if created else "Updated"
+        logging.info(f"{action} {repository=}")
+
         RepositoryStars.objects.update_or_create(
             repository=repository,
             created_at=date.today(),
