@@ -23,6 +23,7 @@ class Profile(TimeStampedModel):
         max_length=30, choices=UserType.choices, null=True, blank=True
     )
     avatar_url = models.URLField()
+    followers = models.PositiveIntegerField(null=True, blank=True)
 
     def __str__(self):
         return f"<Profile: {self.login}>"
@@ -111,8 +112,6 @@ class ProfileFollowers(models.Model):
     profile = models.ForeignKey(
         Profile,
         on_delete=models.CASCADE,
-        related_name="followers",
-        related_query_name="follower",
     )
     created_at = models.DateField()
     followers = models.PositiveIntegerField()

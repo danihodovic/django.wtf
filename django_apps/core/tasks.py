@@ -13,6 +13,7 @@ from urllib3.util.retry import Retry
 from django_apps.core.models import (
     Contributor,
     Profile,
+    ProfileFollowers,
     Repository,
     RepositoryStars,
     RepositoryType,
@@ -79,8 +80,7 @@ def index_repositories(url):
                     description=repository_data["description"],
                 ),
             )
-            action = "Created" if created else "Updated"
-            logging.info(f"{action} {repository=}")
+            log_action(repository, created)
 
             RepositoryStars.objects.update_or_create(
                 repository=repository,
@@ -118,11 +118,35 @@ def index_repo_contributors(repo_id):
                 "avatar_url": entry["avatar_url"],
             },
         )
-        _, _ = Contributor.objects.update_or_create(
+        contributor, created = Contributor.objects.update_or_create(
             repository=repo,
             profile=profile,
             defaults=dict(contributions=entry["contributions"]),
         )
+        log_action(contributor, created)
+
+
+@app.task()
+def index_followers():
+    for profile in Profile.objects.all():
+        index_user_followers(profile.login)
+
+
+@app.task()
+def index_user_followers(user_login):
+    http = http_client()
+    res = http.get(f"https://api.github.com/users/{user_login}/followers")
+    data = res.json()
+    followers = len(data)
+    profile = Profile.objects.get(login=user_login)
+    profile.followers = followers
+    profile.save()
+    profile_followers, created = ProfileFollowers.objects.update_or_create(
+        profile=profile,
+        created_at=date.today(),
+        defaults=dict(followers=followers),
+    )
+    log_action(profile_followers, created)
 
 
 @app.task()
@@ -172,3 +196,8 @@ def has_setup_files(repo_full_name):
         if has_setup_py and has_setup_cfg:
             return True
     return False
+
+
+def log_action(entity, created):
+    action = "Created" if created else "Updated"
+    logging.info(f"{action} {entity}")
