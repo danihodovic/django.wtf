@@ -47,7 +47,7 @@ def http_client():
     return s
 
 
-@app.task()
+@app.task(soft_time_limit=30 * 60)
 def index_repositories(url):
     logging.info(f"GET {url=}")
     http = http_client()
@@ -96,7 +96,7 @@ def index_repositories(url):
             index_repositories(url=next_url)
 
 
-@app.task()
+@app.task(soft_time_limit=60 * 60)
 def index_contributors():
     for repo in Repository.objects.all():
         index_repo_contributors(repo.id)
@@ -126,7 +126,7 @@ def index_repo_contributors(repo_id):
         log_action(contributor, created)
 
 
-@app.task()
+@app.task(soft_time_limit=30 * 60)
 def index_followers():
     for profile in Profile.objects.all():
         index_user_followers(profile.login)
@@ -149,7 +149,7 @@ def index_user_followers(user_login):
     log_action(profile_followers, created)
 
 
-@app.task()
+@app.task(soft_time_limit=60 * 60)
 def categorize_repositories():
     for repo in Repository.objects.all():
         categorize_repository.delay(repo.id)
@@ -160,7 +160,9 @@ def categorize_repository(repository_id):
     repo = Repository.objects.get(id=repository_id)
     appconfig_files = find_appconfig_files(repo.full_name)
     contains_setup_files = has_setup_files(repo.full_name)
-    if contains_setup_files:
+    # Has setup files means it's published to pip. Has AppConfig means
+    # a Django app is configured somewhere
+    if contains_setup_files and len(appconfig_files) > 0:
         repo_type = RepositoryType.APP
     elif len(appconfig_files) > 0:
         repo_type = RepositoryType.PROJECT
