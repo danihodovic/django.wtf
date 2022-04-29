@@ -28,6 +28,10 @@ class Profile(TimeStampedModel):
     def __str__(self):
         return f"<Profile: {self.login}>"
 
+    @property
+    def github_url(self):
+        return f"https://github.com/{self.login}"
+
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=50, unique=True)

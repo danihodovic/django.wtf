@@ -8,7 +8,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from meta.views import MetadataMixin
 
-from .models import Category, Repository, RepositoryStars, RepositoryType
+from .models import Category, Contributor, Repository, RepositoryStars, RepositoryType
 
 
 class IndexView(MetadataMixin, TemplateView):
@@ -24,15 +24,7 @@ class IndexView(MetadataMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["trending_apps"] = trending_repositories(type=RepositoryType.APP)[0:10]
         context["categories"] = Category.objects.all()
-        context["trending_developers"] = [
-            ("danihodovic", 44),
-            ("adinhodovic", 30),
-            ("denishodovic", 12),
-            ("senadacomor", 9),
-            ("janabuco", 7),
-            ("bobgreat", 4),
-            ("dingobingo", 4),
-        ]
+        context["trending_developers"] = most_followed()[0:10]
         context["apps"] = apps
         context["projects"] = projects
         return context
@@ -91,3 +83,19 @@ def trending_repositories(**filters):
         trending.append(repo)
 
     return sorted(trending, key=lambda e: e.stars_lately, reverse=True)
+
+
+@cached_as(Contributor, timeout=60 * 60 * 24)
+def most_followed():
+    repos = Repository.objects.filter(stars__gte=100)
+    contributors = set()
+    for repo in repos:
+        # 10 largest contributors to each repo
+        repo_contributors = (
+            Contributor.objects.filter(repository=repo)
+            .order_by("-contributions")
+            .select_related("profile")
+        )
+        contributors.update(repo_contributors[0:10])
+    profiles = [c.profile for c in contributors]
+    return sorted(profiles, key=lambda e: e.followers or 0, reverse=True)
