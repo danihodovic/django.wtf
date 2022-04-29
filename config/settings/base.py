@@ -315,6 +315,7 @@ SHELL_PLUS_IMPORTS = [
     "from django_apps.core.models import RepositoryType",
     "from django_apps.core.views import trending_repositories",
     "from django_apps.core.tasks import index_repositories, index_contributors",
+    "from django_apps.core.tasks import index_followers, index_user_followers",
     "from django_apps.core.tasks import categorize_repositories",
     "from django_apps.core.tasks import categorize_repository",
     "from django_apps.core.github_api_urls import search_repos_by_topic_url",

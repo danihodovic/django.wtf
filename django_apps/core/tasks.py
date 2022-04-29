@@ -164,8 +164,9 @@ def paginate(http_client, url):  # pylint: disable=redefined-outer-name
     while True:
         data.extend(res.json())
         if "next" not in res.links:
-            return data
+            break
         res = http_client.get(res.links["next"]["url"])
+    return data
 
 
 @app.task()

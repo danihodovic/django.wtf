@@ -43,8 +43,10 @@ class ProfileAdmin(ImportExportModelAdmin):
     list_display = (
         "login",
         "type",
+        "followers",
     )
-    list_filter = ()
+    list_filter = ("type",)
+    search_fields = ("login",)
 
     def get_readonly_fields(self, request, obj=None):
         return [f.name for f in self.model._meta.fields]
