@@ -27,16 +27,20 @@ app.conf.beat_schedule = {
     },
     "index-repositories-by-keyword": {
         "task": "django_apps.core.tasks.index_repositories",
-        "schedule": crontab(minute=30, hour=1),
+        "schedule": crontab(minute=5, hour=1),
         "args": search_repos_by_keyword_url,
     },
     "index-contributors": {
         "task": "django_apps.core.tasks.index_contributors",
-        "schedule": crontab(minute=0, hour=1),
+        "schedule": crontab(minute=10, hour=2),
+    },
+    "index-profile-followers": {
+        "task": "django_apps.core.tasks.index_followers",
+        "schedule": crontab(minute=20, hour=3),
     },
     "categorize-repositories": {
         "task": "django_apps.core.tasks.categorize_repositories",
-        "schedule": crontab(minute=0, hour=1),
+        "schedule": crontab(minute=30, hour=4),
     },
 }
 
