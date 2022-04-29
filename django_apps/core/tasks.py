@@ -20,6 +20,7 @@ from django_apps.core.models import (
 )
 
 
+# TODO: Use superrequests
 def http_client():
     s = requests.Session()
     s.auth = ("danihodovic", config.GITHUB_TOKEN)
@@ -134,9 +135,10 @@ def index_followers():
 
 @app.task()
 def index_user_followers(user_login):
-    http = http_client()
-    res = http.get(f"https://api.github.com/users/{user_login}/followers")
-    data = res.json()
+    data = paginate(
+        http_client(),
+        f"https://api.github.com/users/{user_login}/followers?per_page=100",
+    )
     followers = len(data)
     profile = Profile.objects.get(login=user_login)
     profile.followers = followers
@@ -153,6 +155,17 @@ def index_user_followers(user_login):
 def categorize_repositories():
     for repo in Repository.objects.all():
         categorize_repository.delay(repo.id)
+
+
+# TODO: Use a generator
+def paginate(http_client, url):  # pylint: disable=redefined-outer-name
+    data = []
+    res = http_client.get(url)
+    while True:
+        data.extend(res.json())
+        if "next" not in res.links:
+            return data
+        res = http_client.get(res.links["next"]["url"])
 
 
 @app.task()
