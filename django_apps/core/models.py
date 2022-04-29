@@ -92,6 +92,9 @@ class Contributor(TimeStampedModel):
     )
     contributions = models.PositiveIntegerField()
 
+    def __str__(self):
+        return f"<Contributor {self.profile.login} to {self.repository.full_name}>"
+
 
 class RepositoryStars(models.Model):
     repository = models.ForeignKey(
