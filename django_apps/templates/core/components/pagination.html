@@ -1,0 +1,11 @@
+<div class="mt-2 mb-4 btn-group">
+  {% if page_obj.has_previous %}
+  <a href="?page={{ page_obj.previous_page_number }}"><button class="btn">«</button></a>
+  {% endif %}
+
+  <a href="?page={{ page_obj.number }}"><button class="btn btn-active">{{ page_obj.number }}</button></a>
+
+  {% if page_obj.has_next %}
+  <a href="?page={{ page_obj.next_page_number }}"><button class="btn">»</button></a>
+  {% endif %}
+</div>

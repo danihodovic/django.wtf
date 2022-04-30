@@ -1,0 +1,58 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="flex flex-col items-center w-full overflow-x-auto">
+  <div class="flex flex-wrap self-start justify-center pt-3 mb-4 text-lg gap-2">
+    <span class="px-4 py-3 bg-white border rounded">
+      <span class="text-xl">💰</span>
+      <span class="ml-2 uppercase">Top contributors</span>
+    </span>
+
+    <span class="px-4 py-3 ml-2 bg-white border rounded">
+      <span class="text-xl">📊</span>
+      <span>{{ page_obj.paginator.count }} prolific contributors to Django projects</span>
+    </span>
+  </div>
+  <table class="table w-full text-lg border leading-6">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Contributed to (number of contributions)</th>
+        <th>Github followers</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for profile in page_obj %}
+
+      <tr class="hover">
+        {% with url=profile.github_url %}
+        <td>
+          <a class="font-bold" href="{{ url }}" target="_blank">
+            {{ profile.login }}
+          </a>
+        </td>
+        <td>
+          <a href="{{ url }}">
+            {% for contribution in profile.top_contributions|slice:"0:3" %}
+            <a class="p-3 text-lg text-slate-500 badge badge-outline hover:brightness-125" href="{{ contribution.repository.github_url }}" target="_blank">
+            {{ contribution.repository.full_name }}
+            <span class="ml-1 text-sm text-sm">
+              ({{ contribution.contributions }})
+            </span>
+            </a>
+            {% endfor %}
+          </a>
+        </td>
+        <td>
+          <a href="{{ url }}" target="_blank">
+            {{ profile.followers }}
+          </a>
+        </td>
+        {% endwith %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% include "core/components/pagination.html" %}
+</div>
+{% endblock %}
