@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from cacheops import cached_as
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from model_utils.models import TimeStampedModel
@@ -31,6 +32,15 @@ class Profile(TimeStampedModel):
     @property
     def github_url(self):
         return f"https://github.com/{self.login}"
+
+    def top_contributions(self):
+        @cached_as(Contributor, timeout=24 * 60 * 60)
+        def _fn(self):
+            return self.contributor_set.filter(contributions__gt=20).order_by(
+                "-contributions"
+            )
+
+        return _fn(self)
 
 
 class Category(TimeStampedModel):
@@ -64,7 +74,7 @@ class Repository(TimeStampedModel):
     )
 
     @property
-    def url(self):
+    def github_url(self):
         return f"https://github.com/{self.full_name}"
 
     def __repr__(self):

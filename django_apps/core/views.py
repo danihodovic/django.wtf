@@ -6,9 +6,17 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
 from meta.views import MetadataMixin
 
-from .models import Category, Contributor, Repository, RepositoryStars, RepositoryType
+from .models import (
+    Category,
+    Contributor,
+    Profile,
+    Repository,
+    RepositoryStars,
+    RepositoryType,
+)
 
 
 class IndexView(MetadataMixin, TemplateView):
@@ -70,6 +78,13 @@ class CategoryView(MetadataMixin, DetailView):
         return self.kwargs.get("name")
 
 
+class ContributorsView(MetadataMixin, ListView):
+    paginate_by = 25
+
+    def get_queryset(self):
+        return most_followed()
+
+
 @cached_as(RepositoryStars, timeout=60 * 60 * 24)
 def trending_repositories(**filters):
     trending = []
@@ -88,19 +103,14 @@ def trending_repositories(**filters):
 @cached_as(Contributor, timeout=60 * 60 * 24)
 def most_followed():
     repos = Repository.objects.filter(stars__gte=100, type__isnull=False)
-    contributors = (
-        Contributor.objects.filter(contributions__gte=10, repository__in=repos)
-        .order_by("-contributions")
-        .select_related("profile")
+    profile_ids = (
+        Contributor.objects.filter(
+            contributions__gt=20,
+            repository__in=repos,
+            profile__followers__gt=20,
+        )
+        .values_list("profile__id", flat=True)
+        .order_by("profile__id")
+        .distinct("profile__id")
     )
-    top_contributors = []
-    for contributor in contributors:
-        stars_contributions = contributor.repository.stars * contributor.contributions
-        if (
-            contributor.repository.type
-            and contributor.contributions > 10
-            and stars_contributions > 200
-        ):
-            top_contributors.append(contributor)
-    profiles = {c.profile for c in contributors}
-    return sorted(profiles, key=lambda e: e.followers or 0, reverse=True)
+    return Profile.objects.filter(id__in=profile_ids).order_by("-followers")
