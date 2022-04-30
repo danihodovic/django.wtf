@@ -87,15 +87,20 @@ def trending_repositories(**filters):
 
 @cached_as(Contributor, timeout=60 * 60 * 24)
 def most_followed():
-    repos = Repository.objects.filter(stars__gte=100)
-    contributors = []
-    for repo in repos:
-        # 10 largest contributors to each repo
-        repo_contributors = (
-            Contributor.objects.filter(repository=repo)
-            .order_by("-contributions")
-            .select_related("profile")
-        )
-        contributors.extend(repo_contributors[0:10])
+    repos = Repository.objects.filter(stars__gte=100, type__isnull=False)
+    contributors = (
+        Contributor.objects.filter(contributions__gte=10, repository__in=repos)
+        .order_by("-contributions")
+        .select_related("profile")
+    )
+    top_contributors = []
+    for contributor in contributors:
+        stars_contributions = contributor.repository.stars * contributor.contributions
+        if (
+            contributor.repository.type
+            and contributor.contributions > 10
+            and stars_contributions > 200
+        ):
+            top_contributors.append(contributor)
     profiles = {c.profile for c in contributors}
     return sorted(profiles, key=lambda e: e.followers or 0, reverse=True)
