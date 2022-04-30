@@ -28,21 +28,19 @@
         {% with url=profile.github_url %}
         <td>
           <a class="flex items-center font-bold" href="{{ url }}" target="_blank">
-            <img class="mr-2 rounded-full w-10" src="{{ profile.avatar_url }}" />
+            <img class="w-10 mr-2 rounded-full" src="{{ profile.avatar_url }}" />
             {{ profile.login }}
           </a>
         </td>
         <td>
-          <a href="{{ url }}">
-            {% for contribution in profile.top_contributions|slice:"0:3" %}
-            <a class="p-3 text-lg text-slate-500 badge badge-outline hover:brightness-125" href="{{ contribution.repository.github_url }}" target="_blank">
-            {{ contribution.repository.full_name }}
-            <span class="ml-1 text-sm">
-              ({{ contribution.contributions }})
-            </span>
-            </a>
-            {% endfor %}
+          {% for contribution in profile.top_contributions|slice:"0:4" %}
+          <a class="ml-2 p-3 text-lg text-slate-500 badge badge-outline hover:brightness-125" href="{{ contribution.repository.github_url }}" target="_blank">
+          {{ contribution.repository.full_name }}
+          <span class="ml-1 text-sm">
+            ({{ contribution.contributions }})
+          </span>
           </a>
+          {% endfor %}
         </td>
         <td>
           <a href="{{ url }}" target="_blank">
