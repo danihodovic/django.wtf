@@ -80,6 +80,8 @@ class CategoryView(MetadataMixin, DetailView):
 
 class ContributorsView(MetadataMixin, ListView):
     paginate_by = 25
+    title = "django.wtf: Top contributors to Django projects"
+    description = "Listing the top contributors to Django projects"
 
     def get_queryset(self):
         return most_followed()
