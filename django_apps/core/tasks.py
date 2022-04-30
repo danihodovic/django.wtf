@@ -1,14 +1,11 @@
 import logging
 from datetime import date
 
-import requests
+import superrequests
 from celery import current_app as app
 from constance import config
 from django.db.utils import DataError
 from django.utils.http import urlencode
-from requests.adapters import HTTPAdapter
-from requests.exceptions import HTTPError
-from urllib3.util.retry import Retry
 
 from django_apps.core.models import (
     Contributor,
@@ -20,31 +17,9 @@ from django_apps.core.models import (
 )
 
 
-# TODO: Use superrequests
 def http_client():
-    s = requests.Session()
+    s = superrequests.Session()
     s.auth = ("danihodovic", config.GITHUB_TOKEN)
-    retry_strategy = Retry(
-        connect=3,
-        read=3,
-        total=10,
-        backoff_factor=10,
-        status_forcelist=[403, 429, 500, 502, 503, 504],
-        method_whitelist=["HEAD", "GET", "OPTIONS"],
-    )
-    adapter = HTTPAdapter(max_retries=retry_strategy)
-    s.mount("https://", adapter)
-
-    def assert_status_hook(response, *args, **kwargs):
-        try:
-            response.raise_for_status()
-        except HTTPError as ex:
-            if "json" in response.headers["Content-Type"]:
-                print(response.json())
-
-            raise ex
-
-    s.hooks["response"] = [assert_status_hook]
     return s
 
 
