@@ -16,6 +16,8 @@ from django_apps.core.models import (
     RepositoryType,
 )
 
+from ..utils import log_action
+
 
 def http_client():
     s = superrequests.Session()
@@ -187,8 +189,3 @@ def has_setup_files(repo_full_name):
         if has_setup_py and has_setup_cfg:
             return True
     return False
-
-
-def log_action(entity, created):
-    action = "Created" if created else "Updated"
-    logging.info(f"{action} {entity}")

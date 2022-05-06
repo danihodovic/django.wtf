@@ -3,7 +3,14 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
-from .models import Category, Profile, ProfileFollowers, Repository, RepositoryStars
+from .models import (
+    Category,
+    Profile,
+    ProfileFollowers,
+    Repository,
+    RepositoryStars,
+    SocialNews,
+)
 
 
 @admin.register(Category)
@@ -59,6 +66,16 @@ class ProfileFollowersAdmin(ImportExportModelAdmin):
     date_hierarchy = "created_at"
 
 
+@admin.register(SocialNews)
+class SocialNewsAdmin(ImportExportModelAdmin):
+    list_display = ("title", "upvotes", "type")
+    list_filter = ("type",)
+    search_fields = ("title",)
+
+    def get_readonly_fields(self, request, obj=None):
+        return [f.name for f in self.model._meta.fields]
+
+
 class ProfileResource(resources.ModelResource):
     class Meta:
         model = Profile
@@ -92,3 +109,11 @@ class RepositoryStarsResource(resources.ModelResource):
 
     def get_queryset(self):
         return super().get_queryset().select_related("repository")
+
+
+class SocialNewsResource(resources.ModelResource):
+    class Meta:
+        model = SocialNews
+        instance_loader = "import_export.instance_loaders.CachedInstanceLoader"
+        skip_diff = True
+        use_bulk = True
