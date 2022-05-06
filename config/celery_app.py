@@ -46,6 +46,10 @@ app.conf.beat_schedule = {
         "task": "django_apps.core.tasks.reddit.index_top_weekly_submissions",
         "schedule": crontab(minute=45, hour=4),
     },
+    "social.index-hacker-news": {
+        "task": "django_apps.core.tasks.hacker_news.index_hn_submissions",
+        "schedule": crontab(minute=0, hour=5),
+    },
 }
 
 # Load task modules from all registered Django app configs.

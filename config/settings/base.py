@@ -330,6 +330,7 @@ SHELL_PLUS_IMPORTS = [
     "from django_apps.core.tasks.github_api_urls import search_repos_by_keyword_url",
     "from django_apps.core.tasks.reddit import create_client as create_reddit_client",
     "from django_apps.core.tasks.reddit import index_top_weekly_submissions",
+    "from django_apps.core.tasks.hacker_news import index_hn_submissions",
 ]
 # django-import-export
 # ------------------------------------------------------------------------------
