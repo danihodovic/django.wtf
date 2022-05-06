@@ -25,9 +25,11 @@
     {% endblock %}
   </div>
 
+  {% if not debug %}
 	<noscript>
 			<img src="https://s.depode.com/ingress/7ca0f5ff-8ef2-45fb-9718-37d34cddfe79/pixel.gif">
 	</noscript>
 	<script defer src="https://s.depode.com/ingress/7ca0f5ff-8ef2-45fb-9718-37d34cddfe79/script.js"></script>
+	{% endif %}
 </body>
 </html>
