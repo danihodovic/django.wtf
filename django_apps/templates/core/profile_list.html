@@ -16,6 +16,7 @@
   <table class="table w-full text-lg border leading-6">
     <thead>
       <tr>
+        <th>Rank</th>
         <th>Name</th>
         <th>Contributed to (number of contributions)</th>
         <th>Github followers</th>
@@ -27,7 +28,12 @@
       <tr class="hover">
         {% with url=profile.github_url %}
         <td>
-          <a class="flex items-center font-bold" href="{{ url }}" target="_blank">
+          <a class="font-bold" href="{{ url }}" target="_blank">
+          {{ page_obj.start_index|add:forloop.counter0 }}
+          </a>
+        </td>
+        <td>
+          <a class="flex items-center" href="{{ url }}" target="_blank">
             <img class="w-10 mr-2 rounded-full" src="{{ profile.avatar_url }}" />
             {{ profile.login }}
           </a>
