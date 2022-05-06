@@ -1,8 +1,8 @@
 import pytest
 
+from ..models import Repository
+from .github import index_contributors, index_repositories
 from .github_api_urls import search_repos_by_topic_url
-from .models import Repository
-from .tasks import index_contributors, index_repositories
 
 pytestmark = pytest.mark.django_db
 

@@ -305,6 +305,14 @@ CONSTANCE_CONFIG = {
         "",
         "The Github token to use when scraping the GH API",
     ),
+    "REDDIT_CLIENT_ID": (
+        "",
+        "The Reddit client ID",
+    ),
+    "REDDIT_CLIENT_SECRET": (
+        "",
+        "The Reddit client secret",
+    ),
 }
 TAILWIND_APP_NAME = "django_apps.theme"
 
@@ -314,12 +322,14 @@ SHELL_PLUS_MODEL_IMPORTS_RESOLVER = (
 SHELL_PLUS_IMPORTS = [
     "from django_apps.core.models import RepositoryType",
     "from django_apps.core.views import trending_repositories",
-    "from django_apps.core.tasks import index_repositories, index_contributors",
-    "from django_apps.core.tasks import index_followers, index_user_followers",
-    "from django_apps.core.tasks import categorize_repositories",
-    "from django_apps.core.tasks import categorize_repository",
-    "from django_apps.core.github_api_urls import search_repos_by_topic_url",
-    "from django_apps.core.github_api_urls import search_repos_by_keyword_url",
+    "from django_apps.core.tasks.github import index_repositories, index_contributors",
+    "from django_apps.core.tasks.github import index_followers, index_user_followers",
+    "from django_apps.core.tasks.github import categorize_repositories",
+    "from django_apps.core.tasks.github import categorize_repository",
+    "from django_apps.core.tasks.github_api_urls import search_repos_by_topic_url",
+    "from django_apps.core.tasks.github_api_urls import search_repos_by_keyword_url",
+    "from django_apps.core.tasks.reddit import create_client as create_reddit_client",
+    "from django_apps.core.tasks.reddit import index_top_weekly_submissions",
 ]
 # django-import-export
 # ------------------------------------------------------------------------------
