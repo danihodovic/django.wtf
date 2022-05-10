@@ -1,5 +1,5 @@
 import logging
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from cacheops import cached_as
 from django.core.exceptions import ObjectDoesNotExist
@@ -16,6 +16,7 @@ from .models import (
     Repository,
     RepositoryStars,
     RepositoryType,
+    SocialNews,
 )
 
 
@@ -33,6 +34,10 @@ class IndexView(MetadataMixin, TemplateView):
         context["trending_apps"] = trending_repositories(type=RepositoryType.APP)[0:10]
         context["categories"] = Category.objects.all()
         context["trending_developers"] = most_followed()[0:10]
+        one_week_ago = datetime.today().date() - timedelta(days=7)
+        context["social_news"] = SocialNews.objects.filter(
+            created_at__gt=one_week_ago
+        ).order_by("-upvotes")[0:10]
         context["apps"] = apps
         context["projects"] = projects
         return context
