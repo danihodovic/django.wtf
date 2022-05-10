@@ -2,11 +2,11 @@ import logging
 from datetime import date
 
 import superrequests
-from celery import current_app as app
 from constance import config
 from django.db.utils import DataError
 from django.utils.http import urlencode
 
+from config import celery_app as app
 from django_apps.core.models import (
     Contributor,
     Profile,
@@ -16,7 +16,7 @@ from django_apps.core.models import (
     RepositoryType,
 )
 
-from ..utils import log_action
+from .utils import log_action
 
 
 def http_client():
