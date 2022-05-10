@@ -3,11 +3,13 @@ from datetime import datetime
 
 import pytz
 import superrequests
+from celery import current_app as app
 
-from ..models import SocialNews, SocialNewsType
-from ..utils import log_action
+from .models import SocialNews, SocialNewsType
+from .utils import log_action
 
 
+@app.task
 def index_hn_submissions():
     # https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty
     client = superrequests.Session()

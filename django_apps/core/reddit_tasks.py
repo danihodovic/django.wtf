@@ -6,8 +6,8 @@ import pytz
 from celery import current_app as app
 from constance import config
 
-from ..models import SocialNews, SocialNewsType
-from ..utils import log_action
+from .models import SocialNews, SocialNewsType
+from .utils import log_action
 
 
 def create_client():
