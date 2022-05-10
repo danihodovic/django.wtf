@@ -322,15 +322,15 @@ SHELL_PLUS_MODEL_IMPORTS_RESOLVER = (
 SHELL_PLUS_IMPORTS = [
     "from django_apps.core.models import RepositoryType",
     "from django_apps.core.views import trending_repositories",
-    "from django_apps.core.tasks.github import index_repositories, index_contributors",
-    "from django_apps.core.tasks.github import index_followers, index_user_followers",
-    "from django_apps.core.tasks.github import categorize_repositories",
-    "from django_apps.core.tasks.github import categorize_repository",
+    "from django_apps.core.github_tasks import index_repositories, index_contributors",
+    "from django_apps.core.github_tasks import index_followers, index_user_followers",
+    "from django_apps.core.github_tasks import categorize_repositories",
+    "from django_apps.core.github_tasks import categorize_repository",
     "from django_apps.core.github_api_urls import search_repos_by_topic_url",
     "from django_apps.core.github_api_urls import search_repos_by_keyword_url",
-    "from django_apps.core.tasks.reddit import create_client as create_reddit_client",
-    "from django_apps.core.tasks.reddit import index_top_weekly_submissions",
-    "from django_apps.core.tasks.hacker_news import index_hn_submissions",
+    "from django_apps.core.reddit_tasks import create_client as create_reddit_client",
+    "from django_apps.core.reddit_tasks import index_top_weekly_submissions",
+    "from django_apps.core.hacker_news_tasks import index_hn_submissions",
 ]
 # django-import-export
 # ------------------------------------------------------------------------------
