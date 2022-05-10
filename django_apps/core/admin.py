@@ -71,6 +71,7 @@ class SocialNewsAdmin(ImportExportModelAdmin):
     list_display = ("title", "upvotes", "type")
     list_filter = ("type",)
     search_fields = ("title",)
+    ordering = ("-upvotes",)
 
     def get_readonly_fields(self, request, obj=None):
         return [f.name for f in self.model._meta.fields]
