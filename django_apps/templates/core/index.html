@@ -45,5 +45,21 @@
 				</ul>
 			</div>
 		</div>
+
+		<div class="flex w-full pt-4 rounded gap-3 justify-evenly">
+			<div class="p-6 bg-white border grow-0 basis-6/12">
+				<div class="text-xl font-bold border-b-4 border-teal-500">🐦 Social media news</div>
+				<ul>
+					{% for post in social_news %}
+					<a class="hover:text-cyan-800 leading-8" href="{{ post.url }}" target="_blank">
+						<li class="flex content-center justify-between pt-1 border-b">
+							<span>{{ post.title }}</span>
+							<img class="object-contain w-6" src="https://external-preview.redd.it/iDdntscPf-nfWKqzHRGFmhVxZm4hZgaKe5oyFws-yzA.png?auto=webp&s=38648ef0dc2c3fce76d5e1d8639234d8da0152b2" />
+						</li>
+					</a>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
 	</div>
 {% endblock %}
