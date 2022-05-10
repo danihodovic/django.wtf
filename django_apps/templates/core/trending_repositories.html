@@ -1,0 +1,61 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="flex flex-col items-center w-full overflow-x-auto">
+  <div class="flex flex-wrap self-start justify-center pt-3 mb-4 text-lg gap-2">
+    <span class="px-4 py-3 bg-white border rounded">
+      <span class="text-xl">📈</span>
+      <span class="ml-2 uppercase">Trending repositories</span>
+    </span>
+
+    <span class="px-4 py-3 bg-white border rounded">
+      <span class="ml-2 uppercase">Repositories with the most followers in the past two weeks</span>
+    </span>
+  </div>
+
+  <table class="table w-full text-lg border leading-6">
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Stars last two weeks</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for repo in page_obj %}
+
+      <tr class="hover">
+        {% with url=repo.github_url %}
+        <td>
+          <a class="font-bold" href="{{ url }}" target="_blank">
+          {{ page_obj.start_index|add:forloop.counter0 }}
+          </a>
+        </td>
+        <td>
+          <a class="" href="{{ url }}" target="_blank">
+            {{ repo.full_name }}
+          </a>
+        </td>
+        <td>
+          <a href="{{ url }}" target="_blank">
+            {{ repo.description|truncatechars:120 }}
+          </a>
+        </td>
+        <td>
+          <a href="{{ url }}" target="_blank">
+            {{ repo.stars_lately }}
+          </a>
+        </td>
+        {% endwith %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% include "core/components/pagination.html" %}
+
+</div>
+{% endblock %}
+
+{% block stars_column_header %}
+{% endblock %}

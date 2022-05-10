@@ -83,6 +83,26 @@ class CategoryView(MetadataMixin, DetailView):
         return self.kwargs.get("name")
 
 
+class TrendingRepositoriesView(MetadataMixin, ListView):
+    paginate_by = 25
+    title = "Trending Django projects"
+    description = "Trending Django projects in the past week"
+    template_name = "core/trending_repositories.html"
+
+    def get_queryset(self):
+        return trending_repositories(type=RepositoryType.APP)
+
+
+class TopRepositoriesView(MetadataMixin, ListView):
+    paginate_by = 25
+    title = "Top Django projects"
+    description = "Most popular Django projects"
+    template_name = "core/top_repositories.html"
+
+    def get_queryset(self):
+        return Repository.objects.filter(type=RepositoryType.APP).order_by("-stars")
+
+
 class ContributorsView(MetadataMixin, ListView):
     paginate_by = 25
     title = "django.wtf: Top contributors to Django projects"
@@ -97,7 +117,7 @@ def trending_repositories(**filters):
     trending = []
     for repo in Repository.objects.filter(stars__gte=20, **filters):
         try:
-            stars_in_the_last_week = repo.stars_since(timedelta(days=12))
+            stars_in_the_last_week = repo.stars_since(timedelta(days=15))
         except ObjectDoesNotExist:
             logging.debug(f"No previous stars found for {repo=}")
             continue

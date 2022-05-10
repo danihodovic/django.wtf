@@ -9,7 +9,7 @@ class StaticSitemap(Sitemap):
     changefreq = "daily"
 
     def items(self):
-        return ["core:index", "core:profiles-top"]
+        return ["core:index", "core:top-profiles", "core:trending-repositories"]
 
     def location(self, item):
         return reverse(item)
