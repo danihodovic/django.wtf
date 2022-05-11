@@ -48,7 +48,7 @@ app.conf.beat_schedule = {
     },
     "social.index-hacker-news": {
         "task": "django_apps.core.hacker_news_tasks.index_hn_submissions",
-        "schedule": crontab(minute=0, hour=5),
+        "schedule": crontab(minute=0, hour="*/2"),
     },
     "index-pypi": {
         "task": "django_apps.core.pypi_tasks.index_pypi_projects",
