@@ -11,6 +11,7 @@ from django_apps.core.models import (
     Contributor,
     Profile,
     ProfileFollowers,
+    PypiProject,
     Repository,
     RepositoryStars,
     RepositoryType,
@@ -151,9 +152,10 @@ def categorize_repository(repository_id):
     repo = Repository.objects.get(id=repository_id)
     appconfig_files = find_appconfig_files(repo.full_name)
     contains_setup_files = has_setup_files(repo.full_name)
+    pypi_project = PypiProject.objects.filter(repository=repo)
     # Has setup files means it's published to pip. Has AppConfig means
     # a Django app is configured somewhere
-    if contains_setup_files and len(appconfig_files) > 0:
+    if pypi_project and contains_setup_files and len(appconfig_files) > 0:
         repo_type = RepositoryType.APP
     elif len(appconfig_files) > 0:
         repo_type = RepositoryType.PROJECT
