@@ -332,6 +332,7 @@ SHELL_PLUS_IMPORTS = [
     "from django_apps.core.reddit_tasks import create_client as create_reddit_client",
     "from django_apps.core.reddit_tasks import index_top_weekly_submissions",
     "from django_apps.core.hacker_news_tasks import index_hn_submissions",
+    "from django_apps.core.pypi_tasks import index_pypi_projects, index_pypi_project",
 ]
 # django-import-export
 # ------------------------------------------------------------------------------

@@ -50,6 +50,10 @@ app.conf.beat_schedule = {
         "task": "django_apps.core.hacker_news_tasks.index_hn_submissions",
         "schedule": crontab(minute=0, hour=5),
     },
+    "index-pypi": {
+        "task": "django_apps.core.pypi_tasks.index_pypi_projects",
+        "schedule": crontab(minute=0, hour=5, day_of_week=0),
+    },
 }
 
 # Load task modules from all registered Django app configs.
