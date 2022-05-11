@@ -109,7 +109,7 @@ def trending_repositories(**filters):
 
 @cached_as(Contributor, timeout=60 * 60 * 24)
 def most_followed():
-    repos = Repository.objects.filter(stars__gte=100, type__isnull=False)
+    repos = Repository.objects.filter(stars__gte=100, type=RepositoryType.APP)
     profile_ids = (
         Contributor.objects.filter(
             contributions__gt=20,
