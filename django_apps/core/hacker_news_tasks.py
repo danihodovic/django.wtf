@@ -13,7 +13,7 @@ from .utils import log_action
 def index_hn_submissions():
     # https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty
     client = superrequests.Session()
-    res = client.get("https://hacker-news.firebaseio.com/v0/topstories.json")
+    res = client.get("https://hacker-news.firebaseio.com/v0/newstories.json")
     for item_id in res.json():
         submission_url = f"https://hacker-news.firebaseio.com/v0/item/{item_id}.json"
         logging.info(f"Requesting: {submission_url}")
