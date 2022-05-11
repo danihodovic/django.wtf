@@ -95,7 +95,7 @@ local pushImagePipeline = {
 
 local promote = drone.dockerPipeline {
   name: 'trigger-production',
-  depends_on: ['python'],
+  depends_on: ['python', 'push-image'],
   trigger: {
     branch: [
       'master',
@@ -147,7 +147,7 @@ local deploy = drone.dockerPipeline {
 
 [
   pythonPipeline,
-  promote,
   pushImagePipeline,
+  promote,
   deploy,
 ]
