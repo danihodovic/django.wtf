@@ -97,6 +97,41 @@ class Repository(TimeStampedModel):
         return self.stars - previous_stars.stars
 
 
+class PypiProject(TimeStampedModel):
+    repository = models.OneToOneField(Repository, on_delete=models.CASCADE)
+    author = models.CharField(max_length=100)
+    author_email = models.EmailField()
+    homepage = models.URLField()
+    summary = models.CharField(max_length=300)
+    version = models.CharField(max_length=12)
+    requires_python = models.CharField(max_length=20, null=True, blank=True)
+    license = models.CharField(max_length=70)
+
+    def __str__(self):
+        return f"<PypiProject: {self.repository.full_name}>"
+
+
+class PypiRelease(models.Model):
+    project = models.ForeignKey(
+        PypiProject,
+        on_delete=models.CASCADE,
+    )
+    version = models.CharField(max_length=30)
+    uploaded_at = models.DateTimeField()
+
+    class Meta:
+        unique_together = [["project", "version"]]
+
+    def __str__(self):
+        version = self.version
+        return f"<PypiRelease: {self.project.repository.full_name} {version=}>"
+
+    def pypi_release_url(self):
+        return (
+            f"https://pypi.org/project/{self.project.repository.name}/{self.version}/"
+        )
+
+
 class Contributor(TimeStampedModel):
     profile = models.ForeignKey(
         Profile,

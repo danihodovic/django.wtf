@@ -7,6 +7,7 @@ from .models import (
     Category,
     Profile,
     ProfileFollowers,
+    PypiProject,
     Repository,
     RepositoryStars,
     SocialNews,
@@ -72,6 +73,15 @@ class SocialNewsAdmin(ImportExportModelAdmin):
     list_filter = ("type",)
     search_fields = ("title",)
     ordering = ("-upvotes",)
+
+    def get_readonly_fields(self, request, obj=None):
+        return [f.name for f in self.model._meta.fields]
+
+
+@admin.register(PypiProject)
+class PypiProjectAdmin(admin.ModelAdmin):
+    list_display = ("repository", "version")
+    list_filter = ()
 
     def get_readonly_fields(self, request, obj=None):
         return [f.name for f in self.model._meta.fields]
