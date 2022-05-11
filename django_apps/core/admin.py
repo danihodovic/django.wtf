@@ -62,7 +62,7 @@ class ProfileAdmin(ImportExportModelAdmin):
 
 @admin.register(ProfileFollowers)
 class ProfileFollowersAdmin(ImportExportModelAdmin):
-    list_display = ("profile", "followers")
+    list_display = ("profile", "created_at", "followers")
     list_filter = ()
     date_hierarchy = "created_at"
 
