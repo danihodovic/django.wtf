@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from cacheops import cached_as
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
+from django.urls.base import reverse
 from model_utils.models import TimeStampedModel
 
 
@@ -49,6 +50,9 @@ class Category(TimeStampedModel):
 
     def __str__(self):
         return f"<Category: {self.name}>"
+
+    def get_absolute_url(self):
+        return reverse("core:category-detail", args=[self.name])
 
 
 class Repository(TimeStampedModel):
