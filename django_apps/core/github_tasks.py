@@ -61,11 +61,12 @@ def index_repositories(url):
             )
             log_action(repository, created)
 
-            RepositoryStars.objects.update_or_create(
+            repository_stars, created = RepositoryStars.objects.update_or_create(
                 repository=repository,
                 created_at=date.today(),
                 defaults=dict(stars=repository_data["stargazers_count"]),
             )
+            log_action(repository_stars, created)
         except DataError:
             logging.exception(f"DataError for {repository=}")
 
