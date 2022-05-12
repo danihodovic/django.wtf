@@ -44,7 +44,8 @@ module.exports = {
     theme: {
         extend: {
           fontFamily: {
-            'akshar': [    '"Akshar"', 'sans-serif']
+            'open-sans': [    '"Open Sans"', 'sans-serif'],
+            'akshar': [    '"Akshar"', 'sans-serif'],
           }
         }
     },

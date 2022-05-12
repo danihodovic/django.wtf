@@ -133,10 +133,10 @@ class Repository(TimeStampedModel):
 
     @property
     def truncated_description(self):
-        length = 110
+        length = 90
         # Chinese letters are much longer than latin
         if hanzidentifier.has_chinese(self.description):
-            length = 70
+            length = 60
         return Truncator(self.description or "").chars(length)
 
 
