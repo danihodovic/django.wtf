@@ -143,7 +143,7 @@ def index_user_followers(user_login):
 @app.task(soft_time_limit=60 * 60)
 def categorize_repositories():
     for repo in Repository.objects.all():
-        categorize_repository.delay(repo.id)
+        categorize_repository.delay(repo.full_name)
 
 
 # TODO: Use a generator
@@ -159,14 +159,12 @@ def paginate(http_client, url):  # pylint: disable=redefined-outer-name
 
 
 @app.task()
-def categorize_repository(repository_id):
-    repo = Repository.objects.get(id=repository_id)
+def categorize_repository(repo_full_name):
+    repo = Repository.objects.get(full_name=repo_full_name)
     appconfig_files = find_appconfig_files(repo.full_name)
-    contains_setup_files = has_setup_files(repo.full_name)
     pypi_project = PypiProject.objects.filter(repository=repo)
-    # Has setup files means it's published to pip. Has AppConfig means
-    # a Django app is configured somewhere
-    if pypi_project and contains_setup_files and len(appconfig_files) > 0:
+    # Has AppConfig means a Django app is configured somewhere
+    if pypi_project and len(appconfig_files) > 0:
         repo_type = RepositoryType.APP
     elif len(appconfig_files) > 0:
         repo_type = RepositoryType.PROJECT
@@ -185,20 +183,3 @@ def find_appconfig_files(repo_full_name):
     res = http.get("https://api.github.com/search/code", params=params)
     data = res.json()
     return [item for item in data["items"] if not item["path"].startswith("test")]
-
-
-def has_setup_files(repo_full_name):
-    params = urlencode(dict(q=f"repo:{repo_full_name} setup.py in:path"))
-    http = http_client()
-    res = http.get("https://api.github.com/search/code", params=params)
-    data = res.json()
-    has_setup_py = False
-    has_setup_cfg = False
-    for entry in data["items"]:
-        if entry["path"] == "setup.py":
-            has_setup_py = True
-        if entry["path"] == "setup.cfg":
-            has_setup_cfg = True
-        if has_setup_py and has_setup_cfg:
-            return True
-    return False
