@@ -30,7 +30,7 @@ class RepositoryAdmin(ImportExportModelAdmin):
         "type",
     )
     list_filter = ("type",)
-    search_fields = ("name", "topics", "categories__name")
+    search_fields = ("name", "topics", "description", "categories__name")
 
     def get_readonly_fields(self, request, obj=None):
         return [f.name for f in self.model._meta.fields if f != "categories"]

@@ -4,7 +4,9 @@
 		<div class="flex w-full rounded gap-3 justify-evenly">
 
 			<div class="p-6 bg-white border grow-0 basis-1/3">
-				<div class="text-xl font-bold border-b-4 border-indigo-500 ">🔥Trending packages</div>
+				<a href="{% url "core:trending-repositories" %}">
+					<div class="text-xl font-bold border-b-4 border-indigo-500 ">🔥Trending packages</div>
+				</a>
 				<ul>
 					{% for repo in trending_apps %}
 					<li class="flex content-center justify-between pt-1 border-b">
@@ -31,7 +33,7 @@
 			</div>
 
 			<div class="p-6 bg-white border grow-0 basis-1/3">
-				<a href="{% url "core:profiles-top" %}"><div class="text-xl font-bold border-b-4 border-teal-500">🤸Trending developers</div></a>
+				<a href="{% url "core:top-profiles" %}"><div class="text-xl font-bold border-b-4 border-teal-500">🤸Trending developers</div></a>
 				<ul>
 					{% for profile in trending_developers %}
 					<li class="flex content-center justify-between pt-1 border-b">
