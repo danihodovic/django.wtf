@@ -39,6 +39,7 @@ django-import-export = "^2.8.0"
 django-admin-interface = "^0.19.0"
 superrequests = "^0.1.0"
 praw = "^7.5.0"
+hanzidentifier = "^1.0.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.1"

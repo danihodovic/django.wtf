@@ -595,7 +595,7 @@ Pillow = ">=5.0"
 
 [[package]]
 name = "django-constance"
-version = "2.8.0"
+version = "2.9.0"
 description = "Django live settings with pluggable backends, including Redis."
 category = "main"
 optional = false
@@ -985,6 +985,17 @@ eventlet = ["eventlet (>=0.24.1)"]
 gevent = ["gevent (>=1.4.0)"]
 setproctitle = ["setproctitle"]
 tornado = ["tornado (>=0.2)"]
+
+[[package]]
+name = "hanzidentifier"
+version = "1.0.2"
+description = "Python module that identifies Chinese text as Simplified or Traditional."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+zhon = ">=1.1.3"
 
 [[package]]
 name = "idna"
@@ -2120,10 +2131,18 @@ category = "main"
 optional = false
 python-versions = "*"
 
+[[package]]
+name = "zhon"
+version = "1.1.5"
+description = "Zhon provides constants used in Chinese text processing."
+category = "main"
+optional = false
+python-versions = "*"
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "3d424c61971e38616d9c64913b5cce907affc713df80933253b99477addfc7da"
+content-hash = "9adf58fc7fddf63eaf92dcd68889f591419c20fe91e0512dcf73b9b3c0659ab9"
 
 [metadata.files]
 amqp = [
@@ -2470,8 +2489,8 @@ django-colorfield = [
     {file = "django_colorfield-0.6.3-py3-none-any.whl", hash = "sha256:97625246fb5c4f4a17c9d83b2406a3c98dd9545c40c47741a7b62f7284609910"},
 ]
 django-constance = [
-    {file = "django-constance-2.8.0.tar.gz", hash = "sha256:0a492454acc78799ce7b9f7a28a00c53427d513f34f8bf6fdc90a46d8864b2af"},
-    {file = "django_constance-2.8.0-py3-none-any.whl", hash = "sha256:60fec73e397d5f4f7440f611b18d3e7ce5342647f316fedc47b62e1411c849e7"},
+    {file = "django-constance-2.9.0.tar.gz", hash = "sha256:758e190755f05b12e9729933239b87053aa1f790071a402cc02034cb23c8624e"},
+    {file = "django_constance-2.9.0-py3-none-any.whl", hash = "sha256:c78eed0f75eb003836db84345fa7df0c529b47b2c4e04ac84fdf8558b3338a28"},
 ]
 django-coverage-plugin = [
     {file = "django_coverage_plugin-2.0.2-py3-none-any.whl", hash = "sha256:4206c85ffba0301f83aecc38e5b01b1b9a4b45a545d9456a827e3fabea18d952"},
@@ -2585,6 +2604,9 @@ funcy = [
 gunicorn = [
     {file = "gunicorn-20.1.0-py3-none-any.whl", hash = "sha256:9dcc4547dbb1cb284accfb15ab5667a0e5d1881cc443e0677b4882a4067a807e"},
     {file = "gunicorn-20.1.0.tar.gz", hash = "sha256:e0a968b5ba15f8a328fdfd7ab1fcb5af4470c28aaf7e55df02a99bc13138e6e8"},
+]
+hanzidentifier = [
+    {file = "hanzidentifier-1.0.2.tar.gz", hash = "sha256:793a298430aa9a9d6ab344dc0ca0ab4bd1161d88c7da941d6554571093003cba"},
 ]
 idna = [
     {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
@@ -3214,4 +3236,7 @@ xlrd = [
 xlwt = [
     {file = "xlwt-1.3.0-py2.py3-none-any.whl", hash = "sha256:a082260524678ba48a297d922cc385f58278b8aa68741596a87de01a9c628b2e"},
     {file = "xlwt-1.3.0.tar.gz", hash = "sha256:c59912717a9b28f1a3c2a98fd60741014b06b043936dcecbc113eaaada156c88"},
+]
+zhon = [
+    {file = "zhon-1.1.5.tar.gz", hash = "sha256:793723575c46f10ace8846c579ce740b04c73e2aa583e04e000aedbd4a47f87f"},
 ]
