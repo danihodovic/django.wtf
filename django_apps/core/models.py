@@ -1,9 +1,11 @@
 from datetime import datetime, timedelta
 
+import hanzidentifier
 from cacheops import cached_as
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.urls.base import reverse
+from django.utils.text import Truncator
 from model_utils.models import TimeStampedModel
 
 
@@ -95,6 +97,14 @@ class Repository(TimeStampedModel):
             created_at=previous_date, repository=self
         )
         return self.stars - previous_stars.stars
+
+    @property
+    def truncated_description(self):
+        length = 110
+        # Chinese letters are much longer than latin
+        if hanzidentifier.has_chinese(self.description):
+            length = 70
+        return Truncator(self.description or "").chars(length)
 
 
 class PypiProject(TimeStampedModel):

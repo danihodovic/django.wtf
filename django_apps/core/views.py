@@ -69,10 +69,10 @@ class CategoryView(MetadataMixin, DetailView):
 
     def matching_repositories(self):
         repos_by_category = Repository.objects.filter(
-            categories__name=self.category_name
+            categories__name=self.category_name, type=RepositoryType.APP
         )
         repos_by_topics = Repository.objects.filter(
-            topics__contains=[self.category_name]
+            topics__contains=[self.category_name], type=RepositoryType.APP
         )
         repos = repos_by_category.union(repos_by_topics)
         repos = repos.order_by("-stars")

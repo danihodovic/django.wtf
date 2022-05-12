@@ -15,6 +15,7 @@
   <table class="table w-full text-lg border leading-6">
     <thead>
       <tr>
+        <th>Rank</th>
         <th>Name</th>
         <th>Description</th>
         <th>Stars</th>
@@ -24,21 +25,28 @@
       {% for repo in page_obj %}
 
       <tr class="hover">
+        {% with url=repo.github_url %}
         <td>
-          <a href="{{ repo.url }}">
+          <a class="font-bold" href="{{ url }}" target="_blank">
+          {{ page_obj.start_index|add:forloop.counter0 }}
+          </a>
+        </td>
+        <td>
+          <a href="{{ url }}" target="_blank">
             {{ repo.full_name }}
           </a>
         </td>
         <td>
-          <a href="{{ repo.url }}">
-            {{ repo.description | truncatechars:100 }}
+          <a href="{{ url }}" target="_blank">
+            {{ repo.truncated_description }}
           </a>
         </td>
         <td>
-          <a href="{{ repo.url }}">
+          <a href="{{ url }}" target="_blank">
             {{ repo.stars }}
           </a>
         </td>
+        {% endwith %}
       </tr>
       {% endfor %}
     </tbody>
