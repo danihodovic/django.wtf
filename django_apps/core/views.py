@@ -26,15 +26,13 @@ class IndexView(MetadataMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
-        context["trending_apps"] = trending_repositories(type=RepositoryType.APP)[0:10]
+        context["trending_apps"] = trending_repositories()[0:10]
         context["trending_developers"] = trending_profiles()[0:10]
         one_week_ago = datetime.today().date() - timedelta(days=7)
         context["social_news"] = SocialNews.objects.filter(
             created_at__gt=one_week_ago
         ).order_by("-upvotes")[0:10]
-        context["top_apps"] = Repository.objects.filter(
-            type=RepositoryType.APP
-        ).order_by("-stars")[0:10]
+        context["top_apps"] = Repository.valid.order_by("-stars")[0:10]
         return context
 
 
@@ -63,12 +61,8 @@ class CategoryView(MetadataMixin, DetailView):
         return f"Common apps used for {self.category_name} are: {repo_names}"
 
     def matching_repositories(self):
-        repos_by_category = Repository.objects.filter(
-            categories__name=self.category_name, type=RepositoryType.APP
-        )
-        repos_by_topics = Repository.objects.filter(
-            topics__contains=[self.category_name], type=RepositoryType.APP
-        )
+        repos_by_category = Repository.valid.filter(categories__name=self.category_name)
+        repos_by_topics = Repository.valid.filter(topics__contains=[self.category_name])
         repos = repos_by_category.union(repos_by_topics)
         repos = repos.order_by("-stars")
         return repos
@@ -85,7 +79,7 @@ class TrendingRepositoriesView(MetadataMixin, ListView):
     template_name = "core/trending_repositories.html"
 
     def get_queryset(self):
-        return trending_repositories(type=RepositoryType.APP)
+        return trending_repositories()
 
 
 class TopRepositoriesView(MetadataMixin, ListView):
@@ -95,7 +89,7 @@ class TopRepositoriesView(MetadataMixin, ListView):
     template_name = "core/top_repositories.html"
 
     def get_queryset(self):
-        return Repository.objects.filter(type=RepositoryType.APP).order_by("-stars")
+        return Repository.valid.order_by("-stars")
 
 
 class TopProfilesView(MetadataMixin, ListView):
@@ -121,7 +115,7 @@ class TrendingProfilesView(MetadataMixin, ListView):
 @cached_as(RepositoryStars, timeout=60 * 60 * 24)
 def trending_repositories(**filters):
     trending = []
-    for repo in Repository.objects.filter(stars__gte=20, **filters):
+    for repo in Repository.valid.filter(stars__gte=20, **filters):
         stars_in_the_last_week = repo.stars_since(timedelta(days=15))
         setattr(repo, "stars_lately", stars_in_the_last_week)
         trending.append(repo)
@@ -131,7 +125,7 @@ def trending_repositories(**filters):
 
 @cached_as(Contributor, timeout=60 * 60 * 24)
 def most_followed_profiles():
-    repos = Repository.objects.filter(stars__gte=100, type=RepositoryType.APP)
+    repos = Repository.valid.filter(stars__gte=100)
     profile_ids = (
         Contributor.objects.filter(
             contributions__gt=20,

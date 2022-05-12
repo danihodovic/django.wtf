@@ -1,3 +1,4 @@
+# pylint: disable=too-few-public-methods
 import logging
 from datetime import datetime, timedelta
 
@@ -6,6 +7,7 @@ from cacheops import cached_as
 from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.db.models import Q
 from django.urls.base import reverse
 from django.utils.text import Truncator
 from model_utils.models import TimeStampedModel
@@ -73,7 +75,19 @@ class Category(TimeStampedModel):
         return reverse("core:category-detail", args=[self.name])
 
 
+class RepositoryManager(models.Manager):
+    def get_queryset(self):
+        # If it has a category it's been manually categorized
+        return (
+            super()
+            .get_queryset()
+            .filter(Q(categories__isnull=False) | Q(type=RepositoryType.APP))
+        )
+
+
 class Repository(TimeStampedModel):
+    objects = models.Manager()  # type: ignore
+    valid = RepositoryManager()
     github_id = models.PositiveIntegerField()
     owner = models.ForeignKey(
         Profile,
