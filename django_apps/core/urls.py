@@ -3,9 +3,10 @@ from django.urls import path
 
 from django_apps.core.views import (
     CategoryView,
-    ContributorsView,
     IndexView,
+    TopProfilesView,
     TopRepositoriesView,
+    TrendingProfilesView,
     TrendingRepositoriesView,
 )
 
@@ -24,7 +25,12 @@ urlpatterns = [
         view=TopRepositoriesView.as_view(),
         name="top-repositories",
     ),
-    path("profiles/top/", view=ContributorsView.as_view(), name="top-profiles"),
+    path("profiles/top/", view=TopProfilesView.as_view(), name="top-profiles"),
+    path(
+        "profiles/trending/",
+        view=TrendingProfilesView.as_view(),
+        name="trending-profiles",
+    ),
     path("category/<slug:name>/", view=CategoryView.as_view(), name="category-detail"),
     path(
         "sitemap.xml",

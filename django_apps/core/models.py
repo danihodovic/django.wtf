@@ -1,8 +1,10 @@
+import logging
 from datetime import datetime, timedelta
 
 import hanzidentifier
 from cacheops import cached_as
 from django.contrib.postgres.fields import ArrayField
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.urls.base import reverse
 from django.utils.text import Truncator
@@ -44,6 +46,20 @@ class Profile(TimeStampedModel):
             )
 
         return _fn(self)
+
+    def followers_since(self, td: timedelta, date=None):
+        if date is None:
+            date = datetime.today().date()
+        previous_date = date - td
+        try:
+            previous_followers = ProfileFollowers.objects.get(
+                created_at=previous_date, profile=self
+            )
+        except ObjectDoesNotExist:
+            logging.info(f"ProfileFollowers at {previous_date=} does not exist")
+            return 0
+        assert self.followers
+        return self.followers - previous_followers.followers
 
 
 class Category(TimeStampedModel):
@@ -93,9 +109,12 @@ class Repository(TimeStampedModel):
         if date is None:
             date = datetime.today().date()
         previous_date = date - td
-        previous_stars = RepositoryStars.objects.get(
-            created_at=previous_date, repository=self
-        )
+        try:
+            previous_stars = RepositoryStars.objects.get(
+                created_at=previous_date, repository=self
+            )
+        except ObjectDoesNotExist:
+            return 0
         return self.stars - previous_stars.stars
 
     @property
