@@ -16,10 +16,8 @@
 	<link href="https://fonts.googleapis.com/css2?family=Akshar:wght@300;400&display=swap" rel="stylesheet">
 </head>
 <body class="flex flex-col content-center justify-start min-h-screen bg-slate-100 font-akshar">
-	<div class="flex justify-between p-4 px-12 bg-white md:py-6">
-		<a href="/" class="text-3xl text-black">🎔 django.wtf</a>
-		<span class="text-xl">the unofficial django package index</span>
-	</div>
+	{% include "core/components/_navbar.html" %}
+
 	<div class="flex flex-col content-center self-center pt-5 md:w-10/12">
     {% block content %}
     {% endblock %}
