@@ -50,6 +50,23 @@
 
 		<div class="flex w-full pt-4 rounded gap-3 justify-evenly">
 			<div class="p-6 bg-white border grow-0 basis-6/12">
+				<a href="{% url "core:top-repositories" %}">
+					<div class="text-xl font-bold border-b-4 border-teal-500">📊 Top packages</div>
+				</a>
+				<ul>
+					{% for repo in top_apps %}
+					<li class="flex content-center justify-between pt-1 border-b">
+						<a class="leading-8" href="{{ repo.github_url }}" target="_blank">{{ repo.full_name }}</a>
+						<div>
+							<span class="pl-6 text-lg">⚝ </span>
+							<span>{{ repo.stars }}</span>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+
+			<div class="p-6 bg-white border grow-0 basis-6/12">
 				<div class="text-xl font-bold border-b-4 border-teal-500">🐦 Social media news</div>
 				<ul>
 					{% for post in social_news %}
