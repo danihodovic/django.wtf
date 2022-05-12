@@ -24,20 +24,17 @@ class IndexView(MetadataMixin, TemplateView):
     description = "django.wtf is a collection of Django packages, projects and tools."
 
     def get_context_data(self, **kwargs):
-        apps = Repository.objects.filter(type=RepositoryType.APP).order_by("-stars")
-        projects = Repository.objects.filter(type=RepositoryType.PROJECT).order_by(
-            "-stars"
-        )
         context = super().get_context_data(**kwargs)
-        context["trending_apps"] = trending_repositories(type=RepositoryType.APP)[0:10]
         context["categories"] = Category.objects.all()
+        context["trending_apps"] = trending_repositories(type=RepositoryType.APP)[0:10]
         context["trending_developers"] = trending_profiles()[0:10]
         one_week_ago = datetime.today().date() - timedelta(days=7)
         context["social_news"] = SocialNews.objects.filter(
             created_at__gt=one_week_ago
         ).order_by("-upvotes")[0:10]
-        context["apps"] = apps
-        context["projects"] = projects
+        context["top_apps"] = Repository.objects.filter(
+            type=RepositoryType.APP
+        ).order_by("-stars")[0:10]
         return context
 
 
