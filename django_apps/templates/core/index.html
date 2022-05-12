@@ -26,7 +26,7 @@
 					{% for category in categories %}
 					<a href="{% url "core:category-detail" name=category.name %}" class="px-4 py-2 text-lg border rounded hover:bg-slate-100">
 							<span class="text-xl">{{ category.emoji }}</span>
-							<span class="uppercase text-sm">{{ category.name }}</span>
+							<span class="text-sm uppercase">{{ category.name }}</span>
 						</a>
 					{% endfor %}
 				</div>
@@ -72,7 +72,7 @@
 					{% for post in social_news %}
 					<a class="hover:text-cyan-800 leading-8" href="{{ post.url }}" target="_blank">
 						<li class="flex content-center justify-between pt-1 border-b">
-							<span>{{ post.title|truncatechars:100 }}</span>
+							<span>{{ post.title|truncatechars:75 }}</span>
 							<img class="object-contain w-6" src="https://external-preview.redd.it/iDdntscPf-nfWKqzHRGFmhVxZm4hZgaKe5oyFws-yzA.png?auto=webp&s=38648ef0dc2c3fce76d5e1d8639234d8da0152b2" />
 						</li>
 					</a>
