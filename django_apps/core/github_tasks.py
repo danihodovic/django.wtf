@@ -161,6 +161,7 @@ def paginate(http_client, url):  # pylint: disable=redefined-outer-name
 @app.task()
 def categorize_repository(repo_full_name):
     repo = Repository.objects.get(full_name=repo_full_name)
+    logging.info(f"Categorizing {repo=}")
     appconfig_files = find_appconfig_files(repo.full_name)
     pypi_project = PypiProject.objects.filter(repository=repo)
     # Has AppConfig means a Django app is configured somewhere
