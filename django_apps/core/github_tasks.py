@@ -114,12 +114,22 @@ def index_followers():
 
 @app.task()
 def index_user_followers(user_login):
+    profile = Profile.objects.get(login=user_login)
+
+    for contribution in profile.top_contributions():
+        min_stars = 30
+        if min_stars > contribution.repository.stars:
+            logging.info(
+                f"Avoiding to retrieve ProfileFollowers for {profile=}. "
+                "No repo they contribute to has more than {min_stars} stars"
+            )
+            return
+
     data = paginate(
         http_client(),
         f"https://api.github.com/users/{user_login}/followers?per_page=100",
     )
     followers = len(data)
-    profile = Profile.objects.get(login=user_login)
     profile.followers = followers
     profile.save()
     profile_followers, created = ProfileFollowers.objects.update_or_create(
