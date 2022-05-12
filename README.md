@@ -52,3 +52,25 @@ Enter the Django shell
 ```
 ./manage.py shell_plus
 ```
+
+## Dumping production data for local development
+
+Dump the data from the database into the worker pod.
+```
+kubectl exec -it django-wtf-worker-0 -- ./manage.py dumpdata core -o data.json.gz
+```
+
+Copy the data from the worker pod.
+```
+kubectl cp django-wtf-worker-0:/app/data.json.gz data.json.gz
+```
+
+Delete the Profile models which will cascade into a full delete.
+```
+Profile.objects.all().delete()
+```
+
+Load the data into the local database.
+```
+./manage.py loaddata data.json.gz
+```
