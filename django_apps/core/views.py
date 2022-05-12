@@ -25,7 +25,7 @@ class IndexView(MetadataMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["categories"] = Category.objects.all()
+        context["categories"] = self.categories_ordered_by_total_repositories()
         context["trending_apps"] = trending_repositories()[0:10]
         context["trending_developers"] = trending_profiles()[0:10]
         one_week_ago = datetime.today().date() - timedelta(days=7)
@@ -34,6 +34,18 @@ class IndexView(MetadataMixin, TemplateView):
         ).order_by("-upvotes")[0:10]
         context["top_apps"] = Repository.valid.order_by("-stars")[0:10]
         return context
+
+    # pylint: disable=no-self-use
+    def categories_ordered_by_total_repositories(self):
+        categories = []
+        for c in Category.objects.all():
+            count_matching_repositories = Repository.objects.filter(
+                categories__in=[c]
+            ).count()
+            if count_matching_repositories:
+                setattr(c, "total_repositories", count_matching_repositories)
+                categories.append(c)
+        return sorted(categories, key=lambda c: c.total_repositories, reverse=True)
 
 
 class CategoryView(MetadataMixin, DetailView):
@@ -61,9 +73,7 @@ class CategoryView(MetadataMixin, DetailView):
         return f"Common apps used for {self.category_name} are: {repo_names}"
 
     def matching_repositories(self):
-        repos_by_category = Repository.valid.filter(categories__name=self.category_name)
-        repos_by_topics = Repository.valid.filter(topics__contains=[self.category_name])
-        repos = repos_by_category.union(repos_by_topics)
+        repos = Repository.valid.filter(categories__name=self.category_name).distinct()
         repos = repos.order_by("-stars")
         return repos
 
