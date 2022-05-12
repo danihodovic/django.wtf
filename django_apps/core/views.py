@@ -1,8 +1,6 @@
-import logging
 from datetime import datetime, timedelta
 
 from cacheops import cached_as
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
@@ -33,7 +31,7 @@ class IndexView(MetadataMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["trending_apps"] = trending_repositories(type=RepositoryType.APP)[0:10]
         context["categories"] = Category.objects.all()
-        context["trending_developers"] = most_followed()[0:10]
+        context["trending_developers"] = trending_profiles()[0:10]
         one_week_ago = datetime.today().date() - timedelta(days=7)
         context["social_news"] = SocialNews.objects.filter(
             created_at__gt=one_week_ago
@@ -103,24 +101,31 @@ class TopRepositoriesView(MetadataMixin, ListView):
         return Repository.objects.filter(type=RepositoryType.APP).order_by("-stars")
 
 
-class ContributorsView(MetadataMixin, ListView):
+class TopProfilesView(MetadataMixin, ListView):
+    template_name = "core/top_profiles.html"
     paginate_by = 25
-    title = "django.wtf: Top contributors to Django projects"
+    title = "Top contributors to Django projects"
     description = "Listing the top contributors to Django projects"
 
     def get_queryset(self):
-        return most_followed()
+        return most_followed_profiles()
+
+
+class TrendingProfilesView(MetadataMixin, ListView):
+    template_name = "core/trending_profiles.html"
+    paginate_by = 25
+    title = "Trending Django developers"
+    description = "Listing the trending Django developers in the past two weeks"
+
+    def get_queryset(self):
+        return trending_profiles()
 
 
 @cached_as(RepositoryStars, timeout=60 * 60 * 24)
 def trending_repositories(**filters):
     trending = []
     for repo in Repository.objects.filter(stars__gte=20, **filters):
-        try:
-            stars_in_the_last_week = repo.stars_since(timedelta(days=15))
-        except ObjectDoesNotExist:
-            logging.debug(f"No previous stars found for {repo=}")
-            continue
+        stars_in_the_last_week = repo.stars_since(timedelta(days=15))
         setattr(repo, "stars_lately", stars_in_the_last_week)
         trending.append(repo)
 
@@ -128,7 +133,7 @@ def trending_repositories(**filters):
 
 
 @cached_as(Contributor, timeout=60 * 60 * 24)
-def most_followed():
+def most_followed_profiles():
     repos = Repository.objects.filter(stars__gte=100, type=RepositoryType.APP)
     profile_ids = (
         Contributor.objects.filter(
@@ -141,3 +146,19 @@ def most_followed():
         .distinct("profile__id")
     )
     return Profile.objects.filter(id__in=profile_ids).order_by("-followers")
+
+
+@cached_as(Contributor, timeout=60 * 60 * 24)
+def trending_profiles():
+    # Contributed to a Django project
+    # Sorted by most stars in the past two weeks
+    trending = set()
+    for profile in Profile.objects.filter(followers__gte=10):
+        contributions = profile.top_contributions()
+        for contribution in contributions:
+            repo = contribution.repository
+            if repo.type == RepositoryType.APP and repo.stars > 20:
+                followers_lately = profile.followers_since(timedelta(days=13))
+                setattr(profile, "followers_lately", followers_lately)
+                trending.add(profile)
+    return sorted(list(trending), key=lambda e: e.followers_lately, reverse=True)

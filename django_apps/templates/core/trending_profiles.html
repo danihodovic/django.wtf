@@ -5,21 +5,22 @@
   <div class="flex flex-wrap self-start justify-center pt-3 mb-4 text-lg gap-2">
     <span class="px-4 py-3 bg-white border rounded">
       <span class="text-xl">💰</span>
-      <span class="ml-2 uppercase">Top contributors</span>
+      <span class="ml-2 uppercase">Trending profiles</span>
     </span>
 
     <span class="px-4 py-3 ml-2 bg-white border rounded">
       <span class="text-xl">📊</span>
-      <span>{{ page_obj.paginator.count }} prolific contributors to Django projects</span>
+      <span class="uppercase">Engineers that have gained the most followers in the past two weeks</span>
     </span>
   </div>
+
   <table class="table w-full text-lg border leading-6">
     <thead>
       <tr>
         <th>Rank</th>
         <th>Name</th>
         <th>Contributed to (number of contributions)</th>
-        <th>Github followers</th>
+        <th>Number of new followers</th>
       </tr>
     </thead>
     <tbody>
@@ -50,7 +51,7 @@
         </td>
         <td>
           <a href="{{ url }}" target="_blank">
-            {{ profile.followers }}
+            {{ profile.followers_lately }}
           </a>
         </td>
         {% endwith %}
