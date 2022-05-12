@@ -51,7 +51,7 @@
 		<div class="flex w-full pt-4 rounded gap-3 justify-evenly">
 			<div class="p-6 bg-white border grow-0 basis-6/12">
 				<a href="{% url "core:top-repositories" %}">
-					<div class="text-xl font-bold border-b-4 border-teal-500">📊 Top packages</div>
+					<div class="text-xl font-bold border-b-4 border-green-600">📊 Top packages</div>
 				</a>
 				<ul>
 					{% for repo in top_apps %}
@@ -67,7 +67,7 @@
 			</div>
 
 			<div class="p-6 bg-white border grow-0 basis-6/12">
-				<div class="text-xl font-bold border-b-4 border-teal-500">🐦 Social media news</div>
+				<div class="text-xl font-bold border-b-4 border-red-500">🐦 Social media news</div>
 				<ul>
 					{% for post in social_news %}
 					<a class="hover:text-cyan-800 leading-8" href="{{ post.url }}" target="_blank">
