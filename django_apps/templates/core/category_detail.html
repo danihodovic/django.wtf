@@ -1,18 +1,17 @@
 {% extends "core/base.html" %}
 
 {% block content %}
-<div class="flex flex-col items-center w-full overflow-x-auto">
-  <div class="flex flex-wrap self-start justify-center pt-3 mb-4 text-lg gap-2">
-    <a href="{% url "core:category-detail" name=category.name %}" class="px-4 py-3 bg-white border rounded hover:bg-slate-100">
-      <span class="text-xl">{{ category.emoji }}</span>
-      <span class="uppercase">{{ category.name }}</span>
+<div class="flex flex-col w-full">
+  <div class="flex gap-2 mt-5 mb-5 lg:text-lg">
+    <a href="{% url "core:category-detail" name=category.name %}" class="p-4 bg-white border rounded hover:bg-slate-100">
+      <span>{{ category.emoji }}</span>
+      <span>{{ category.name|upper }}</span>
     </a>
-    <span class="px-4 py-3 ml-2 bg-white border rounded">
-      <span class="text-xl">📊</span>
+    <span class="p-4 bg-white border rounded">
       <span>{{ page_obj.paginator.count }} matching repositor{{ page_obj.paginator.count | pluralize:"ies" }}</span>
     </span>
   </div>
-  <table class="table w-full border leading-6">
+  <table class="table border leading-6">
     <thead>
       <tr>
         <th>Rank</th>
@@ -28,7 +27,7 @@
         {% with url=repo.github_url %}
         <td>
           <a class="font-bold" href="{{ url }}" target="_blank">
-          {{ page_obj.start_index|add:forloop.counter0 }}
+            {{ page_obj.start_index|add:forloop.counter0 }}
           </a>
         </td>
         <td>
@@ -51,6 +50,6 @@
       {% endfor %}
     </tbody>
   </table>
-    {% include "core/components/pagination.html" %}
+  {% include "core/components/pagination.html" %}
 </div>
 {% endblock %}

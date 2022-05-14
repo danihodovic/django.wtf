@@ -2,10 +2,13 @@
 
 <!doctype html>
 <html lang="en-US">
+
 <head>
   <meta charset="UTF-8">
   {% include "meta/meta.html" %}
   {% tailwind_css %}
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <link href="https://cdn.jsdelivr.net/npm/daisyui@2.14.2/dist/full.css" rel="stylesheet" type="text/css">
 
@@ -17,10 +20,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Akshar:wght@300;400&display=swap" rel="stylesheet">
 </head>
-<body class="flex flex-col content-center justify-start min-h-screen bg-slate-100 font-open-sans">
+
+<body class="flex flex-col w-full content-center justify-start min-h-screen bg-slate-100 font-open-sans">
   {% include "core/components/_navbar.html" %}
 
-  <div class="flex flex-col content-center self-center pt-5 w-11/12 lg:w-10/12">
+  <div class="flex flex-col content-center self-center mt-3 lg:w-10/12">
     {% block content %}
     {% endblock %}
   </div>
@@ -32,6 +36,7 @@
   <script defer src="https://s.depode.com/ingress/7ca0f5ff-8ef2-45fb-9718-37d34cddfe79/script.js"></script>
   {% endif %}
 </body>
+
 </html>
 
 <script src="https://cdn.tailwindcss.com"></script>
