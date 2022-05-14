@@ -81,6 +81,7 @@ THIRD_PARTY_APPS = [
     "django_extensions",
     "django_celery_beat",
     "django_toolshed",
+    "django_user_agents",
     "import_export",
     "meta",
     "tailwind",
@@ -148,6 +149,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "django_user_agents.middleware.UserAgentMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
