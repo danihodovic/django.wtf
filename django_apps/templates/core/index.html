@@ -1,84 +1,84 @@
 {% extends "core/base.html" %}
 {% block content %}
-	<div class="flex flex-col content-center self-center pt-5 md:w-11/12">
-		<div class="flex w-full rounded gap-3 justify-evenly">
+  <div class="lg:flex flex-col content-center self-center mt-5 mb-5 lg:w-11/12">
+    <div class="lg:flex gap-3">
 
-			<div class="p-6 bg-white border grow-0 basis-1/3">
-				<a href="{% url "core:trending-repositories" %}">
-					<div class="text-xl font-bold pb-2 border-b-4 border-indigo-500 ">🔥Trending packages</div>
-				</a>
-				<ul>
-					{% for repo in trending_apps %}
-					<li class="flex content-center justify-between pt-1 border-b">
-						<a class="leading-8" href="{{ repo.github_url }}" target="_blank">{{ repo.full_name }}</a>
-						<div>
-							<span class="pl-6 text-lg">⚝ </span>
-							<span>{{ repo.stars_lately }}</span>
-						</div>
-					</li>
-					{% endfor %}
-				</ul>
-			</div>
+      <div class="p-6 bg-white border lg:basis-1/3">
+        <a href="{% url "core:trending-repositories" %}">
+          <div class="text-xl font-bold pb-2 border-b-4 border-indigo-500 ">🔥Trending packages</div>
+        </a>
+        <ul>
+          {% for repo in trending_apps %}
+          <li class="flex content-center justify-between pt-1 border-b">
+            <a class="leading-8" href="{{ repo.github_url }}" target="_blank">{{ repo.full_name }}</a>
+            <div>
+              <span class="pl-6 text-lg">⚝ </span>
+              <span>{{ repo.stars_lately }}</span>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
 
-			<div class="p-6 bg-white border grow-0 basis-1/3">
-				<div class="text-xl font-bold pb-2 border-b-4 border-red-500">🔨Categories</div>
-				<div class="flex flex-wrap justify-center pt-3 gap-2">
-					{% for category in categories %}
-					<a href="{% url "core:category-detail" name=category.name %}" class="px-4 py-2 text-lg border rounded hover:bg-slate-100">
-							<span class="text-xl">{{ category.emoji }}</span>
-							<span class="text-sm uppercase">{{ category.name }} <span class="text-sm">({{ category.total_repositories }})</span></span>
-						</a>
-					{% endfor %}
-				</div>
-			</div>
+      <div class="p-6 mt-5 lg:mt-0 bg-white border lg:basis-1/3">
+        <div class="text-xl font-bold pb-2 border-b-4 border-red-500">🔨Categories</div>
+        <div class="flex flex-wrap justify-center pt-3 gap-2">
+          {% for category in categories %}
+            <a href="{% url "core:category-detail" name=category.name %}" class="px-4 py-2 text-lg border rounded hover:bg-slate-100">
+              <span class="text-xl">{{ category.emoji }}</span>
+              <span class="text-sm uppercase">{{ category.name }} <span class="text-sm">({{ category.total_repositories }})</span></span>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
 
-			<div class="p-6 bg-white border  grow-0 basis-1/3">
-				<a href="{% url "core:trending-profiles" %}"><div class="text-xl font-bold pb-2 border-b-4 border-teal-500">🤸Trending engineers</div></a>
-				<ul>
-					{% for profile in trending_developers %}
-					<li class="flex content-center justify-between pt-1 border-b">
-						<a class="hover:text-cyan-800 leading-8" href="{{ profile.github_url }}" target="_blank">{{ profile.login }}</a>
-						<div>
-							<span>{{ profile.followers_lately }}</span>
-							<span>👍</span>
-						</div>
-					</li>
-					{% endfor %}
-				</ul>
-			</div>
-		</div>
+      <div class="p-6 mt-5 lg:mt-0  bg-white border lg:basis-1/3">
+        <a href="{% url "core:trending-profiles" %}"><div class="text-xl font-bold pb-2 border-b-4 border-teal-500">🤸Trending engineers</div></a>
+        <ul>
+          {% for profile in trending_developers %}
+          <li class="flex content-center justify-between pt-1 border-b">
+            <a class="hover:text-cyan-800 leading-8" href="{{ profile.github_url }}" target="_blank">{{ profile.login }}</a>
+            <div>
+              <span>{{ profile.followers_lately }}</span>
+              <span>👍</span>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
 
-		<div class="flex w-full pt-4 rounded gap-3 justify-evenly">
-			<div class="p-6 bg-white border grow-0 basis-6/12">
-				<a href="{% url "core:top-repositories" %}">
-					<div class="text-xl font-bold border-b-4 pb-2 border-green-600">📊 Top packages</div>
-				</a>
-				<ul>
-					{% for repo in top_apps %}
-					<li class="flex content-center justify-between pt-1 border-b">
-						<a class="leading-8" href="{{ repo.github_url }}" target="_blank">{{ repo.full_name }}</a>
-						<div>
-							<span class="pl-6 text-lg">⚝ </span>
-							<span>{{ repo.stars }}</span>
-						</div>
-					</li>
-					{% endfor %}
-				</ul>
-			</div>
+    <div class="lg:flex mt-5 rounded gap-3 lg:basis-6/12">
+      <div class="p-6 bg-white border grow-0 basis-6/12">
+        <a href="{% url "core:top-repositories" %}">
+          <div class="text-xl font-bold border-b-4 pb-2 border-green-600">📊 Top packages</div>
+        </a>
+        <ul>
+          {% for repo in top_apps %}
+          <li class="flex content-center justify-between pt-1 border-b">
+            <a class="leading-8" href="{{ repo.github_url }}" target="_blank">{{ repo.full_name }}</a>
+            <div>
+              <span class="pl-6 text-lg">⚝ </span>
+              <span>{{ repo.stars }}</span>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
 
-			<div class="p-6 bg-white border grow-0 basis-6/12">
-				<div class="text-xl font-bold border-b-4 pb-2 border-red-500">🐦 Social media news</div>
-				<ul>
-					{% for post in social_news %}
-					<a class="hover:text-cyan-800 leading-8" href="{{ post.url }}" target="_blank">
-						<li class="flex content-center justify-between pt-1 border-b">
-							<span>{{ post.title|truncatechars:75 }}</span>
-							<img class="object-contain w-6" src="https://external-preview.redd.it/iDdntscPf-nfWKqzHRGFmhVxZm4hZgaKe5oyFws-yzA.png?auto=webp&s=38648ef0dc2c3fce76d5e1d8639234d8da0152b2" />
-						</li>
-					</a>
-					{% endfor %}
-				</ul>
-			</div>
-		</div>
-	</div>
+      <div class="p-6 mt-5 lg:mt-0 bg-white border grow-0 basis-6/12">
+        <div class="text-xl font-bold border-b-4 pb-2 border-red-500">🐦 Social media news</div>
+        <ul>
+          {% for post in social_news %}
+          <a class="hover:text-cyan-800 leading-8" href="{{ post.url }}" target="_blank">
+            <li class="flex content-center justify-between pt-1 border-b">
+              <span>{{ post.title|truncatechars:75 }}</span>
+              <img class="object-contain w-6" alt="Reddit icon" src="https://external-preview.redd.it/iDdntscPf-nfWKqzHRGFmhVxZm4hZgaKe5oyFws-yzA.png?auto=webp&s=38648ef0dc2c3fce76d5e1d8639234d8da0152b2" >
+            </li>
+          </a>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
 {% endblock %}
