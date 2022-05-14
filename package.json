@@ -1,19 +1,14 @@
 {
   "name": "django_apps",
   "version": "0.0.1",
-  "dependencies": {},
   "devDependencies": {
-    "eslint": "^6.0.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-config-prettier": "^6.0.0",
-    "eslint-plugin-import": "^2.17.3",
-    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-config-airbnb": "^19.0.4",
     "js-beautify": "^1.10.0",
     "prettier": "^1.18.2",
-    "stylelint": "^10.1.0",
-    "stylelint-config-airbnb": "0.0.0",
     "stylelint-order": "^3.0.0",
-    "stylelint-scss": "^3.8.0"
+    "stylelint-scss": "^4.2.0",
+    "eslint": "^8.15.0",
+    "stylelint": "^14.8.2"
   },
   "engines": {
     "node": ">=8"
@@ -21,5 +16,8 @@
   "browserslist": [
     "last 2 versions"
   ],
-  "scripts": {}
+  "scripts": {},
+  "dependencies": {
+    "daisyui": "^2.14.3"
+  }
 }
