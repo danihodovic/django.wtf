@@ -2,13 +2,13 @@
   "name": "django_apps",
   "version": "0.0.1",
   "devDependencies": {
+    "eslint": "^8.15.0",
     "eslint-config-airbnb": "^19.0.4",
     "js-beautify": "^1.10.0",
     "prettier": "^1.18.2",
+    "stylelint": "^14.8.2",
     "stylelint-order": "^3.0.0",
-    "stylelint-scss": "^4.2.0",
-    "eslint": "^8.15.0",
-    "stylelint": "^14.8.2"
+    "stylelint-scss": "^4.2.0"
   },
   "engines": {
     "node": ">=8"
