@@ -316,6 +316,10 @@ CONSTANCE_CONFIG = {
         "",
         "The Reddit client secret",
     ),
+    "DAYS_SINCE_TRENDING": (
+        14,
+        "The number of days since we calculate the trending repos and devs.",
+    ),
 }
 TAILWIND_APP_NAME = "django_apps.theme"
 

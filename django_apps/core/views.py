@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 from cacheops import cached_as
+from constance import config
 from django.core.paginator import Paginator
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
@@ -126,7 +127,9 @@ class TrendingProfilesView(MetadataMixin, ListView):
 def trending_repositories(**filters):
     trending = []
     for repo in Repository.valid.filter(stars__gte=20, **filters):
-        stars_in_the_last_week = repo.stars_since(timedelta(days=15))
+        stars_in_the_last_week = repo.stars_since(
+            timedelta(days=config.DAYS_SINCE_TRENDING)
+        )
         setattr(repo, "stars_lately", stars_in_the_last_week)
         trending.append(repo)
 
@@ -159,7 +162,9 @@ def trending_profiles():
         for contribution in contributions:
             repo = contribution.repository
             if repo.type == RepositoryType.APP and repo.stars > 20:
-                followers_lately = profile.followers_since(timedelta(days=13))
+                followers_lately = profile.followers_since(
+                    timedelta(days=config.DAYS_SINCE_TRENDING)
+                )
                 setattr(profile, "followers_lately", followers_lately)
                 trending.add(profile)
     return sorted(list(trending), key=lambda e: e.followers_lately, reverse=True)
