@@ -69,7 +69,7 @@
 
             {% for profile in trending_developers|slice:":3" %}
             <div class="avatar">
-              <div class="w-9">
+              <div class="w-8">
                 <img src="{{ profile.avatar_url }}" alt="{{ profile.login }}">
               </div>
             </div>
@@ -79,7 +79,7 @@
 
             {% for profile in trending_developers %}
             <div class="avatar">
-              <div class="w-9">
+              <div class="w-8">
                 <img src="{{ profile.avatar_url }}" alt="{{ profile.login }}">
               </div>
             </div>
@@ -87,7 +87,7 @@
 
             {% endif %}
             <div class="avatar placeholder">
-              <div class="w-9 bg-neutral-focus text-sm text-neutral-content">
+              <div class="w-8 bg-neutral-focus text-sm text-neutral-content">
                 <span>+99</span>
               </div>
             </div>
@@ -172,7 +172,13 @@
               </td>
               <td class="text-right">
                 <a href="{{ post.url }}">
-                  <i class="fa-brands fa-reddit text-2xl"></i>
+                  {% if post.type == 'Reddit' %}
+                  <i class="fa-brands fa-reddit text-3xl"></i>
+                  {% elif post.type == 'Hacker News' %}
+                  <i class="fa-brands fa-hacker-news text-3xl"></i>
+                  {% else %}
+                  <i class="fa-brands fa-reddit text-3xl"></i>
+                  {% endif %}
                 </a>
               </td>
               </a>
