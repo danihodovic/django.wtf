@@ -3,17 +3,28 @@
 
 {% block content %}
 
-<div class="lg:flex flex-col content-center self-center mt-5 mb-5 w-full lg:w-11/12">
+<div class="lg:flex flex-col content-center self-center lg:mt-5 mb-5 w-full lg:w-11/12">
 
-  <div class="mt-5 mb-5 lg:rounded-lg bg-black">
+  <div class="mt-5 mb-5 lg:rounded-lg bg-neutral">
     <div class="p-6">
       <h3 class="text-lg text-white">Categories</h3>
       <div class="flex flex-wrap mt-3 gap-2">
-        {% for category in categories %}
-        <a href="{% url "core:category-detail" name=category.name %}" class="btn">
+        {% if request|is_mobile or request|is_tablet %}
+
+        {% for category in categories|slice:"6" %}
+        <a href="{% url "core:category-detail" name=category.name %}" class="btn btn-primary">
           <span class="uppercase font-normal">{{ category.name }} <span class="text-sm">({{ category.total_repositories }})</span></span>
         </a>
         {% endfor %}
+
+        {% else %}
+        {% for category in categories %}
+        <a href="{% url "core:category-detail" name=category.name %}" class="btn btn-primary">
+          <span class="uppercase font-normal">{{ category.name }} <span class="text-sm">({{ category.total_repositories }})</span></span>
+        </a>
+        {% endfor %}
+
+        {% endif %}
       </div>
     </div>
   </div>
