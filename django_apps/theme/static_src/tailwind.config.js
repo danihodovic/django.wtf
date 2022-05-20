@@ -65,13 +65,13 @@ module.exports = {
   daisyui: {
     styled: true,
     themes: [
-      'light'
+      'bumblebee'
     ],
     base: true,
     utils: true,
     logs: true,
     rtl: false,
     prefix: "",
-    darkTheme: "light",
+    darkTheme: "bumblebee",
   },
 }

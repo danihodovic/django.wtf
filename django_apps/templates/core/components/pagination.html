@@ -3,7 +3,15 @@
   <a href="?page={{ page_obj.previous_page_number }}" class="btn">«</a>
   {% endif %}
 
-  <a href="?page={{ page_obj.number }}" class="btn btn-active">{{ page_obj.number }}</a>
+  {% for page_number in page_obj.paginator.get_elided_page_range %}
+  {% if page_number == page_obj.paginator.ELLIPSIS %}
+  <a class="btn btn-disabled">...</a>
+  {% else %}
+  <a href="?page={{ page_number }}" class="btn {% if page_number == page_obj.number %}btn-active{% endif %}">
+    {{page_number}}
+  </a>
+  {% endif %}
+  {% endfor %}
 
   {% if page_obj.has_next %}
   <a href="?page={{ page_obj.next_page_number }}" class="btn">»</a>
