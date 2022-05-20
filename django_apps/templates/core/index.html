@@ -1,6 +1,7 @@
 {% extends "core/base.html" %}
-{% block content %}
+{% load user_agents %}
 
+{% block content %}
 
 <div class="lg:flex flex-col content-center self-center mt-5 mb-5 w-full lg:w-11/12">
 
@@ -53,6 +54,18 @@
         <div class="pb-2 flex justify-between border-b-2 border-gray-100 ">
           <h3 class="text-lg font-bold self-center">Trending Engineers</h3>
           <div class="avatar-group -space-x-6 justify-self-end">
+            {% if request|is_mobile or request|is_tablet %}
+
+            {% for profile in trending_developers|slice:":3" %}
+            <div class="avatar">
+              <div class="w-9">
+                <img src="{{ profile.avatar_url }}" alt="{{ profile.login }}">
+              </div>
+            </div>
+            {% endfor %}
+
+            {% else %}
+
             {% for profile in trending_developers %}
             <div class="avatar">
               <div class="w-9">
@@ -60,6 +73,8 @@
               </div>
             </div>
             {% endfor %}
+
+            {% endif %}
             <div class="avatar placeholder">
               <div class="w-9 bg-neutral-focus text-sm text-neutral-content">
                 <span>+99</span>
