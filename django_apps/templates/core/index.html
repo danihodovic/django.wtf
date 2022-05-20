@@ -5,7 +5,7 @@
 
 <div class="lg:flex flex-col content-center self-center mt-5 mb-5 w-full lg:w-11/12">
 
-  <div class="mt-5 mb-5 lg:rounded-lg bg-black border">
+  <div class="mt-5 mb-5 lg:rounded-lg bg-black">
     <div class="p-6">
       <h3 class="text-lg text-white">Categories</h3>
       <div class="flex flex-wrap mt-3 gap-2">
@@ -152,7 +152,7 @@
             <tr>
               <td>
                 <a href="{{ post.url }}">
-                  {{ post.title|truncatechars:75 }}
+                  {{ post.title|truncatechars:30 }}
                 </a>
               </td>
               <td class="text-right">
