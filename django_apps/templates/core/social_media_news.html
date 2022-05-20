@@ -36,7 +36,11 @@
             <i class="fa-brands fa-reddit text-2xl"></i>
             {% endif %}
             <span class="ml-2 align-top">
+              {% if request|is_mobile or request|is_tablet %}
+              {{ news.title|truncatechars:25 }}
+              {% else %}
               {{ news.title }}
+              {% endif %}
             </span>
           </a>
         </td>
