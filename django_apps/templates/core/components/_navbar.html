@@ -1,29 +1,28 @@
-<div class="navbar bg-base-100 font-akshar">
+{% load static %}
+
+<div class="navbar bg-neutral">
   <div class="navbar-start">
     <div class="dropdown">
-      <label tabindex="0" class="btn btn-ghost btn-circle lg:hidden">
+      <label tabindex="0" class="btn btn-circle lg:hidden">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
         </svg>
       </label>
-      <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+      <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-primary-content rounded-box w-52">
         <li><a href="{% url "core:top-repositories" %}">Best apps</a></li>
         <li><a href="{% url "core:trending-repositories" %}">Trending apps</a></li>
         <li><a href="{% url "core:top-profiles" %}">Best profiles</a></li>
         <li><a href="{% url "core:trending-profiles" %}">Trending profiles</a></li>
       </ul>
     </div>
-    <a href="/" class="lg:ml-6 order-last lg:text-3xl text-black">🎔 django.wtf</a>
-  </div>
-  <div class="hidden navbar-center lg:flex">
-    <ul class="p-0 uppercase menu menu-horizontal md:text-xl">
-      <li><a href="{% url "core:top-repositories" %}">Best apps</a></li>
-      <li><a href="{% url "core:trending-repositories" %}">Trending apps</a></li>
-      <li class="ml-8"><a href="{% url "core:top-profiles" %}">Best profiles</a></li>
-      <li><a href="{% url "core:trending-profiles" %}">Trending profiles</a></li>
-    </ul>
-  </div>
-  <div class="navbar-end hidden lg:flex">
-    <span class="mr-6 text-xl">the unofficial django package index</span>
+    <a class="lg:ml-6" href="/"><img src="{% static 'images/logo.png' %}" alt="Django.wtf"></a>
+    <div class="hidden ml-10 lg:flex">
+      <ul class="p-0 uppercase menu menu-horizontal text-white">
+        <li><a href="{% url "core:top-repositories" %}">Best apps</a></li>
+        <li><a href="{% url "core:trending-repositories" %}">Trending apps</a></li>
+        <li><a href="{% url "core:top-profiles" %}">Best profiles</a></li>
+        <li><a href="{% url "core:trending-profiles" %}">Trending profiles</a></li>
+      </ul>
+    </div>
   </div>
 </div>

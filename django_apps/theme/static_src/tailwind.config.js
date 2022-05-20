@@ -45,6 +45,7 @@ module.exports = {
         extend: {
           fontFamily: {
             'open-sans': [    '"Open Sans"', 'sans-serif'],
+            'roboto': [    '"Roboto"', 'sans-serif'],
             'akshar': [    '"Akshar"', 'sans-serif'],
           }
         }
@@ -57,7 +58,6 @@ module.exports = {
          */
         require('@tailwindcss/forms'),
         require('@tailwindcss/typography'),
-        require('@tailwindcss/line-clamp'),
         require('@tailwindcss/line-clamp'),
         require('@tailwindcss/aspect-ratio'),
         require('daisyui'),
