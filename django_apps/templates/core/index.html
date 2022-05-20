@@ -152,7 +152,11 @@
             <tr>
               <td>
                 <a href="{{ post.url }}">
-                  {{ post.title|truncatechars:30 }}
+                  {% if request|is_mobile or request|is_tablet %}
+                  {{ post.title|truncatechars:35 }}
+                  {% else %}
+                  {{ post.title|truncatechars:55 }}
+                  {% endif %}
                 </a>
               </td>
               <td class="text-right">
