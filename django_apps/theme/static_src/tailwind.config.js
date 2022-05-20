@@ -65,13 +65,18 @@ module.exports = {
   daisyui: {
     styled: true,
     themes: [
-      'bumblebee'
+        {
+          dark: {
+          ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
+            "primary": "#0369a1",
+        },
+        },
     ],
     base: true,
     utils: true,
     logs: true,
     rtl: false,
     prefix: "",
-    darkTheme: "bumblebee",
+    darkTheme: "dark",
   },
 }
