@@ -28,7 +28,16 @@
         </td>
         <td>
           <a href="{{ url }}" target="_blank">
-            {{ news.title }}
+            {% if news.type == 'Reddit' %}
+            <i class="fa-brands fa-reddit text-2xl"></i>
+            {% elif news.type == 'Hacker News' %}
+            <i class="fa-brands fa-hacker-news text-2xl"></i>
+            {% else %}
+            <i class="fa-brands fa-reddit text-2xl"></i>
+            {% endif %}
+            <span class="ml-2 align-top">
+              {{ news.title }}
+            </span>
           </a>
         </td>
         <td class="text-sm hidden xl:table-cell">
