@@ -1,10 +1,15 @@
 {% extends "core/base.html" %}
+{% load user_agents %}
 
 {% block content %}
-<div class="flex flex-col self-center items-center p-1 lg:p-6 w-full lg:w-11/12">
-  <div class="flex self-start mt-3 mb-10 text-sm lg:text-lg gap-2">
+<div class="flex flex-col self-center items-center p-4 lg:p-6 w-full lg:w-11/12">
+  <div class="flex flex-wrap self-start mt-3 mb-10 text-sm lg:text-lg gap-2">
     <div class="badge badge-lg badge-primary">Top contributors</div>
+    {% if request|is_mobile or request|is_tablet %}
+    <div class="badge badge-lg badge-primary">{{ page_obj.paginator.count }} prolific contributors</div>
+    {% else %}
     <div class="badge badge-lg badge-primary">{{ page_obj.paginator.count }} prolific contributors to Django projects</div>
+    {% endif %}
   </div>
 
   <table class="table w-full leading-6 mb-5">

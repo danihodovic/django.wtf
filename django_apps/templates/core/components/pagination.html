@@ -1,9 +1,17 @@
+{% load paginator_tags user_agents %}
+
 <div class="mt-5 mb-5 self-center btn-group">
   {% if page_obj.has_previous %}
   <a href="?page={{ page_obj.previous_page_number }}" class="btn">«</a>
   {% endif %}
 
-  {% for page_number in page_obj.paginator.get_elided_page_range %}
+  {% if request|is_mobile or request|is_tablet %}
+  {% get_proper_elided_page_range paginator page_obj.number 1 1 as page_range %}
+  {% else %}
+  {% get_proper_elided_page_range paginator page_obj.number 2 2 as page_range %}
+  {% endif %}
+
+  {% for page_number in page_range %}
   {% if page_number == page_obj.paginator.ELLIPSIS %}
   <a class="btn btn-disabled">...</a>
   {% else %}
