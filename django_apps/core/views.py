@@ -18,6 +18,8 @@ from .models import (
     SocialNews,
 )
 
+one_week_ago = datetime.today().date() - timedelta(days=7)
+
 
 class IndexView(MetadataMixin, TemplateView):
     template_name = "core/index.html"
@@ -29,7 +31,6 @@ class IndexView(MetadataMixin, TemplateView):
         context["categories"] = self.categories_ordered_by_total_repositories()
         context["trending_apps"] = trending_repositories()[0:5]
         context["trending_developers"] = trending_profiles()[0:5]
-        one_week_ago = datetime.today().date() - timedelta(days=7)
         context["social_news"] = SocialNews.objects.filter(
             created_at__gt=one_week_ago
         ).order_by("-upvotes")[0:5]
@@ -61,6 +62,7 @@ class CategoryView(MetadataMixin, DetailView):
         paginator = Paginator(repos, 25)
         page_number = self.request.GET.get("page")
         page_obj = paginator.get_page(page_number)
+        context["paginator"] = paginator
         context["page_obj"] = page_obj
         context["category"] = self.get_object()
         return context
@@ -101,6 +103,18 @@ class TopRepositoriesView(MetadataMixin, ListView):
 
     def get_queryset(self):
         return Repository.valid.order_by("-stars")
+
+
+class SocialMediaNewsView(MetadataMixin, ListView):
+    paginate_by = 25
+    title = "Django News"
+    description = "Django social media news"
+    template_name = "core/social_media_news.html"
+
+    def get_queryset(self):
+        return SocialNews.objects.filter(created_at__gt=one_week_ago).order_by(
+            "-upvotes"
+        )
 
 
 class TopProfilesView(MetadataMixin, ListView):

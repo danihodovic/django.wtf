@@ -15,6 +15,7 @@ class StaticSitemap(Sitemap):
             "core:trending-profiles",
             "core:top-repositories",
             "core:trending-repositories",
+            "core:social-media-news",
         ]
 
     def location(self, item):

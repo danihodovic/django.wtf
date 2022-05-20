@@ -4,6 +4,7 @@ from django.urls import path
 from django_apps.core.views import (
     CategoryView,
     IndexView,
+    SocialMediaNewsView,
     TopProfilesView,
     TopRepositoriesView,
     TrendingProfilesView,
@@ -24,6 +25,11 @@ urlpatterns = [
         "top/",
         view=TopRepositoriesView.as_view(),
         name="top-repositories",
+    ),
+    path(
+        "social-media-news/",
+        view=SocialMediaNewsView.as_view(),
+        name="social-media-news",
     ),
     path("profiles/top/", view=TopProfilesView.as_view(), name="top-profiles"),
     path(
