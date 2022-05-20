@@ -45,6 +45,7 @@ module.exports = {
         extend: {
           fontFamily: {
             'open-sans': [    '"Open Sans"', 'sans-serif'],
+            'roboto': [    '"Roboto"', 'sans-serif'],
             'akshar': [    '"Akshar"', 'sans-serif'],
           }
         }
