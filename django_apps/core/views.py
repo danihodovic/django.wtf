@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 from cacheops import cached_as
 from constance import config
+from constance.backends.database.models import Constance
 from django.core.paginator import Paginator
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
@@ -94,6 +95,9 @@ class TrendingRepositoriesView(MetadataMixin, ListView):
     def get_queryset(self):
         return trending_repositories()
 
+    def get_meta_description(self, context=None):
+        return f"Trending Django projects in the past {config.DAYS_SINCE_TRENDING} days"
+
 
 class TopRepositoriesView(MetadataMixin, ListView):
     paginate_by = 25
@@ -136,8 +140,11 @@ class TrendingProfilesView(MetadataMixin, ListView):
     def get_queryset(self):
         return trending_profiles()
 
+    def get_meta_description(self, context=None):
+        return f"Trending Django projects in the past {config.DAYS_SINCE_TRENDING} days"
 
-@cached_as(RepositoryStars, timeout=60 * 60 * 24)
+
+@cached_as(RepositoryStars, Constance, timeout=60 * 60 * 24)
 def trending_repositories(**filters):
     trending = []
     for repo in Repository.valid.filter(stars__gte=20, **filters):
@@ -166,7 +173,7 @@ def most_followed_profiles():
     return Profile.objects.filter(id__in=profile_ids).order_by("-followers")
 
 
-@cached_as(Contributor, timeout=60 * 60 * 24)
+@cached_as(Contributor, Constance, timeout=60 * 60 * 24)
 def trending_profiles():
     # Contributed to a Django project
     # Sorted by most stars in the past two weeks
