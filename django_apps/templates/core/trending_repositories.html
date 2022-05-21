@@ -9,7 +9,7 @@
     {% if request|is_mobile or request|is_tablet %}
     <div class="badge badge-lg badge-primary">Repositories with the most stars</div>
     {% else %}
-    <div class="badge badge-lg badge-primary">Repositories with the most stars in the past {{ config.DAYS_SINCE_TRENDING | apnumber }} days</div>
+    <div class="badge badge-lg badge-primary">Repositories with the most new stars in the past {{ config.DAYS_SINCE_TRENDING | apnumber }} days</div>
     {% endif %}
   </div>
 
