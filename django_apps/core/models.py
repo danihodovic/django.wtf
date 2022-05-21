@@ -82,6 +82,7 @@ class RepositoryManager(models.Manager):
             super()
             .get_queryset()
             .filter(Q(categories__isnull=False) | Q(type=RepositoryType.APP))
+            .distinct()
         )
 
 

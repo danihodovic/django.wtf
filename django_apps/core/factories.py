@@ -1,3 +1,4 @@
+import factory
 from factory import Faker, SubFactory, lazy_attribute
 from factory.django import DjangoModelFactory
 
@@ -33,6 +34,19 @@ class RepositoryFactory(DjangoModelFactory):
     description = Faker("sentence")
     topics = Faker("paragraphs")
     type = Faker("random_element", elements=RepositoryType.values)
+
+    @factory.post_generation
+    def categories(self, create, extracted, **kwargs):
+        if not create:
+            # Simple build, do nothing.
+            return
+
+        if extracted:
+            # A list of groups were passed in, use them
+            for category in extracted:
+                category.save()
+                # pylint: disable=no-member
+                self.categories.add(category)
 
 
 class RepositoryStarsFactory(DjangoModelFactory):
