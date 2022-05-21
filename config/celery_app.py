@@ -1,3 +1,4 @@
+import json
 import os
 
 from celery import Celery
@@ -23,12 +24,12 @@ app.conf.beat_schedule = {
     "index-repositories-by-topic": {
         "task": "django_apps.core.github_tasks.index_repositories",
         "schedule": crontab(minute=0, hour=0),
-        "args": search_repos_by_topic_url,
+        "args": json.dumps([search_repos_by_topic_url]),
     },
     "index-repositories-by-keyword": {
         "task": "django_apps.core.github_tasks.index_repositories",
         "schedule": crontab(minute=5, hour=1),
-        "args": search_repos_by_keyword_url,
+        "args": json.dumps([search_repos_by_keyword_url]),
     },
     "index-contributors": {
         "task": "django_apps.core.github_tasks.index_contributors",
