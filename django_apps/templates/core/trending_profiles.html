@@ -1,4 +1,5 @@
 {% extends "core/base.html" %}
+{% load humanize %}
 {% load user_agents %}
 
 {% block content %}
@@ -6,7 +7,7 @@
   <div class="flex flex-wrap self-start mt-3 mb-10 text-sm lg:text-lg gap-2">
     <div class="badge badge-lg badge-primary">Trending profiles</div>
     {% if not request|is_mobile and not request|is_tablet %}
-    <div class="badge badge-lg badge-primary">Engineers that have gained the most followers in the past two weeks</div>
+    <div class="badge badge-lg badge-primary">Engineers that have gained the most followers in the past {{ config.DAYS_SINCE_TRENDING | apnumber }} days</div>
     {% endif %}
   </div>
 
