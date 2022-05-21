@@ -24,8 +24,11 @@ one_week_ago = datetime.today().date() - timedelta(days=7)
 
 class IndexView(MetadataMixin, TemplateView):
     template_name = "core/index.html"
-    title = "django.wtf: the unofficial Django package index"
-    description = "django.wtf is a collection of Django packages, projects and tools."
+    title = "Django.WTF: The Django package index"
+    description = (
+        "Django.WTF lists popular Django projects, apps and tools. "
+        "The latest and greatest news in the Django community."
+    )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
