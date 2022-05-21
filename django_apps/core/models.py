@@ -96,7 +96,7 @@ class Repository(TimeStampedModel):
         related_name="repositories",
         related_query_name="repository",
     )
-    categories = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(Category, blank=True)
     name = models.CharField(max_length=100)
     full_name = models.CharField(max_length=100, unique=True)
     forks = models.PositiveIntegerField()
