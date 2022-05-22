@@ -30,7 +30,6 @@ class IndexView(MetadataMixin, TemplateView):
         "Django.WTF lists popular Django projects, apps and tools. "
         "The latest and greatest news in the Django community."
     )
-    image = static("images/logo.png")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -54,6 +53,9 @@ class IndexView(MetadataMixin, TemplateView):
                 setattr(c, "total_repositories", count_matching_repositories)
                 categories.append(c)
         return sorted(categories, key=lambda c: c.total_repositories, reverse=True)
+
+    def get_meta_image(self, context=None):
+        return static("images/logo.png")
 
 
 class CategoryView(MetadataMixin, DetailView):
