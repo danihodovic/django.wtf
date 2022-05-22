@@ -5,6 +5,7 @@ import praw
 import pytz
 from celery import current_app as app
 from constance import config
+from django.db import DataError
 
 from .models import SocialNews, SocialNewsType
 from .utils import log_action
@@ -24,13 +25,21 @@ def index_top_weekly_submissions():
     logging.info(f"Indexing top Reddit posts by {period=}")
     subreddit = create_client().subreddit("django")
     for submission in subreddit.top(period):
-        obj, created = SocialNews.objects.update_or_create(
-            url=submission.url,
-            defaults=dict(
-                type=SocialNewsType.REDDIT,
-                title=submission.title,
-                upvotes=submission.ups,
-                created_at=datetime.fromtimestamp(submission.created_utc, tz=pytz.utc),
-            ),
-        )
+        try:
+            obj, created = SocialNews.objects.update_or_create(
+                url=submission.url,
+                defaults=dict(
+                    type=SocialNewsType.REDDIT,
+                    title=submission.title,
+                    upvotes=submission.ups,
+                    created_at=datetime.fromtimestamp(
+                        submission.created_utc, tz=pytz.utc
+                    ),
+                ),
+            )
+        except DataError as ex:
+            permalink = submission.permalink
+            logging.warning(f"Failed to index {permalink} - {ex.args}")
+            continue
+
         log_action(obj, created)
