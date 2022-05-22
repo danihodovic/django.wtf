@@ -80,6 +80,7 @@ THIRD_PARTY_APPS = [
     "django_browser_reload",
     "django_extensions",
     "django_celery_beat",
+    "django_celery_results",
     "django_toolshed",
     "django_user_agents",
     "import_export",
@@ -360,3 +361,6 @@ META_USE_OG_PROPERTIES = True
 META_USE_TWITTER_PROPERTIES = True
 META_SITE_PROTOCOL = "https"
 META_USE_TITLE_TAG = True
+
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_CACHE_BACKEND = "django-cache"
