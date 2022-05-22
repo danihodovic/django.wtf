@@ -10,7 +10,7 @@
     </a>
   </div>
 
-  <table class="table w-full mb-5">
+  <table class="table table-compact lg:table-normal w-full mb-5">
     <thead>
       <tr>
         <th class="hidden xl:block">Rank</th>
@@ -32,16 +32,18 @@
         <td>
           <a href="{{ url }}" target="_blank">
             {% if request|is_mobile or request|is_tablet %}
-            {{ repo.full_name|truncatechars:20 }}
+            {{ repo.full_name|truncatechars:30 }}
             {% else %}
             {{ repo.full_name }}
             {% endif %}
           </a>
         </td>
         <td class="hidden xl:table-cell">
-          <a href="{{ url }}" target="_blank">
-            {{ repo.truncated_description|truncatechars:50 }}
-          </a>
+          <div class="tooltip tooltip-primary before:content-[attr(data-tip)] before:max-w-[50rem]" data-tip="{{ repo.truncated_description }}">
+            <a href="{{ url }}" target="_blank">
+              {{ repo.truncated_description|truncatechars:60 }}
+            </a>
+          </div>
         </td>
         <td>
           <a href="{{ url }}" target="_blank">
