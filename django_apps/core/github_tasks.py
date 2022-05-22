@@ -7,6 +7,10 @@ from django.db.utils import DataError
 from django.utils.http import urlencode
 
 from config import celery_app as app
+from django_apps.core.github_api_urls import (
+    search_repos_by_keyword_url,
+    search_repos_by_topic_url,
+)
 from django_apps.core.models import (
     Contributor,
     Profile,
@@ -20,13 +24,16 @@ from django_apps.core.models import (
 from .utils import log_action
 
 
-def http_client():
-    s = superrequests.Session()
-    s.auth = ("danihodovic", config.GITHUB_TOKEN)
-    return s
+@app.task(soft_time_limit=30 * 60)
+def index_repositories_by_topic():
+    index_repositories(search_repos_by_topic_url)
 
 
 @app.task(soft_time_limit=30 * 60)
+def index_repositories_by_keyword():
+    index_repositories(search_repos_by_keyword_url)
+
+
 def index_repositories(url):
     logging.info(f"GET {url=}")
     http = http_client()
@@ -184,3 +191,9 @@ def find_appconfig_files(repo_full_name):
     res = http.get("https://api.github.com/search/code", params=params)
     data = res.json()
     return [item for item in data["items"] if not item["path"].startswith("test")]
+
+
+def http_client():
+    s = superrequests.Session()
+    s.auth = ("danihodovic", config.GITHUB_TOKEN)
+    return s
