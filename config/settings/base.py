@@ -355,4 +355,8 @@ X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
 # django-meta
 # ------------------------------------------------------------------------------
+META_SITE_DOMAIN = "django.wtf"
+META_USE_OG_PROPERTIES = True
+META_USE_TWITTER_PROPERTIES = True
+META_SITE_PROTOCOL = "https"
 META_USE_TITLE_TAG = True

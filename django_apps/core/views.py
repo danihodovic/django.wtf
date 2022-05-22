@@ -4,6 +4,7 @@ from cacheops import cached_as
 from constance import config
 from constance.backends.database.models import Constance
 from django.core.paginator import Paginator
+from django.templatetags.static import static
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -29,6 +30,7 @@ class IndexView(MetadataMixin, TemplateView):
         "Django.WTF lists popular Django projects, apps and tools. "
         "The latest and greatest news in the Django community."
     )
+    image = static("images/logo.png")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
