@@ -159,7 +159,8 @@ def trending_repositories(**filters):
             timedelta(days=config.DAYS_SINCE_TRENDING)
         )
         setattr(repo, "stars_lately", stars_in_the_last_week)
-        trending.append(repo)
+        if stars_in_the_last_week > 0:
+            trending.append(repo)
 
     return sorted(trending, key=lambda e: e.stars_lately, reverse=True)
 
@@ -193,6 +194,7 @@ def trending_profiles():
                 followers_lately = profile.followers_since(
                     timedelta(days=config.DAYS_SINCE_TRENDING)
                 )
-                setattr(profile, "followers_lately", followers_lately)
-                trending.add(profile)
+                if followers_lately > 0:
+                    setattr(profile, "followers_lately", followers_lately)
+                    trending.add(profile)
     return sorted(list(trending), key=lambda e: e.followers_lately, reverse=True)
