@@ -64,6 +64,7 @@ class ProfileAdmin(ImportExportModelAdmin):
 class ProfileFollowersAdmin(ImportExportModelAdmin):
     list_display = ("profile", "created_at", "followers")
     list_filter = ()
+    search_fields = ("profile__login",)
     date_hierarchy = "created_at"
 
 
