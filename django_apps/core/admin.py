@@ -28,6 +28,7 @@ class RepositoryAdmin(ImportExportModelAdmin):
         "stars",
         "topics",
         "type",
+        "created",
     )
     list_filter = ("type",)
     search_fields = ("name", "topics", "description", "categories__name")
@@ -52,6 +53,7 @@ class ProfileAdmin(ImportExportModelAdmin):
         "login",
         "type",
         "followers",
+        "created",
     )
     list_filter = ("type",)
     search_fields = ("login",)
