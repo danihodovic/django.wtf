@@ -116,7 +116,7 @@ def index_repo_contributors(repo_id):
 @app.task(soft_time_limit=30 * 60)
 def index_followers():
     for profile in Profile.objects.all():
-        index_user_followers(profile.login)
+        index_user_followers.delay(profile.login)
 
 
 @app.task()
