@@ -5,6 +5,7 @@ import superrequests
 from constance import config
 from django.db.utils import DataError
 from django.utils.http import urlencode
+from urllib3.util.retry import Retry
 
 from config import celery_app as app
 from django_apps.core.github_api_urls import (
@@ -194,6 +195,14 @@ def find_appconfig_files(repo_full_name):
 
 
 def http_client():
+    # Github rate limits with 403
+    default_retry_strategy = Retry(
+        connect=3,
+        read=3,
+        total=3,
+        status_forcelist=[403, 429, 500, 502, 503, 504],
+        method_whitelist=["HEAD", "GET", "OPTIONS"],
+    )
     s = superrequests.Session()
     s.auth = ("danihodovic", config.GITHUB_TOKEN)
     return s
