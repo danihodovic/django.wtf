@@ -33,7 +33,7 @@ app.conf.beat_schedule = {
     },
     "categorize-repositories": {
         "task": "django_apps.core.github_tasks.categorize_repositories",
-        "schedule": crontab(minute=30, hour=4),
+        "schedule": crontab(minute=30, hour=4, day_of_week=0),
     },
     "social.index-reddit": {
         "task": "django_apps.core.reddit_tasks.index_top_weekly_submissions",
