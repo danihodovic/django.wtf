@@ -125,7 +125,7 @@ def index_user_followers(user_login):
     profile = Profile.objects.get(login=user_login)
 
     for contribution in profile.top_contributions():
-        min_stars = 30
+        min_stars = 70
         if min_stars > contribution.repository.stars:
             logging.info(
                 f"Avoiding to retrieve ProfileFollowers for {profile=}. "
