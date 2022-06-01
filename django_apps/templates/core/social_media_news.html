@@ -39,7 +39,7 @@
               {% if request|is_mobile or request|is_tablet %}
               {{ news.title|truncatechars:25 }}
               {% else %}
-              {{ news.title }}
+              {{ news.title|truncatechars:55 }}
               {% endif %}
             </span>
           </a>
