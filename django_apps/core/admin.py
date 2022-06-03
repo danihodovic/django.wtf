@@ -41,6 +41,7 @@ class RepositoryAdmin(ImportExportModelAdmin):
 class RepositoryStarsAdmin(ImportExportModelAdmin):
     list_display = ("repository", "created_at", "stars")
     list_filter = ()
+    search_fields = ("repository__full_name",)
     date_hierarchy = "created_at"
 
     def get_readonly_fields(self, request, obj=None):
