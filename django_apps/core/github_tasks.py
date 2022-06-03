@@ -86,7 +86,7 @@ def index_repositories(url):
 
 @app.task(soft_time_limit=60 * 60)
 def index_contributors():
-    for repo in Repository.objects.all():
+    for repo in Repository.valid.all():
         index_repo_contributors(repo.id)
 
 
@@ -116,7 +116,7 @@ def index_repo_contributors(repo_id):
 
 @app.task(soft_time_limit=30 * 60)
 def index_followers():
-    for profile in Profile.objects.all():
+    for profile in Profile.contributes_to_valid_repos.all():
         index_user_followers.delay(profile.login)
 
 

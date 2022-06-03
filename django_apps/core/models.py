@@ -24,7 +24,21 @@ class RepositoryType(models.TextChoices):
     APP = ("app", "app")
 
 
+class ProfileContributesToValidProjectsManager(models.Manager):
+    def get_queryset(self):
+        # If it has a category it's been manually categorized
+        valid_repos = Repository.valid.all()
+        return (
+            super()
+            .get_queryset()
+            .filter(contributor__repository__in=valid_repos)
+            .distinct()
+        )
+
+
 class Profile(TimeStampedModel):
+    objects = models.Manager()  # type: ignore
+    contributes_to_valid_repos = ProfileContributesToValidProjectsManager()
     github_id = models.PositiveIntegerField()
     login = models.CharField(max_length=100, unique=True)
     type = models.CharField(
