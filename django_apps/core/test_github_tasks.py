@@ -3,7 +3,7 @@ import pytest
 from django_apps.core.github_api_urls import search_repos_by_topic_url
 
 from .github_tasks import index_contributors, index_repositories
-from .models import Repository
+from .models import Category, Repository
 
 pytestmark = pytest.mark.django_db
 
@@ -59,7 +59,13 @@ def test_index_repositories(mocked_responses):
     )
 
     index_repositories(search_repos_by_topic_url)
+    category = Category(name="monitoring", emoji="m")
+    category.save()
+    Repository.objects.get(full_name="danihodovic/celery-exporter").categories.add(
+        category
+    )
     index_contributors()
+
     repos = Repository.objects.all()
     assert len(repos) == 1
     repo = repos[0]
