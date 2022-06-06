@@ -1,10 +1,13 @@
 import logging
+from base64 import b64decode
 from datetime import date
 
+import markdown
 import superrequests
 from constance import config
 from django.db.utils import DataError
 from django.utils.http import urlencode
+from requests.models import HTTPError
 from urllib3.util.retry import Retry
 
 from config import celery_app as app
@@ -82,6 +85,32 @@ def index_repositories(url):
         next_url = res.links["next"]["url"]
         if next_url != url:
             index_repositories(url=next_url)
+
+
+@app.task()
+def index_repositories_readme():
+    for repo in Repository.valid.all():
+        index_repository_readme.delay(repo.full_name)
+
+
+@app.task()
+def index_repository_readme(repo_full_name):
+    http = http_client()
+    try:
+        # Use the API since it retrieves the default branch
+        res = http.get(
+            f"https://api.github.com/repos/{repo_full_name}/contents/README.md"
+        )
+    except HTTPError as ex:
+        if ex.response.status_code == 404:
+            logging.info(f"{repo_full_name} has no README.md file")
+            return
+        raise ex
+
+    markdown_text = b64decode(res.json()["content"]).decode("utf-8")
+    repo = Repository.objects.get(full_name=repo_full_name)
+    repo.readme_html = markdown.markdown(markdown_text)
+    repo.save()
 
 
 @app.task(soft_time_limit=60 * 60)
