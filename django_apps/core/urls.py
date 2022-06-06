@@ -1,6 +1,7 @@
 from django.contrib.sitemaps.views import sitemap
 from django.urls import path
 
+from django_apps.core.repository_detail import RepositoryDetail
 from django_apps.core.views import (
     CategoryView,
     IndexView,
@@ -43,5 +44,9 @@ urlpatterns = [
         sitemap,
         {"sitemaps": sitemaps},
         name="django.contrib.sitemaps.views.sitemap",
+    ),
+    # Has to be last
+    path(
+        "<path:full_name>/", view=RepositoryDetail.as_view(), name="repository-detail"
     ),
 ]
