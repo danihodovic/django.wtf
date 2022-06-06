@@ -123,6 +123,7 @@ class Repository(TimeStampedModel):
     type = models.CharField(
         max_length=30, choices=RepositoryType.choices, null=True, blank=True
     )
+    readme_html = models.TextField(null=True)
 
     @property
     def github_url(self):
