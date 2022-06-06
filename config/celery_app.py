@@ -31,6 +31,10 @@ app.conf.beat_schedule = {
         "task": "django_apps.core.github_tasks.index_followers",
         "schedule": crontab(minute=20, hour=3),
     },
+    "index-readme": {
+        "task": "django_apps.core.github_tasks.index_repositories_readme",
+        "schedule": crontab(minute=20, hour=8, day_of_week=5),
+    },
     "categorize-repositories": {
         "task": "django_apps.core.github_tasks.categorize_repositories",
         "schedule": crontab(minute=30, hour=4, day_of_week=0),
