@@ -3,6 +3,7 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
+from .filters import HasReadmeListFilter
 from .models import (
     Category,
     Profile,
@@ -30,8 +31,8 @@ class RepositoryAdmin(ImportExportModelAdmin):
         "type",
         "created",
     )
-    list_filter = ("type",)
-    search_fields = ("name", "topics", "description", "categories__name")
+    list_filter = ("type", HasReadmeListFilter)
+    search_fields = ("name", "topics", "description", "categories__name", "readme_html")
     autocomplete_fields = ("categories",)
 
     def get_readonly_fields(self, request, obj=None):
@@ -44,6 +45,7 @@ class RepositoryStarsAdmin(ImportExportModelAdmin):
     list_filter = ()
     search_fields = ("repository__full_name",)
     date_hierarchy = "created_at"
+    advanced_filter_fields = "__all__"
 
     def get_readonly_fields(self, request, obj=None):
         return [f.name for f in self.model._meta.fields]
