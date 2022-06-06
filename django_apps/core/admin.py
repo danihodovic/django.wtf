@@ -31,7 +31,7 @@ class RepositoryAdmin(ImportExportModelAdmin):
         "created",
     )
     list_filter = ("type",)
-    search_fields = ("name", "topics", "description", "categories__name")
+    search_fields = ("name", "topics", "description", "categories__name", "readme_html")
     autocomplete_fields = ("categories",)
 
     def get_readonly_fields(self, request, obj=None):
