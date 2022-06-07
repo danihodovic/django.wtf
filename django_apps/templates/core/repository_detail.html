@@ -1,4 +1,20 @@
 {% extends "core/base.html" %}
 
 {% block content %}
+<div class="text-xl">{{ object.full_name }}</div>
+<div>{{ object.pypiproject.releases.latest.version }}</div>
+<div>Last release: {{ object.pypiproject.releases.latest.uploaded_at | timesince }} ago</div>
+<div>Forks: {{ object.forks }}</div>
+<div>Stars: {{ object.stars }}</div>
+<div>Open issues: {{ object.open_issues }}</div>
+<div>Top contributors
+  <ul>
+    {% for contributor in object.top_contributors|slice:"6" %}
+      <li>
+        <img class="w-10 mr-2 rounded-full" alt="{{ contributor.profile.login }}" src="{{ contributor.profile.avatar_url }}">
+        {{ contributor.profile.login }} - {{ contributor.contributions }}
+      </li>
+    {% endfor %}
+  </ul>
+</div>
 {% endblock %}

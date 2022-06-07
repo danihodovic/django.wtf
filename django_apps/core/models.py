@@ -161,6 +161,9 @@ class Repository(TimeStampedModel):
             pass
         return Truncator(self.description or "").chars(length)
 
+    def top_contributors(self):
+        return self.contributors.order_by("-contributions")
+
 
 class PypiProject(TimeStampedModel):
     repository = models.OneToOneField(Repository, on_delete=models.CASCADE)
@@ -180,12 +183,15 @@ class PypiRelease(models.Model):
     project = models.ForeignKey(
         PypiProject,
         on_delete=models.CASCADE,
+        related_name="releases",
+        related_query_name="release",
     )
     version = models.CharField(max_length=30)
     uploaded_at = models.DateTimeField()
 
     class Meta:
         unique_together = [["project", "version"]]
+        get_latest_by = "uploaded_at"
 
     def __str__(self):
         version = self.version
