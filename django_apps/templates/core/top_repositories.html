@@ -21,7 +21,7 @@
       {% for repo in page_obj %}
 
       <tr class="hover">
-        {% with url=repo.github_url %}
+        {% with url=repo.get_absolute_url %}
         <td class="hidden xl:table-cell">
           <a class="font-bold" href="{{ url }}" target="_blank">
             {{ page_obj.start_index|add:forloop.counter0 }}
