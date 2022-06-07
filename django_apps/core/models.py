@@ -57,7 +57,7 @@ class Profile(TimeStampedModel):
     def top_contributions(self):
         @cached_as(Contributor, timeout=24 * 60 * 60)
         def _fn(self):
-            return self.contributor_set.filter(contributions__gt=20).order_by(
+            return self.contributor_set.filter(contributions__gte=20).order_by(
                 "-contributions"
             )
 
@@ -72,7 +72,7 @@ class Profile(TimeStampedModel):
                 created_at=previous_date, profile=self
             )
         except ObjectDoesNotExist:
-            logging.info(f"ProfileFollowers at {previous_date=} does not exist")
+            logging.debug(f"ProfileFollowers at {previous_date=} does not exist")
             return 0
         assert self.followers
         return self.followers - previous_followers.followers
