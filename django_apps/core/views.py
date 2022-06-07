@@ -16,7 +16,6 @@ from .models import (
     Profile,
     Repository,
     RepositoryStars,
-    RepositoryType,
     SocialNews,
 )
 
@@ -178,7 +177,9 @@ def most_followed_profiles():
         .order_by("profile__id")
         .distinct("profile__id")
     )
-    return Profile.objects.filter(id__in=profile_ids).order_by("-followers")
+    return Profile.contributes_to_valid_repos.filter(id__in=profile_ids).order_by(
+        "-followers"
+    )
 
 
 @cached_as(Contributor, Constance, timeout=60 * 60 * 24)
@@ -186,15 +187,16 @@ def trending_profiles():
     # Contributed to a Django project
     # Sorted by most stars in the past two weeks
     trending = set()
-    for profile in Profile.objects.filter(followers__gte=10):
-        contributions = profile.top_contributions()
-        for contribution in contributions:
-            repo = contribution.repository
-            if repo.type == RepositoryType.APP and repo.stars > 20:
-                followers_lately = profile.followers_since(
-                    timedelta(days=config.DAYS_SINCE_TRENDING)
-                )
-                if followers_lately > 0:
-                    setattr(profile, "followers_lately", followers_lately)
-                    trending.add(profile)
+    profiles = Profile.contributes_to_valid_repos.filter(
+        contributor__contributions__gte=20,
+        contributor__repository__stars__gte=20,
+        followers__gte=10,
+    )
+    for profile in profiles:
+        followers_lately = profile.followers_since(
+            timedelta(days=config.DAYS_SINCE_TRENDING)
+        )
+        if followers_lately > 0:
+            setattr(profile, "followers_lately", followers_lately)
+            trending.add(profile)
     return sorted(list(trending), key=lambda e: e.followers_lately, reverse=True)
