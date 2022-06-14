@@ -14,4 +14,6 @@ class HasReadmeListFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         if self.value() == "true":
             return queryset.filter(readme_html__isnull=False)
-        return queryset.filter(readme_html__isnull=True)
+        if self.value() == "false":
+            return queryset.filter(readme_html__isnull=True)
+        return queryset
