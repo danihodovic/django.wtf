@@ -5,6 +5,7 @@ from .github_tasks import (
     index_repositories_by_keyword,
     index_repositories_by_topic,
     index_repositories_readme,
+    index_repository,
     index_repository_readme,
     index_user_followers,
 )
