@@ -44,47 +44,58 @@ def index_repositories(url):
     res = http.get(url)
     data = res.json()
     for repository_data in data["items"]:
-        try:
-            owner = repository_data["owner"]
-            profile, _ = Profile.objects.update_or_create(
-                github_id=owner["id"],
-                defaults={
-                    "login": owner["login"],
-                    "type": owner["type"],
-                    "avatar_url": owner["avatar_url"],
-                },
-            )
-
-            repository, created = Repository.objects.update_or_create(
-                github_id=repository_data["id"],
-                defaults=dict(
-                    owner=profile,
-                    name=repository_data["name"],
-                    full_name=repository_data["full_name"],
-                    forks=repository_data["forks"],
-                    watchers=repository_data["watchers"],
-                    open_issues=repository_data["open_issues"],
-                    stars=repository_data["stargazers_count"],
-                    archived=repository_data["archived"],
-                    topics=repository_data["topics"],
-                    description=repository_data["description"],
-                ),
-            )
-            log_action(repository, created)
-
-            repository_stars, created = RepositoryStars.objects.update_or_create(
-                repository=repository,
-                created_at=date.today(),
-                defaults=dict(stars=repository_data["stargazers_count"]),
-            )
-            log_action(repository_stars, created)
-        except DataError:
-            logging.exception(f"DataError for {repository=}")
+        _update_or_create_repo(repository_data)
 
     if "next" in res.links:
         next_url = res.links["next"]["url"]
         if next_url != url:
             index_repositories(url=next_url)
+
+
+@app.task
+def index_repository(full_name):
+    http = http_client()
+    res = http.get(f"https://api.github.com/repos/{full_name}")
+    _update_or_create_repo(res.json())
+
+
+def _update_or_create_repo(repository_data):
+    try:
+        owner = repository_data["owner"]
+        profile, _ = Profile.objects.update_or_create(
+            github_id=owner["id"],
+            defaults={
+                "login": owner["login"],
+                "type": owner["type"],
+                "avatar_url": owner["avatar_url"],
+            },
+        )
+
+        repository, created = Repository.objects.update_or_create(
+            github_id=repository_data["id"],
+            defaults=dict(
+                owner=profile,
+                name=repository_data["name"],
+                full_name=repository_data["full_name"],
+                forks=repository_data["forks"],
+                watchers=repository_data["watchers"],
+                open_issues=repository_data["open_issues"],
+                stars=repository_data["stargazers_count"],
+                archived=repository_data["archived"],
+                topics=repository_data["topics"],
+                description=repository_data["description"],
+            ),
+        )
+        log_action(repository, created)
+
+        repository_stars, created = RepositoryStars.objects.update_or_create(
+            repository=repository,
+            created_at=date.today(),
+            defaults=dict(stars=repository_data["stargazers_count"]),
+        )
+        log_action(repository_stars, created)
+    except DataError:
+        logging.exception(f"DataError for {repository=}")
 
 
 @app.task()
