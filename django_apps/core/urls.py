@@ -1,6 +1,7 @@
 from django.contrib.sitemaps.views import sitemap
 from django.urls import path
 
+from django_apps.core.search_view import SearchView
 from django_apps.core.views import (
     CategoryView,
     IndexView,
@@ -38,6 +39,7 @@ urlpatterns = [
         name="trending-profiles",
     ),
     path("category/<slug:name>/", view=CategoryView.as_view(), name="category-detail"),
+    path("search/", view=SearchView.as_view(), name="search"),
     path(
         "sitemap.xml",
         sitemap,

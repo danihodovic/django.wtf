@@ -86,6 +86,7 @@ THIRD_PARTY_APPS = [
     "import_export",
     "meta",
     "tailwind",
+    "watson",
     "widget_tweaks",
 ]
 
@@ -153,6 +154,8 @@ MIDDLEWARE = [
     "django_user_agents.middleware.UserAgentMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # TODO: What does this do?
+    "watson.middleware.SearchContextMiddleware",
 ]
 
 # STATIC
@@ -334,6 +337,7 @@ SHELL_PLUS_IMPORTS = [
     "from django_apps.core.models import RepositoryType",
     "from django_apps.core.views import trending_repositories",
     "from django_apps.core.tasks import *",
+    "from watson import search as watson",
 ]
 # django-import-export
 # ------------------------------------------------------------------------------

@@ -51,6 +51,10 @@ app.conf.beat_schedule = {
         "task": "django_apps.core.pypi_tasks.index_pypi_projects",
         "schedule": crontab(minute=0, hour=5, day_of_week=0),
     },
+    "rebuild-search-index": {
+        "task": "django_apps.core.tasks.rebuild_search_index",
+        "schedule": crontab(minute=0, hour="*/3"),
+    },
 }
 
 # Load task modules from all registered Django app configs.
