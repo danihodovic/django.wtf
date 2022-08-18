@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from watson import search as watson
 
 
 class CoreConfig(AppConfig):
@@ -7,6 +8,8 @@ class CoreConfig(AppConfig):
 
     def ready(self):
         try:
+            Repository = self.get_model("Repository")
+            watson.register(Repository)
             # pylint: disable=unused-import,import-outside-toplevel
             import django_apps.core.signals
         except ImportError:

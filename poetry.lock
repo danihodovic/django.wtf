@@ -864,6 +864,14 @@ django = "*"
 user-agents = "*"
 
 [[package]]
+name = "django-watson"
+version = "1.6.2"
+description = "Full-text multi-table search application for Django. Easy to install and use, with good performance."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "django-widget-tweaks"
 version = "1.4.12"
 description = "Tweak the form field rendering in templates, not in python-level form definitions."
@@ -2251,7 +2259,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "2e0a04c90ff7cf4f573140a4c353fd776139a7022067e0a80ce73919aba928ec"
+content-hash = "0a551f256447ac659057ad8a1028aeb6b1151faa1794bde9f36069f1e19a2141"
 
 [metadata.files]
 amqp = [
@@ -2676,6 +2684,7 @@ django-user-agents = [
     {file = "django-user_agents-0.4.0.tar.gz", hash = "sha256:cda8ae2146cee30e6867a07943f56ecc570b4391d725ab5309901a8b3e4a3514"},
     {file = "django_user_agents-0.4.0-py3-none-any.whl", hash = "sha256:cd9d9f7158b23c5237b2dacb0bc4fffdf77fefe1d2633b5814d3874288ebdb5d"},
 ]
+django-watson = []
 django-widget-tweaks = [
     {file = "django-widget-tweaks-1.4.12.tar.gz", hash = "sha256:9bfc5c705684754a83cc81da328b39ad1b80f32bd0f4340e2a810cbab4b0c00e"},
     {file = "django_widget_tweaks-1.4.12-py3-none-any.whl", hash = "sha256:fe6b17d5d595c63331f300917980db2afcf71f240ab9341b954aea8f45d25b9a"},
