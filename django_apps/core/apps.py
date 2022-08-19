@@ -1,6 +1,8 @@
 from django.apps import AppConfig
 from watson import search as watson
 
+from .search_adapter import RepositorySearchAdapter
+
 
 class CoreConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
@@ -9,7 +11,9 @@ class CoreConfig(AppConfig):
     def ready(self):
         try:
             Repository = self.get_model("Repository")
-            watson.register(Repository)
+            qs = Repository.valid.all()  # type: ignore
+            watson.register(qs, RepositorySearchAdapter)
+
             # pylint: disable=unused-import,import-outside-toplevel
             import django_apps.core.signals
         except ImportError:
