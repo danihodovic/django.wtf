@@ -19,4 +19,4 @@ from .reddit_tasks import index_top_weekly_submissions
 
 @app.task(soft_time_limit=10 * 60)
 def rebuild_search_index():
-    call_command("manage.py buildwatson")
+    call_command("buildwatson")
