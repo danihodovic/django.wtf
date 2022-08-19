@@ -1,3 +1,4 @@
+from watson import search as watson
 from watson.views import SearchView as OriginalSearchView
 
 from django_apps.core.models import Repository
@@ -9,8 +10,8 @@ class SearchView(OriginalSearchView):
     models = (Repository,)
 
     def get_queryset(self):
-        qs = super().get_queryset()
-        return qs.prefetch_related("object")
+        repositories = Repository.valid.all()
+        return watson.filter(repositories, self.query)
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
