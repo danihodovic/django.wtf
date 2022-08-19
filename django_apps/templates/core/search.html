@@ -2,8 +2,7 @@
 
 {% block content %}
 <div class="mb-3">
-{% for result in object_list %}
-  {% with object=result.object %}
+{% for object in object_list %}
   <div class="mb-1 rounded">
   <div class="shadow-xl card bg-base-100">
     <div class="pb-2 card-body">
@@ -28,7 +27,6 @@
     </div>
   </div>
   </div>
-  {% endwith %}
 {% endfor %}
 </div>
 {% endblock %}
