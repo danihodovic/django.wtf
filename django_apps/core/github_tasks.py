@@ -89,6 +89,8 @@ def index_repositories(url):
 
 @app.task()
 def index_repositories_readme():
+    # Option2: https://github.com/py-universe/django-rest-cli/
+    # Just scrape html off the root page
     for repo in Repository.valid.all():
         index_repository_readme.delay(repo.full_name)
 
@@ -109,7 +111,26 @@ def index_repository_readme(repo_full_name):
 
     markdown_text = b64decode(res.json()["content"]).decode("utf-8")
     repo = Repository.objects.get(full_name=repo_full_name)
-    repo.readme_html = markdown.markdown(markdown_text)
+    from markdown import extensions
+    from markdown.extensions.codehilite import CodeHiliteExtension
+    from markdown.extensions.fenced_code import FencedCodeExtension
+    from markdown.extensions.tables import TableExtension
+
+    # extensions.codehilite.CodeHiliteExtension()
+    # from markdown.extensions import Code
+    repo.readme_html = markdown.markdown(
+        markdown_text,
+        extensions=[
+            "def_list",
+            "toc",
+            "tables",
+            "codehilite",
+            "fenced_code",
+            # CodeHiliteExtension(),
+            # FencedCodeExtension(),
+            # TableExtension(),
+        ],
+    )
     repo.save()
 
 

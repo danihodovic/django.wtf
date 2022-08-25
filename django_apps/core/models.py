@@ -120,6 +120,7 @@ class Repository(TimeStampedModel):
     archived = models.BooleanField(null=True)
     description = models.CharField(max_length=600, null=True)
     topics = ArrayField(models.CharField(max_length=50), null=True)
+    # TODO: Add last updated date on GH or rely on releases
     type = models.CharField(
         max_length=30, choices=RepositoryType.choices, null=True, blank=True
     )
