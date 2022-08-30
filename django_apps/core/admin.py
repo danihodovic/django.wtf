@@ -2,6 +2,7 @@
 from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
+from watson.admin import SearchAdmin
 
 from .filters import HasReadmeListFilter
 from .models import (
@@ -22,7 +23,8 @@ class CategoryAdmin(ImportExportModelAdmin):
 
 
 @admin.register(Repository)
-class RepositoryAdmin(ImportExportModelAdmin):
+class RepositoryAdmin(SearchAdmin):
+    # class RepositoryAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "full_name",
@@ -40,6 +42,7 @@ class RepositoryAdmin(ImportExportModelAdmin):
         "readme_html",
     )
     autocomplete_fields = ("categories",)
+    save_on_top = True
 
     def get_readonly_fields(self, request, obj=None):
         return [f.name for f in self.model._meta.fields if f != "categories"]
@@ -58,7 +61,8 @@ class RepositoryStarsAdmin(ImportExportModelAdmin):
 
 
 @admin.register(Profile)
-class ProfileAdmin(ImportExportModelAdmin):
+class ProfileAdmin(SearchAdmin):
+    # class ProfileAdmin(admin.ModelAdmin):
     list_display = (
         "login",
         "type",
@@ -81,7 +85,8 @@ class ProfileFollowersAdmin(ImportExportModelAdmin):
 
 
 @admin.register(SocialNews)
-class SocialNewsAdmin(ImportExportModelAdmin):
+# class SocialNewsAdmin(SearchAdmin):
+class SocialNewsAdmin(admin.ModelAdmin):
     list_display = ("title", "upvotes", "type")
     list_filter = ("type",)
     search_fields = ("title",)
