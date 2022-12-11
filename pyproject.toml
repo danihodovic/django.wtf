@@ -5,7 +5,7 @@ description = "djangoapps.dev"
 authors = ["Dani Hodovic <dani-hodovic@example.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
 psycopg2 = "^2.9.3"
 whitenoise = "^6.0.0"
 django-anymail = "^8.5"
