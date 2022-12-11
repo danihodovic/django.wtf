@@ -1,15 +1,27 @@
+# syntax=docker/dockerfile:1.3-labs
 FROM python:3.10.8
 
-RUN apt-get update && apt install -y locales \
-        && apt-get clean \
-        && rm -rf /var/lib/apt/lists/*
+# Base apt dependencies
+RUN <<EOF
+set -e
+apt-get update && apt install -y locales
 
-RUN echo "LC_ALL=en_US.UTF-8" >> /etc/environment && \
-	echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
-	echo "LANG=en_US.UTF-8" > /etc/locale.conf && \
-	locale-gen en_US.UTF-8
+# Install postgresql-client-14
+apt-get install -y lsb-release wget
+sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+apt update
+apt-get install -y postgresql-client-14
+rm -rf /var/lib/apt/lists/*
 
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && apt install -y nodejs #!COMMIT
+curl -sL https://deb.nodesource.com/setup_16.x | bash - && apt install -y nodejs #!COMMIT
+
+# Fix locales
+echo "LC_ALL=en_US.UTF-8" >> /etc/environment
+echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+locale-gen en_US.UTF-8
+EOF
 
 WORKDIR /app/
 
@@ -25,16 +37,15 @@ COPY django_apps/theme/static_src/package.json django_apps/theme/static_src/pack
 RUN cd /app/django_apps/theme/static_src && npm install
 
 COPY . /app/
-RUN DJANGO_SETTINGS_MODULE=config.settings.test \
-	DATABASE_URL=postgres://postgres \
-	CELERY_BROKER_URL=zar \
-	REDIS_URL=bar \
-	python manage.py tailwind install --no-input
-RUN DJANGO_SETTINGS_MODULE=config.settings.test \
-	DATABASE_URL=postgres://postgres \
-	CELERY_BROKER_URL=zar \
-	REDIS_URL=bar \
-	python manage.py tailwind build --no-input
+
+RUN <<EOF
+set -e
+export DJANGO_SETTINGS_MODULE=config.settings.test DATABASE_URL=postgres://postgres
+export CELERY_BROKER_URL= REDIS_URL=
+
+python manage.py tailwind install --no-input
+python manage.py tailwind build --no-input
+EOF
 
 # Install the app itself so we can import from it
 RUN poetry install --no-interaction
