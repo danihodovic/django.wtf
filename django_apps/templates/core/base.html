@@ -4,6 +4,7 @@
 <html lang="en-US">
 
 <head>
+  {% block head %}
   <meta charset="UTF-8">
   {% include "meta/meta.html" %}
   {% tailwind_css %}
@@ -17,6 +18,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Akshar:wght@300;400&display=swap" rel="stylesheet">
+  {% endblock %}
 </head>
 
 <body class="flex flex-col w-screen lg:w-full content-center justify-start min-h-screen font-roboto">
