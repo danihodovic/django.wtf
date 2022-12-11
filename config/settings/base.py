@@ -83,9 +83,26 @@ THIRD_PARTY_APPS = [
     "django_celery_results",
     "django_toolshed",
     "django_user_agents",
+    "django_json_ld",
     "import_export",
     "meta",
+    "modelcluster",
     "tailwind",
+    "taggit",
+    "wagtail.contrib.forms",
+    "wagtail.contrib.redirects",
+    "wagtail.embeds",
+    "wagtail.sites",
+    "wagtail.snippets",
+    "wagtail.documents",
+    "wagtail.images",
+    "wagtail.search",
+    "wagtail.admin",
+    "wagtail.users",
+    "wagtail",
+    "wagtailmarkdown",
+    "wagtailmetadata",
+    "wagtail_code_blog",
     "watson",
     "widget_tweaks",
 ]
@@ -156,6 +173,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # TODO: What does this do?
     "watson.middleware.SearchContextMiddleware",
+    "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 
 # STATIC
@@ -358,3 +376,42 @@ META_USE_OG_PROPERTIES = True
 META_USE_TWITTER_PROPERTIES = True
 META_SITE_PROTOCOL = "https"
 META_USE_TITLE_TAG = True
+
+# WAGTAIL SETTINGS
+# ------------------------------------------------------------------------------
+# This is the human-readable name of your Wagtail install
+# which welcomes users upon login to the Wagtail admin.
+WAGTAIL_SITE_NAME = "Django WTF"
+# WAGTAIL_USER_CUSTOM_FIELDS = ['name']
+
+# Replace the search backend
+# WAGTAILSEARCH_BACKENDS = {
+#  'default': {
+#    'BACKEND': 'wagtail.search.backends.elasticsearch5',
+#    'INDEX': 'myapp'
+#  }
+# }
+
+# Wagtail email notifications from address
+# WAGTAILADMIN_NOTIFICATION_FROM_EMAIL = 'wagtail@myhost.io'
+
+# Wagtail email notification format
+# WAGTAILADMIN_NOTIFICATION_USE_HTML = True
+
+# Reverse the default case-sensitive handling of tags
+TAGGIT_CASE_INSENSITIVE = True
+
+WAGTAILMARKDOWN = {
+    "autodownload_fontawesome": False,
+    "allowed_tags": [],  # optional. a list of HTML tags. e.g. ['div', 'p', 'a']
+    "allowed_styles": [],  # optional. a list of styles
+    "allowed_attributes": {},  # optional. a dict with HTML tag as key and a list of attributes as value
+    "allowed_settings_mode": "extend",  # optional. Possible values: "extend" or "override". Defaults to "extend".
+    # https://python-markdown.github.io/extensions/#officially-supported-extensions
+    "extensions": [
+        "toc",
+        "sane_lists",
+    ],  # optional. a list of python-markdown supported extensions
+    "extension_configs": {},  # optional. a dictionary with the extension name as key, and its configuration as value
+    "extensions_settings_mode": "extend",  # optional. Possible values: "extend" or "override". Defaults to "extend".
+}
