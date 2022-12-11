@@ -81,6 +81,9 @@ local pushImagePipeline = {
     {
       name: 'Push Docker image',
       image: 'plugins/docker',
+      environment: {
+        DOCKER_BUILDKIT: '1',
+      },
       settings: {
         username: 'depode',
         password: { from_secret: 'docker_registry_password' },
