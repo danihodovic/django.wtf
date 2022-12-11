@@ -1,4 +1,4 @@
-FROM python:3.9.7
+FROM python:3.10.8
 
 RUN apt-get update && apt install -y locales \
         && apt-get clean \
