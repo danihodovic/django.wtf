@@ -157,11 +157,12 @@ def trending_repositories(**filters):
         stars_in_the_last_week = repo.stars_since(
             timedelta(days=config.DAYS_SINCE_TRENDING)
         )
-        setattr(repo, "stars_lately", stars_in_the_last_week)
         if stars_in_the_last_week > 0:
+            setattr(repo, "stars_lately", stars_in_the_last_week)
+            setattr(repo, "stars_quota", repo.stars_lately / repo.stars)
             trending.append(repo)
 
-    return sorted(trending, key=lambda e: e.stars_lately, reverse=True)
+    return sorted(trending, key=lambda e: e.stars_quota, reverse=True)
 
 
 @cached_as(Contributor, timeout=60 * 60 * 24)
