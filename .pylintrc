@@ -7,7 +7,7 @@ ignore=manage.py,.ptpython_config.py
 max-line-length=120
 
 [MESSAGES CONTROL]
-disable=missing-docstring,invalid-name,duplicate-code,logging-fstring-interpolation,fixme
+disable=missing-docstring,invalid-name,duplicate-code,logging-fstring-interpolation,fixme,inconsistent-return-statements
 
 [DESIGN]
 max-parents=13

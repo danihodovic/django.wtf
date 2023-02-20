@@ -415,3 +415,7 @@ WAGTAILMARKDOWN = {
     "extension_configs": {},  # optional. a dictionary with the extension name as key, and its configuration as value
     "extensions_settings_mode": "extend",  # optional. Possible values: "extend" or "override". Defaults to "extend".
 }
+
+MATTERMOST_URL = env.url("MATTERMOST_URL", default="")
+MATTERMOST_TOKEN = env.str("MATTERMOST_TOKEN", default="")
+MATTERMOST_CHANNEL_ID = env.str("MATTERMOST_CHANNEL_ID", default="")
