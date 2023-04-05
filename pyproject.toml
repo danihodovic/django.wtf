@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "project"
 version = "0.0.1"
-description = "djangoapps.dev"
+description = "django.wtf"
 authors = ["Dani Hodovic <dani-hodovic@example.com>"]
 
 [tool.poetry.dependencies]
@@ -46,6 +46,7 @@ django-watson = "^1.6.2"
 wagtail-code-blog = {git = "https://github.com/honeylogic-io/wagtail-code-blog.git", rev = "master"}
 wagtail-markdown = "^0.10.0"
 mattermostdriver = "^7.3.2"
+django-storages = {extras = ["s3"], version = "^1.13.2"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.1"

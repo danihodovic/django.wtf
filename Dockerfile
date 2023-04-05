@@ -26,7 +26,7 @@ EOF
 WORKDIR /app/
 
 # hadolint ignore=DL3013
-RUN pip install pip poetry #!COMMIT
+RUN pip install pip poetry==1.4.2 #!COMMIT
 COPY pyproject.toml poetry.lock /app/
 RUN poetry config virtualenvs.create false && poetry install --no-interaction #!COMMIT
 
