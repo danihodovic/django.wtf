@@ -3629,28 +3629,24 @@ testing = ["Jinja2 (>=3.0,<3.2)", "azure-mgmt-cdn (>=12.0,<13.0)", "azure-mgmt-f
 
 [[package]]
 name = "wagtail-code-blog"
-version = "0.3.3"
+version = "0.4.0"
 description = "A wagtail code blog"
 category = "main"
 optional = false
 python-versions = ">=3.9,<4.0"
-files = []
-develop = false
+files = [
+    {file = "wagtail_code_blog-0.4.0-py3-none-any.whl", hash = "sha256:17da2eeea43ce74e914db05f9fa61e5b9e483e68f1ae6c58c5674abee1a56532"},
+    {file = "wagtail_code_blog-0.4.0.tar.gz", hash = "sha256:8fc205506d6306f5eba2c5303363bba641d9fc07220aa5cbf2aadc784a50d9de"},
+]
 
 [package.dependencies]
 beautifulsoup4 = "4.8"
-django = "4.*"
-django-json-ld = "^0.0.5 "
-django-model-utils = "^4.2.0"
-readtime = "^1.1.1"
-wagtail = "5.*"
-wagtail-metadata = "4.*"
-
-[package.source]
-type = "git"
-url = "https://github.com/honeylogic-io/wagtail-code-blog.git"
-reference = "master"
-resolved_reference = "e2f9c8ee52cb1fda84a03bd65faf5975f14ec186"
+django = ">=4.0.0,<5.0.0"
+django-json-ld = ">=0.0.5,<0.0.6"
+django-model-utils = ">=4.2.0,<5.0.0"
+readtime = ">=1.1.1,<2.0.0"
+wagtail = ">=5.0.0,<6.0.0"
+wagtail-metadata = ">=4.0.0,<5.0.0"
 
 [[package]]
 name = "wagtail-markdown"
@@ -3955,4 +3951,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "ed15e39a74e98b615a73056e3fe6716666aa3defea8a6c647730370e57bfe65c"
+content-hash = "24c4590d89e14fb26567f21259e46cc12d3be8f71370e3a82a4630ec46609b9d"
