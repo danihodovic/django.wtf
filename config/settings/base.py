@@ -84,7 +84,6 @@ THIRD_PARTY_APPS = [
     "django_toolshed",
     "django_user_agents",
     "django_json_ld",
-    "import_export",
     "meta",
     "modelcluster",
     "tailwind",
@@ -357,12 +356,6 @@ SHELL_PLUS_IMPORTS = [
     "from django_apps.core.tasks import *",
     "from watson import search as watson",
 ]
-# django-import-export
-# ------------------------------------------------------------------------------
-IMPORT_EXPORT_USE_TRANSACTIONS = True
-IMPORT_EXPORT_SKIP_ADMIN_LOG = True
-IMPORT_EXPORT_TMP_STORAGE_CLASS = "import_export.tmp_storages.CacheStorage"
-IMPORT_EXPORT_CHUNK_SIZE = 1000
 
 # django-admin-interface
 # ------------------------------------------------------------------------------
