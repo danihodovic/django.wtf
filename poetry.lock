@@ -3616,14 +3616,14 @@ testing = ["Jinja2 (>=3.0,<3.2)", "azure-mgmt-cdn (>=12.0,<13.0)", "azure-mgmt-f
 
 [[package]]
 name = "wagtail-code-blog"
-version = "0.4.0"
+version = "0.4.1"
 description = "A wagtail code blog"
 category = "main"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "wagtail_code_blog-0.4.0-py3-none-any.whl", hash = "sha256:17da2eeea43ce74e914db05f9fa61e5b9e483e68f1ae6c58c5674abee1a56532"},
-    {file = "wagtail_code_blog-0.4.0.tar.gz", hash = "sha256:8fc205506d6306f5eba2c5303363bba641d9fc07220aa5cbf2aadc784a50d9de"},
+    {file = "wagtail_code_blog-0.4.1-py3-none-any.whl", hash = "sha256:46cbf2519e801d5703a0f821ab9c8b3518e7521767dbc97f9b151ef378de5bd9"},
+    {file = "wagtail_code_blog-0.4.1.tar.gz", hash = "sha256:555cf2417486b251bc69583501eac7a173a0e0bd0ed1e907f14ce76cd47640fb"},
 ]
 
 [package.dependencies]
@@ -3909,4 +3909,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "2c33ddb3176398beacac91e0e569db2e089b5083bfb336fecb9860736fed9087"
+content-hash = "b1590855a8a40094c40f4efe87281a2fd7171ae8f6f1151ef4157e2fb1d43676"
