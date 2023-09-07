@@ -14,7 +14,7 @@ apt update
 apt-get install -y postgresql-client-14
 rm -rf /var/lib/apt/lists/*
 
-curl -sL https://deb.nodesource.com/setup_16.x | bash - && apt install -y nodejs #!COMMIT
+curl -sL https://deb.nodesource.com/setup_20.x | bash - && apt install -y nodejs #!COMMIT
 
 # Fix locales
 echo "LC_ALL=en_US.UTF-8" >> /etc/environment
@@ -40,10 +40,9 @@ COPY . /app/
 
 RUN <<EOF
 set -e
-export DJANGO_SETTINGS_MODULE=config.settings.test DATABASE_URL=postgres://postgres
+export DJANGO_SETTINGS_MODULE=config.settings.test DATABASE_URL=postgres://postgres:5432/postgres
 export CELERY_BROKER_URL= REDIS_URL=
 
-python manage.py tailwind install --no-input
 python manage.py tailwind build --no-input
 EOF
 
