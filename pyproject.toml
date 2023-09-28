@@ -5,7 +5,7 @@ description = "django.wtf"
 authors = ["Dani Hodovic <dani-hodovic@example.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 psycopg2 = "^2.9.3"
 whitenoise = "^6.0.0"
 django-anymail = "^8.5"
@@ -46,6 +46,8 @@ wagtail-code-blog = "0.4.1"
 wagtail-markdown = "^0.10.0"
 mattermostdriver = "^7.3.2"
 django-storages = {extras = ["boto3"], version = "^1.13.2"}
+wrapt = "^1.15.0"
+django-webhook = "^0.0.7"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.1"
