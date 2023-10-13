@@ -13,19 +13,19 @@
         <ul tabindex="0"
             class="p-2 mt-3 shadow menu menu-compact dropdown-content bg-primary-content rounded-box w-52">
             <li>
-                <a href="{% url "core:top-repositories" %}">Best apps</a>
+                <a href="{% url 'core:top-repositories' %}">Best apps</a>
             </li>
             <li>
-                <a href="{% url "core:trending-repositories" %}">Trending apps</a>
+                <a href="{% url 'core:trending-repositories' %}">Trending apps</a>
             </li>
             <li>
-                <a href="{% url "core:top-profiles" %}">Best profiles</a>
+                <a href="{% url 'core:top-profiles' %}">Best profiles</a>
             </li>
             <li>
-                <a href="{% url "core:trending-profiles" %}">Trending profiles</a>
+                <a href="{% url 'core:trending-profiles' %}">Trending profiles</a>
             </li>
             <li>
-                <a href="{% url "core:social-media-news" %}">Social media news</a>
+                <a href="{% url 'core:social-media-news' %}">Social media news</a>
             </li>
         </ul>
     </div>
@@ -33,39 +33,39 @@
         <img src="{% static 'images/logo.png' %}" alt="Django.wtf">
     </a>
     <div class="hidden ml-12 lg:flex form-control">
-        <form id="search-form" action="{% url "core:search" %}">
+        <form id="search-form" action="{% url " core:search" %}">
             <input type="text"
                    name="q"
                    value="{{ request.GET.q }}"
                    placeholder="Search"
-                   class="input input-bordered" />
+                   class="input input-bordered">
         </form>
         <script>
-      const form = document.querySelector("#search-form");
-      const input = form.querySelector("input");
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          form.submit();
-        }
-      });
+            const form = document.querySelector("#search-form");
+            const input = form.querySelector("input");
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    form.submit();
+                }
+            });
         </script>
     </div>
     <div class="hidden ml-10 lg:flex">
         <ul class="p-0 text-white uppercase menu menu-horizontal">
             <li>
-                <a href="{% url "core:top-repositories" %}">Best apps</a>
+                <a href="{% url 'core:top-repositories' %}">Best apps</a>
             </li>
             <li>
-                <a href="{% url "core:trending-repositories" %}">Trending apps</a>
+                <a href="{% url 'core:trending-repositories' %}">Trending apps</a>
             </li>
             <li>
-                <a href="{% url "core:top-profiles" %}">Best profiles</a>
+                <a href="{% url 'core:top-profiles' %}">Best profiles</a>
             </li>
             <li>
-                <a href="{% url "core:trending-profiles" %}">Trending profiles</a>
+                <a href="{% url 'core:trending-profiles' %}">Trending profiles</a>
             </li>
             <li>
-                <a href="{% url "core:social-media-news" %}">Social media news</a>
+                <a href="{% url 'core:social-media-news' %}">Social media news</a>
             </li>
         </ul>
     </div>

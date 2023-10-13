@@ -6,9 +6,11 @@ on:
   pull_request:
     branches:
       - main
+      - master
   push:
     branches:
       - main
+      - master
 
 env:
   IMAGE_REGISTRY: europe-west1-docker.pkg.dev
@@ -66,7 +68,7 @@ jobs:
           cache-to: type=gha,mode=min
 
       - name: Build and push Production
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push'
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -249,7 +251,7 @@ jobs:
           ssh-private-key: ${{ secrets.OPS_DEPLOY_KEY }}
 
       - name: Release
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push'
         run: |
           COMMIT_MESSAGE=$(echo "${{ github.event.head_commit.message }}")
-          ./scripts/git-push.sh -v ${{ github.sha }} -m "$COMMIT_MESSAGE"  -t 'apps' -a '${{ github.event.repository.name }}'
+          ./scripts/git-push.sh -v ${{ github.sha }} -m "$COMMIT_MESSAGE"  -t '${{ github.event.repository.name }}' -a '${{ github.event.repository.name }}'

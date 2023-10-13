@@ -134,3 +134,8 @@ ignore-imports = "yes"
 
 [tool.djlint]
 ignore="H006,H030,H031"
+profile = "django"
+preserve_blank_lines = true
+use_gitignore = true
+format_css = true
+format_js = true
