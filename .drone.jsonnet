@@ -61,7 +61,7 @@ local pythonPipelineWithoutCache = drone.pythonPipeline.new({
     REDIS_URL: 'redis://redis:6379/',
     CELERY_BROKER_URL: 'redis://redis:6379/0',
   },
-}, 'python:3.10');
+}, 'python:3.11');
 
 local pythonPipeline = pythonPipelineWithoutCache {
   steps: [restoreCacheStep] + pythonPipelineWithoutCache.steps + [rebuildCacheStep],
