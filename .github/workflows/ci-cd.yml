@@ -137,19 +137,16 @@ jobs:
           ./manage.py validate_templates --ignore-app jazzmin
 
       - name: Python Upgrade (pyupgrade)
-        if: github.event == 'dont-run'
         run: |
           source .venv/bin/activate
-          pyupgrade $(git ls-files -- '*.py' ':!:**/migrations/*.py') --py39-plus
+          pyupgrade $(git ls-files -- '*.py' ':!:**/migrations/*.py') --py311-plus
 
       - name: Django Upgrade (django-upgrade)
-        if: github.event == 'dont-run'
         run: |
           source .venv/bin/activate
-          django-upgrade $(git ls-files -- '*.py' ':!:**/migrations/*.py') --target=3.2
+          django-upgrade $(git ls-files -- '*.py' ':!:**/migrations/*.py') --target=4.2
 
       - name: Django Template/Html Lint (djlint)
-        if: github.event == 'dont-run'
         run: |
           source .venv/bin/activate
           djlint $(git ls-files -- '*.html')

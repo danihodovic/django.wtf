@@ -34,15 +34,15 @@ def index_pypi_project(repo_full_name):
 
     pypi_project, created = PypiProject.objects.update_or_create(
         repository=repo,
-        defaults=dict(
-            author=info["author"],
-            author_email=info["author_email"],
-            homepage=info["home_page"],
-            summary=info["summary"],
-            version=info["version"],
-            requires_python=info["requires_python"],
-            license=info["license"],
-        ),
+        defaults={
+            "author": info["author"],
+            "author_email": info["author_email"],
+            "homepage": info["home_page"],
+            "summary": info["summary"],
+            "version": info["version"],
+            "requires_python": info["requires_python"],
+            "license": info["license"],
+        },
     )
     log_action(pypi_project, created)
 
@@ -55,8 +55,8 @@ def index_pypi_project(repo_full_name):
         pypi_release, created = PypiRelease.objects.update_or_create(
             project=pypi_project,
             version=version,
-            defaults=dict(
-                uploaded_at=parser.parse(release_data["upload_time_iso_8601"])
-            ),
+            defaults={
+                "uploaded_at": parser.parse(release_data["upload_time_iso_8601"])
+            },
         )
         log_action(pypi_release, created)

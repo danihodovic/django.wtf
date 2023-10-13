@@ -23,7 +23,7 @@ def send_exception_to_mattermost(sender, request, **kwargs):
     if exc_value:
         message = f"Exception occurred: {exc_value}\n\nStack trace:\n{''.join(traceback.format_tb(exc_traceback))}"
         client.posts.create_post(
-            options=dict(channel_id=settings.MATTERMOST_CHANNEL_ID, message=message)
+            options={"channel_id": settings.MATTERMOST_CHANNEL_ID, "message": message}
         )
 
 
@@ -43,3 +43,5 @@ def mattermost_client():
         logging.exception(f"Invalid url configured for Mattermost {url=}")
     except ConnectionError:
         logging.exception("Error when trying to connect to the Mattermost server")
+
+    return None

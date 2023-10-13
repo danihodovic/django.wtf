@@ -22,12 +22,12 @@ class StaticSitemap(Sitemap):
         return reverse(item)
 
 
-category_sitemap = GenericSitemap(
-    dict(queryset=Category.objects.all(), changefreq="daily")
+category_sitemap = GenericSitemap(  # type: ignore
+    {"queryset": Category.objects.all(), "changefreq": "daily"}
 )
 
 
-sitemaps = dict(
-    static=StaticSitemap,
-    categories=category_sitemap,
-)
+sitemaps = {
+    "static": StaticSitemap,
+    "categories": category_sitemap,
+}

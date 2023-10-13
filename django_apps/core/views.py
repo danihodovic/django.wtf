@@ -41,7 +41,6 @@ class IndexView(MetadataMixin, TemplateView):
         context["top_apps"] = Repository.valid.order_by("-stars")[0:5]
         return context
 
-    # pylint: disable=no-self-use
     def categories_ordered_by_total_repositories(self):
         categories = []
         for c in Category.objects.all():

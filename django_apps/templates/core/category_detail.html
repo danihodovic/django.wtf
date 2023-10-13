@@ -1,60 +1,55 @@
 {% extends "core/base.html" %}
 {% load user_agents %}
-
 {% block content %}
-<div class="flex flex-col self-center items-center p-4 lg:p-6 w-full lg:w-11/12">
-  <div class="flex flex-wrap flex-row self-start mt-3 mb-10 text-sm lg:text-lg gap-2">
-    <a href="{% url "core:category-detail" name=category.name %}" class="flex flex-wrap gap-2 hover:brightness-125">
-      <div class="badge badge-lg badge-primary">{{ category.emoji }} {{ category.name }}</div>
-      <div class="badge badge-lg badge-primary">{{ page_obj.paginator.count }} matching repositor{{ page_obj.paginator.count | pluralize:"ies" }}</div>
-    </a>
-  </div>
-
-  <table class="table table-compact lg:table-normal w-full mb-5">
-    <thead>
-      <tr>
-        <th class="hidden xl:block">Rank</th>
-        <th>Name</th>
-        <th class="hidden xl:block">Description</th>
-        <th>Stars</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for repo in page_obj %}
-
-      <tr class="hover">
-        {% with url=repo.github_url %}
-        <td class="hidden xl:table-cell">
-          <a class="font-bold" href="{{ url }}" target="_blank">
-            {{ page_obj.start_index|add:forloop.counter0 }}
-          </a>
-        </td>
-        <td>
-          <a href="{{ url }}" target="_blank">
-            {% if request|is_mobile or request|is_tablet %}
-            {{ repo.full_name|truncatechars:30 }}
-            {% else %}
-            {{ repo.full_name }}
-            {% endif %}
-          </a>
-        </td>
-        <td class="hidden xl:table-cell">
-          <div class="tooltip tooltip-primary before:content-[attr(data-tip)] before:max-w-[50rem]" data-tip="{{ repo.truncated_description }}">
-            <a href="{{ url }}" target="_blank">
-              {{ repo.truncated_description|truncatechars:60 }}
+    <div class="flex flex-col self-center items-center p-4 lg:p-6 w-full lg:w-11/12">
+        <div class="flex flex-wrap flex-row self-start mt-3 mb-10 text-sm lg:text-lg gap-2">
+            <a href="{% url "core:category-detail" name=category.name %}"
+               class="flex flex-wrap gap-2 hover:brightness-125">
+                <div class="badge badge-lg badge-primary">{{ category.emoji }} {{ category.name }}</div>
+                <div class="badge badge-lg badge-primary">
+                    {{ page_obj.paginator.count }} matching repositor{{ page_obj.paginator.count | pluralize:"ies" }}
+                </div>
             </a>
-          </div>
-        </td>
-        <td>
-          <a href="{{ url }}" target="_blank">
-            {{ repo.stars }}
-          </a>
-        </td>
-        {% endwith %}
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% include "core/components/pagination.html" %}
-</div>
+        </div>
+        <table class="table table-compact lg:table-normal w-full mb-5">
+            <thead>
+                <tr>
+                    <th class="hidden xl:block">Rank</th>
+                    <th>Name</th>
+                    <th class="hidden xl:block">Description</th>
+                    <th>Stars</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for repo in page_obj %}
+                    <tr class="hover">
+                        {% with url=repo.github_url %}
+                            <td class="hidden xl:table-cell">
+                                <a class="font-bold" href="{{ url }}" target="_blank">{{ page_obj.start_index|add:forloop.counter0 }}</a>
+                            </td>
+                            <td>
+                                <a href="{{ url }}" target="_blank">
+                                    {% if request|is_mobile or request|is_tablet %}
+                                        {{ repo.full_name|truncatechars:30 }}
+                                    {% else %}
+                                        {{ repo.full_name }}
+                                    {% endif %}
+                                </a>
+                            </td>
+                            <td class="hidden xl:table-cell">
+                                <div class="tooltip tooltip-primary before:content-[attr(data-tip)] before:max-w-[50rem]"
+                                     data-tip="{{ repo.truncated_description }}">
+                                    <a href="{{ url }}" target="_blank">{{ repo.truncated_description|truncatechars:60 }}</a>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="{{ url }}" target="_blank">{{ repo.stars }}</a>
+                            </td>
+                        {% endwith %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% include "core/components/pagination.html" %}
+    </div>
 {% endblock %}

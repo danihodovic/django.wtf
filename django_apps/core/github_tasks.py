@@ -73,25 +73,25 @@ def _update_or_create_repo(repository_data):
 
         repository, created = Repository.objects.update_or_create(
             github_id=repository_data["id"],
-            defaults=dict(
-                owner=profile,
-                name=repository_data["name"],
-                full_name=repository_data["full_name"],
-                forks=repository_data["forks"],
-                watchers=repository_data["watchers"],
-                open_issues=repository_data["open_issues"],
-                stars=repository_data["stargazers_count"],
-                archived=repository_data["archived"],
-                topics=repository_data["topics"],
-                description=repository_data["description"],
-            ),
+            defaults={
+                "owner": profile,
+                "name": repository_data["name"],
+                "full_name": repository_data["full_name"],
+                "forks": repository_data["forks"],
+                "watchers": repository_data["watchers"],
+                "open_issues": repository_data["open_issues"],
+                "stars": repository_data["stargazers_count"],
+                "archived": repository_data["archived"],
+                "topics": repository_data["topics"],
+                "description": repository_data["description"],
+            },
         )
         log_action(repository, created)
 
         repository_stars, created = RepositoryStars.objects.update_or_create(
             repository=repository,
             created_at=date.today(),
-            defaults=dict(stars=repository_data["stargazers_count"]),
+            defaults={"stars": repository_data["stargazers_count"]},
         )
         log_action(repository_stars, created)
     except DataError:
@@ -149,7 +149,7 @@ def index_repo_contributors(repo_id):
         contributor, created = Contributor.objects.update_or_create(
             repository=repo,
             profile=profile,
-            defaults=dict(contributions=entry["contributions"]),
+            defaults={"contributions": entry["contributions"]},
         )
         log_action(contributor, created)
 
@@ -183,7 +183,7 @@ def index_user_followers(user_login):
     profile_followers, created = ProfileFollowers.objects.update_or_create(
         profile=profile,
         created_at=date.today(),
-        defaults=dict(followers=followers),
+        defaults={"followers": followers},
     )
     log_action(profile_followers, created)
 
@@ -226,7 +226,7 @@ def categorize_repository(repo_full_name):
 
 def find_appconfig_files(repo_full_name):
     params = urlencode(
-        dict(q=f"repo:{repo_full_name} AppConfig in:file AppConfig language:python")
+        {"q": f"repo:{repo_full_name} AppConfig in:file AppConfig language:python"}
     )
     http = http_client()
     res = http.get("https://api.github.com/search/code", params=params)
@@ -242,7 +242,7 @@ def http_client():
         total=300,
         status=300,
         status_forcelist=[403, 429, 500, 502, 503, 504],
-        method_whitelist=["HEAD", "GET", "OPTIONS"],
+        allowed_methods=["HEAD", "GET", "OPTIONS"],
         backoff_factor=60,
     )
     s = superrequests.Session(retry_strategy=retry_strategy)

@@ -412,3 +412,5 @@ WAGTAILMARKDOWN = {
 MATTERMOST_URL = env.url("MATTERMOST_URL", default="")
 MATTERMOST_TOKEN = env.str("MATTERMOST_TOKEN", default="")
 MATTERMOST_CHANNEL_ID = env.str("MATTERMOST_CHANNEL_ID", default="")
+
+WAGTAILADMIN_BASE_URL = "https://django.wtf"

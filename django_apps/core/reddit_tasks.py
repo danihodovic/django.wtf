@@ -28,14 +28,14 @@ def index_top_weekly_submissions():
         try:
             obj, created = SocialNews.objects.update_or_create(
                 url=submission.url,
-                defaults=dict(
-                    type=SocialNewsType.REDDIT,
-                    title=submission.title,
-                    upvotes=submission.ups,
-                    created_at=datetime.fromtimestamp(
+                defaults={
+                    "type": SocialNewsType.REDDIT,
+                    "title": submission.title,
+                    "upvotes": submission.ups,
+                    "created_at": datetime.fromtimestamp(
                         submission.created_utc, tz=pytz.utc
                     ),
-                ),
+                },
             )
         except DataError as ex:
             permalink = submission.permalink

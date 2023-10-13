@@ -13,8 +13,8 @@ def test_index_repositories(mocked_responses):
     mocked_responses.add(
         "GET",
         "https://api.github.com/search/repositories",
-        json=dict(
-            items=[
+        json={
+            "items": [
                 {
                     "id": 22,
                     "name": "celery-exporter",
@@ -35,7 +35,7 @@ def test_index_repositories(mocked_responses):
                     },
                 }
             ]
-        ),
+        },
     )
     mocked_responses.add(
         "GET",

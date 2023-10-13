@@ -1,4 +1,4 @@
-# pylint: disable=no-self-use,too-few-public-methods
+# pylint: disable=too-few-public-methods
 import pytest
 from django.conf import settings
 

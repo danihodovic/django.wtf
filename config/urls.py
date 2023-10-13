@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap as sitemap_view
-from django.urls import include, path, re_path
+from django.urls import include, path
 from django.views import defaults as default_views
 from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
@@ -32,13 +32,11 @@ urlpatterns: List[Any] = [
         {"sitemaps": sitemaps},
         name="django.contrib.sitemaps.views.sitemap",
     ),
-    re_path(r"^blog/", include(wagtail_urls)),
-    re_path("", include("django_apps.core.urls")),
+    path("blog/", include(wagtail_urls)),
+    path("", include("django_apps.core.urls")),
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's serving mechanism
-] + static(  # type: ignore
-    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
-)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 if settings.DEBUG:

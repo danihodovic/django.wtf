@@ -1,21 +1,21 @@
 {% load tailwind_tags %}
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en-US">
 
 <head>
   {% block head %}
+  <title>
+    {% block title %}{{ title }}{% endblock %}
+  </title>
+  <meta name="description" content="{% block description %}{{ description }}{% endblock %}">
+  <meta name="keywords" content="{% block keywords %}{{ keywords }}{% endblock %}">
   <meta charset="UTF-8">
   {% include "meta/meta.html" %}
   {% tailwind_css %}
-
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Akshar:wght@300;400&display=swap" rel="stylesheet">
   {% endblock %}
@@ -23,14 +23,10 @@
 
 <body class="flex flex-col w-screen lg:w-full content-center justify-start min-h-screen font-roboto">
   {% include "core/components/_navbar.html" %}
-
   <div class="flex flex-col content-center self-center mt-3 w-full lg:w-9/12">
-    {% block content %}
-    {% endblock %}
+    {% block content %}{% endblock %}
   </div>
-
   {% include "core/components/_footer.html" %}
-
   {% if not debug %}
   <noscript>
     <img alt="django-wtf logo" src="https://s.depode.com/ingress/7ca0f5ff-8ef2-45fb-9718-37d34cddfe79/pixel.gif">

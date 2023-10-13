@@ -1,7 +1,7 @@
 """
 Module for all Form Tests.
 """
-# pylint: disable=no-self-use,too-few-public-methods
+# pylint: disable=too-few-public-methods
 import pytest
 from django.utils.translation import gettext_lazy as _
 

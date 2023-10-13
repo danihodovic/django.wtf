@@ -24,11 +24,11 @@ def index_hn_submissions():
             logging.debug(f"Found HN submission that matches Django in {title=}")
             obj, created = SocialNews.objects.update_or_create(
                 url=f"https://news.ycombinator.com/item?id={item_id}",
-                defaults=dict(
-                    type=SocialNewsType.HACKER_NEWS,
-                    title=data["title"],
-                    upvotes=data["score"],
-                    created_at=datetime.fromtimestamp(data["time"], tz=pytz.utc),
-                ),
+                defaults={
+                    "type": SocialNewsType.HACKER_NEWS,
+                    "title": data["title"],
+                    "upvotes": data["score"],
+                    "created_at": datetime.fromtimestamp(data["time"], tz=pytz.utc),
+                },
             )
             log_action(obj, created)
