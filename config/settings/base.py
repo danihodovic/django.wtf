@@ -84,6 +84,7 @@ THIRD_PARTY_APPS = [
     "django_toolshed",
     "django_user_agents",
     "django_json_ld",
+    "django_custom_error_views",
     "meta",
     "modelcluster",
     "tailwind",

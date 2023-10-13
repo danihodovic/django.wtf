@@ -5,12 +5,14 @@
     <head>
         {% block head %}
             <title>
-                {% block title %}{{ title }}{% endblock %}
+                {% block title %}
+                    {{ title }}
+                {% endblock title %}
             </title>
             <meta name="description"
-                  content="{% block description %}{{ description }}{% endblock %}">
+                  content="{% block description %}{{ description }}{% endblock description %}">
             <meta name="keywords"
-                  content="{% block keywords %}{{ keywords }}{% endblock %}">
+                  content="{% block keywords %}{{ keywords }}{% endblock keywords %}">
             <meta charset="UTF-8">
             {% include "meta/meta.html" %}
             {% tailwind_css %}
@@ -23,13 +25,14 @@
                   rel="stylesheet">
             <link href="https://fonts.googleapis.com/css2?family=Akshar:wght@300;400&display=swap"
                   rel="stylesheet">
-        {% endblock %}
+        {% endblock head %}
     </head>
 
     <body class="flex flex-col w-screen lg:w-full content-center justify-start min-h-screen font-roboto">
         {% include "core/components/_navbar.html" %}
         <div class="flex flex-col content-center self-center mt-3 w-full lg:w-9/12">
-            {% block content %}{% endblock %}
+            {% block content %}
+            {% endblock content %}
         </div>
         {% include "core/components/_footer.html" %}
         {% if not debug %}
