@@ -231,7 +231,7 @@ jobs:
       - name: Run Pytest
         run: |
           source .venv/bin/activate
-          pytest django_apps --ignore .poetry --cov # --run-concurrent
+          pytest django_apps --cov # --run-concurrent
 
   release:
     name: Release

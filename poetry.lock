@@ -3194,13 +3194,13 @@ rsa = ["oauthlib[signedtoken] (>=3.0.0)"]
 
 [[package]]
 name = "requests-toolbelt"
-version = "0.9.1"
+version = "1.0.0"
 description = "A utility belt for advanced users of python-requests"
 optional = false
-python-versions = "*"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 files = [
-    {file = "requests-toolbelt-0.9.1.tar.gz", hash = "sha256:968089d4584ad4ad7c171454f0a5c6dac23971e9472521ea3b6d49d610aa6fc0"},
-    {file = "requests_toolbelt-0.9.1-py2.py3-none-any.whl", hash = "sha256:380606e1d10dc85c3bd47bf5a6095f815ec007be7a8b69c878507068df059e6f"},
+    {file = "requests-toolbelt-1.0.0.tar.gz", hash = "sha256:7681a0a3d047012b5bdc0ee37d7f8f07ebe76ab08caeccfc3921ce23c88d5bc6"},
+    {file = "requests_toolbelt-1.0.0-py2.py3-none-any.whl", hash = "sha256:cccfdd665f0a24fcf4726e690f65639d272bb0637b9b92dfd91a5568ccf6bd06"},
 ]
 
 [package.dependencies]
@@ -3427,15 +3427,19 @@ name = "superrequests"
 version = "0.1.0"
 description = ""
 optional = false
-python-versions = ">=3.8,<4.0"
-files = [
-    {file = "superrequests-0.1.0-py3-none-any.whl", hash = "sha256:7ec283c6014e9b9059a32dbd41ca5aeeb79a29ec2d7bec0ad76521a3fd3a475a"},
-    {file = "superrequests-0.1.0.tar.gz", hash = "sha256:835fb50318a05ace62ccc4d95b5d734519f5399715ce0caa34f2a255600ad2a6"},
-]
+python-versions = "^3.8"
+files = []
+develop = false
 
 [package.dependencies]
-requests = ">=2.27.1,<3.0.0"
-requests-toolbelt = ">=0.9.1,<0.10.0"
+requests = "^2.27.1"
+requests-toolbelt = "^1.0.0"
+
+[package.source]
+type = "git"
+url = "https://github.com/danihodovic/superrequests.git"
+reference = "add-requests-toolbelt"
+resolved_reference = "7f4c939a39211a538b1a8afcca8bb71d2d6ed1d9"
 
 [[package]]
 name = "telepath"
@@ -4082,4 +4086,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "814e807cfa5fa7edd417553fbc696ed83b05f4942b9f6b3143d4306a3dbad0f7"
+content-hash = "01a90d4005c77a07fd64a4cfab2a73159612468459fbbb3199c2984d217317ee"
