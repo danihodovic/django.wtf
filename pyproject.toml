@@ -77,14 +77,14 @@ djlint = "^1.34.0"
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
 
-[tool.black]
-skip_numeric_underscore_normalization = true
-exclude = ".*(venv|virtualenv|.poetry|migrations|node_modules)"
-
 [tool.pytest.ini_options]
 addopts = "--ds=config.settings.test --reuse-db --pdbcls=pudb.debugger:Debugger"
 python_files = "tests.py test_*.py"
 norecursedirs = ".git */migrations/* */static/* venv .venv .virtualenv node_modules"
+
+[tool.black]
+skip_numeric_underscore_normalization = true
+exclude = ".*(venv|virtualenv|.poetry|migrations|node_modules)"
 
 [tool.isort]
 skip_glob = "**/migrations/*.py,**/fixtures/*.py,infra/**/*.py"
@@ -133,4 +133,4 @@ ignore-docstrings = "yes"
 ignore-imports = "yes"
 
 [tool.djlint]
-ignore="H006"
+ignore="H006,H030,H031"
