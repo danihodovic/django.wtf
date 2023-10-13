@@ -13,8 +13,8 @@
         </a>
         <p>
           {% for topic in object.topics|slice:"0:5" %}
-          <a class="p-3 mr-1 text-xs badge badge-outline hover:brightness-125" href="{% url " core:search" %}?q={{ topic
-            }}">{{ topic|truncatechars:30 }}</a>
+          <a class="p-3 mr-1 text-xs badge badge-outline hover:brightness-125"
+            href="{% url 'core:search' %}?q={{ topic }}">{{ topic|truncatechars:30 }}</a>
           {% endfor %}
         </p>
         <p class="mt-2">{{ object.description }}</p>
