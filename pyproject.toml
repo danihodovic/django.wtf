@@ -42,35 +42,32 @@ django-user-agents = "^0.4.0"
 django-celery-results = "^2.3.1"
 Markdown = "^3.3.7"
 django-watson = "^1.6.2"
+wagtail = "^5.1.1"
 wagtail-code-blog = "0.4.1"
 wagtail-markdown = "^0.10.0"
 mattermostdriver = "^7.3.2"
 django-storages = {extras = ["boto3"], version = "^1.13.2"}
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
+pudb = "^2022.1.3"
 pytest = "^7.0.1"
 pytest-django = "^4.5.2"
-black = "^22.1.0"
+black = "23.7.0"
+isort = "^5.12.0"
 coverage = "^6.3.1"
 factory-boy = "^3.2.1"
-isort = "^5.10.1"
-mypy = "^0.931"
-pylint-django = "^2.0.14"
-pylint = "^2.4.4"
+mypy = "^1.6.0"
+pylint = "2.17.5"
+pylint-django = "2.5.3"
 pytest-cov = "^3.0.0"
-django-stubs = "^1.9.0"
+django-stubs = "^4.2.3"
 pylint-celery = "^0.3"
 Werkzeug = "^2.0.3"
 django-coverage-plugin = "^2.0.2"
 responses = "^0.18.0"
 types-requests = "^2.27.12"
 types-python-dateutil = "^2.8.15"
-pudb = "^2022.1.1"
 types-Markdown = "^3.3.27"
-
-[tool.poetry.group.dev.dependencies]
-pudb = "^2022.1.3"
-wagtail = "^5.1.1"
 
 [build-system]
 requires = ["poetry>=0.12"]
@@ -79,3 +76,43 @@ build-backend = "poetry.masonry.api"
 [tool.black]
 skip_numeric_underscore_normalization = true
 exclude = ".*(venv|virtualenv|.poetry|migrations|node_modules)"
+
+[tool.pytest.ini_options]
+addopts = "--ds=config.settings.test --reuse-db --pdbcls=pudb.debugger:Debugger"
+python_files = "tests.py test_*.py"
+norecursedirs = ".git */migrations/* */static/* venv .venv .virtualenv node_modules"
+
+[tool.isort]
+skip_glob = "**/migrations/*.py,**/fixtures/*.py,infra/**/*.py"
+# https://github.com/psf/black/issues/251#issuecomment-535187912
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+line_length = 88
+
+[tool.mypy]
+python_version = "3.10"
+check_untyped_defs = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+plugins = ["mypy_django_plugin.main"]
+exclude = [".venv","migrations.*"]
+
+[tool.django-stubs]
+django_settings_module = "config.settings.test"
+
+[tool.pylint.'MASTER']
+load-plugins = "pylint_django, pylint_celery"
+
+[tool.pylint.'FORMAT']
+max-line-length = 150
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = "missing-docstring,invalid-name"
+
+[tool.pylint.'DESIGN']
+max-parents = 13

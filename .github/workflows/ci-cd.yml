@@ -1,0 +1,258 @@
+# yamllint disable rule:line-length rule:truthy
+---
+name: CI/CD
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+env:
+  IMAGE_REGISTRY: europe-west1-docker.pkg.dev
+  IMAGE_REPOSITORY: europe-west1-docker.pkg.dev/honeylogic/default/${{ github.event.repository.name }}
+
+  DATABASE_URL: psql://postgres:postgres@localhost:5432/django_wtf
+  DJANGO_SETTINGS_MODULE: config.settings.test
+  REDIS_URL: redis://localhost:6379/
+
+  # Common Django Env
+  DJANGO_ADMIN_URL: ""
+  DJANGO_SECRET_KEY: placeholder-g7cLmscguS3fnxCPK2j12lc73j0vDAuUciazNxbl09AVj4dTtY
+  DJANGO_HASHID_FIELD_SALT: salty
+  DJANGO_AWS_ACCESS_KEY_ID: ""
+  DJANGO_AWS_SECRET_ACCESS_KEY: ""
+  DJANGO_AWS_STORAGE_BUCKET_NAME: ""
+  PROMETHEUS_EXPORT_MIGRATIONS: "false"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to Image Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v4.4.1
+
+      - name: Build and push Default
+        if: github.event_name == 'pull_request'
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE_REPOSITORY }}:${{ github.event.pull_request.head.sha }}
+            ${{ env.IMAGE_REPOSITORY }}:${{ env.GITHUB_REF_NAME_SLUG }}-latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=min
+
+      - name: Build and push Production
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          # Push latest image
+          tags: |
+            ${{ env.IMAGE_REPOSITORY }}:${{ github.sha }}
+            ${{ env.IMAGE_REPOSITORY }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=min
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        id: setup-python
+        with:
+          python-version: 3.10.8
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.5.1
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: |
+          poetry install --no-interaction --no-root
+
+      - name: Format (black)
+        run: |
+          source .venv/bin/activate
+          black --check $(git ls-files -- '*.py' ':!:**/migrations/*.py')
+
+      - name: Sort imports (isort)
+        run: |
+          source .venv/bin/activate
+          isort --check-only $(git ls-files -- '*.py' ':!:**/migrations/*.py')
+
+      - name: Type Check (mypy)
+        run: |
+          source .venv/bin/activate
+          mypy .
+
+      - name: Lint (pylint)
+        run: |
+          source .venv/bin/activate
+          pylint $(git ls-files -- '*.py' ':!:**/migrations/*.py')
+
+      - name: Validate templates
+        run: |
+          source .venv/bin/activate
+          ./manage.py validate_templates --ignore-app jazzmin
+
+      - name: Python Upgrade (pyupgrade)
+        if: github.event == 'dont-run'
+        run: |
+          source .venv/bin/activate
+          pyupgrade $(git ls-files -- '*.py' ':!:**/migrations/*.py') --py39-plus
+
+      - name: Django Upgrade (django-upgrade)
+        if: github.event == 'dont-run'
+        run: |
+          source .venv/bin/activate
+          django-upgrade $(git ls-files -- '*.py' ':!:**/migrations/*.py') --target=3.2
+
+      - name: Django Template/Html Lint (djlint)
+        if: github.event == 'dont-run'
+        run: |
+          source .venv/bin/activate
+          djlint $(git ls-files -- '*.html')
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:12
+        ports: ['5432:5432']
+        env:
+          POSTGRES_DB: django_wtf
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+
+      redis:
+        image: redis:6
+        ports: ['6379:6379']
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        id: setup-python
+        with:
+          python-version: 3.10.8
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.5.1
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: |
+          poetry install --no-interaction --no-root
+          source .venv/bin/activate
+
+      - name: Run Migrations
+        run: |
+          source .venv/bin/activate
+          ./manage.py migrate
+
+      # Some Django checks require migrations to run for full functionality
+      # Therefore run migrations first before checking for missing migrations
+      - name: Check for Missing Migrations
+        if: github.event == 'dont-run'
+        run: |
+          source .venv/bin/activate
+          DJANGO_SETTINGS_MODULE=config.settings.production \
+            ./manage.py makemigrations --check --dry-run
+
+      - name: Django Check
+        run: |
+          source .venv/bin/activate
+          DJANGO_SETTINGS_MODULE=config.settings.production \
+            ./manage.py check --deploy --fail-level=WARNING
+
+      - name: Test Loading Fixtures
+        if: github.event == 'dont-run'
+        run: |
+          source .venv/bin/activate
+          ./manage.py load_fixtures
+
+      - name: Run Pytest
+        run: |
+          source .venv/bin/activate
+          pytest django_apps --ignore .poetry --cov # --run-concurrent
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name == 'push' || github.event_name == 'release'
+    needs:
+      - build
+      - lint
+      - test
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ssh-key: ${{ secrets.OPS_DEPLOY_KEY }}
+          repository: 'honeylogic-io/ops'
+
+      - uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.OPS_DEPLOY_KEY }}
+
+      - name: Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          COMMIT_MESSAGE=$(echo "${{ github.event.head_commit.message }}")
+          ./scripts/git-push.sh -v ${{ github.sha }} -m "$COMMIT_MESSAGE"  -t 'apps' -a '${{ github.event.repository.name }}'
