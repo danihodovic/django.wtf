@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any
 
 from django.conf import settings
 from django.conf.urls.static import static
