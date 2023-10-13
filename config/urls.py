@@ -16,7 +16,7 @@ from django_apps.core.sitemap_views import sitemaps as core_sitemaps
 sitemaps = {**core_sitemaps, "blog": wagtail_sitemap_view}
 
 
-urlpatterns: List[Any] = [
+urlpatterns: list[Any] = [
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management

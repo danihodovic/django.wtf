@@ -19,6 +19,7 @@ env:
   DATABASE_URL: psql://postgres:postgres@localhost:5432/django_wtf
   DJANGO_SETTINGS_MODULE: config.settings.test
   REDIS_URL: redis://localhost:6379/
+  CELERY_BROKER_URL: redis://localhost:6379/
 
   # Common Django Env
   DJANGO_ADMIN_URL: ""
