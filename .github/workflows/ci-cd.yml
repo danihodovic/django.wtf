@@ -153,7 +153,7 @@ jobs:
       - name: Django Template/Html Lint (djlint)
         run: |
           source .venv/bin/activate
-          djlint .
+          djlint . --check
 
   test:
     name: Test
@@ -246,7 +246,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ssh-key: ${{ secrets.OPS_DEPLOY_KEY }}
-          repository: 'honeylogic-io/ops'
+          repository: '${{ github.event.organization.login }}/ops'
 
       - uses: webfactory/ssh-agent@v0.8.0
         with:
