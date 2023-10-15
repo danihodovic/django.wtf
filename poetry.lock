@@ -3424,22 +3424,18 @@ tests = ["cython", "littleutils", "pygments", "pytest", "typeguard"]
 
 [[package]]
 name = "superrequests"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 optional = false
-python-versions = "^3.8"
-files = []
-develop = false
+python-versions = ">=3.8,<4.0"
+files = [
+    {file = "superrequests-0.1.1-py3-none-any.whl", hash = "sha256:5fae89105a07f78cba0e1d2068a05e2583669c2a1c044cbd92001b6717814cc9"},
+    {file = "superrequests-0.1.1.tar.gz", hash = "sha256:a0761ffb79a7f5e6f736562f1eac03bf716e5d32b2a36027f57500ab0d41804c"},
+]
 
 [package.dependencies]
-requests = "^2.27.1"
-requests-toolbelt = "^1.0.0"
-
-[package.source]
-type = "git"
-url = "https://github.com/danihodovic/superrequests.git"
-reference = "add-requests-toolbelt"
-resolved_reference = "7f4c939a39211a538b1a8afcca8bb71d2d6ed1d9"
+requests = ">=2.31.0,<3.0.0"
+requests-toolbelt = ">=1.0.0,<2.0.0"
 
 [[package]]
 name = "telepath"
@@ -4086,4 +4082,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "01a90d4005c77a07fd64a4cfab2a73159612468459fbbb3199c2984d217317ee"
+content-hash = "b19cb987890574cd23b66d8906a1975436b78372d116c9b2469bf004f93f9edc"
