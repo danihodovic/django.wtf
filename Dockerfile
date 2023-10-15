@@ -48,8 +48,11 @@ EOF
 
 RUN <<EOF
 set -e
-export DJANGO_SETTINGS_MODULE=config.settings.test DATABASE_URL=postgres://postgres:5432/postgres
+export DJANGO_SETTINGS_MODULE=config.settings.production DATABASE_URL=postgres://postgres:5432/postgres
 export CELERY_BROKER_URL= REDIS_URL=
+export DJANGO_SECRET_KEY=test DJANGO_ADMIN_URL=test
+export DJANGO_AWS_ACCESS_KEY_ID= DJANGO_AWS_SECRET_ACCESS_KEY=
+export DJANGO_AWS_STORAGE_BUCKET_NAME=
 
 python manage.py collectstatic --no-input
 EOF
