@@ -44,7 +44,14 @@ export DJANGO_SETTINGS_MODULE=config.settings.test DATABASE_URL=postgres://postg
 export CELERY_BROKER_URL= REDIS_URL=
 
 python manage.py tailwind build --no-input
-python manage.py collectstatic --noinput
+EOF
+
+RUN <<EOF
+set -e
+export DJANGO_SETTINGS_MODULE=config.settings.test DATABASE_URL=postgres://postgres:5432/postgres
+export CELERY_BROKER_URL= REDIS_URL=
+
+python manage.py collectstatic --no-input
 EOF
 
 # Install the app itself so we can import from it

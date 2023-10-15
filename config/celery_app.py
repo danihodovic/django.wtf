@@ -1,7 +1,9 @@
 import os
+from pathlib import Path
 
-from celery import Celery
+from celery import Celery, bootsteps
 from celery.schedules import crontab
+from celery.signals import worker_ready, worker_shutdown
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.production")
@@ -13,6 +15,49 @@ app = Celery("django_wtf")
 # - namespace='CELERY' means all celery-related configuration keys
 #   should have a `CELERY_` prefix.
 app.config_from_object("django.conf:settings", namespace="CELERY")
+
+
+HEARTBEAT_FILE = Path("/tmp/worker_heartbeat")
+READINESS_FILE = Path("/tmp/worker_ready")
+
+
+class LivenessProbe(bootsteps.StartStopStep):
+    requires = {"celery.worker.components:Timer"}
+
+    def __init__(
+        self, worker, **kwargs
+    ):  # pylint: disable=unused-argument,super-init-not-called
+        self.requests = []
+        self.tref = None
+
+    def start(self, worker):  # pylint: disable=arguments-renamed
+        self.tref = worker.timer.call_repeatedly(
+            1.0,
+            self.update_heartbeat_file,
+            (worker,),
+            priority=10,
+        )
+
+    def stop(self, worker):  # pylint: disable=unused-argument,arguments-renamed
+        HEARTBEAT_FILE.unlink(missing_ok=True)
+
+    def update_heartbeat_file(
+        self, worker
+    ):  # pylint: disable=unused-argument,arguments-renamed
+        HEARTBEAT_FILE.touch()
+
+
+@worker_ready.connect  # type: ignore
+def worker_ready(**_):
+    READINESS_FILE.touch()
+
+
+@worker_shutdown.connect  # type: ignore
+def worker_shutdown(**_):
+    READINESS_FILE.unlink(missing_ok=True)
+
+
+app.steps["worker"].add(LivenessProbe)
 
 app.conf.beat_schedule = {
     "index-repositories-by-topic": {
