@@ -1,6 +1,6 @@
 import pytest
 
-from django_apps.core.github_api_urls import search_repos_by_topic_url
+from django_wtf.core.github_api_urls import search_repos_by_topic_url
 
 from .github_tasks import index_contributors, index_repositories
 from .models import Category, Repository

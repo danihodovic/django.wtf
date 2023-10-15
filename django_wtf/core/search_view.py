@@ -1,7 +1,7 @@
 from watson import search as watson
 from watson.views import SearchView as OriginalSearchView
 
-from django_apps.core.models import Repository
+from django_wtf.core.models import Repository
 
 
 class SearchView(OriginalSearchView):

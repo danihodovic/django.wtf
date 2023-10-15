@@ -11,9 +11,9 @@ from django.http import HttpRequest, HttpResponseRedirect
 from django.test import RequestFactory
 from django.urls import reverse
 
-from django_apps.users.models import User
-from django_apps.users.tests.factories import UserFactory
-from django_apps.users.views import UserRedirectView, UserUpdateView, user_detail_view
+from django_wtf.users.models import User
+from django_wtf.users.tests.factories import UserFactory
+from django_wtf.users.views import UserRedirectView, UserUpdateView, user_detail_view
 
 pytestmark = pytest.mark.django_db
 

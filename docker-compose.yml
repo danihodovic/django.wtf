@@ -5,7 +5,7 @@ services:
     image: postgres:14
     network_mode: host
     environment:
-      POSTGRES_DB: django-apps
+      POSTGRES_DB: django-wtf
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:

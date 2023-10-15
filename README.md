@@ -1,4 +1,4 @@
-# django_apps
+# django_wtf
 
 ### Project setup
 
@@ -7,8 +7,8 @@ Install [Docker](https://docs.docker.com/get-docker/) since we dockerize externa
 Clone the project:
 
 ```
-git clone git@github.com:danihodovic/django_apps.git
-cd django_apps
+git clone git@github.com:danihodovic/django_wtf.git
+cd django_wtf
 ```
 
 Add the direnv file

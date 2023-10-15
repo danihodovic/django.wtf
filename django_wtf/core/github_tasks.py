@@ -11,11 +11,11 @@ from requests.models import HTTPError
 from urllib3.util.retry import Retry
 
 from config import celery_app as app
-from django_apps.core.github_api_urls import (
+from django_wtf.core.github_api_urls import (
     search_repos_by_keyword_url,
     search_repos_by_topic_url,
 )
-from django_apps.core.models import (
+from django_wtf.core.models import (
     Contributor,
     Profile,
     ProfileFollowers,

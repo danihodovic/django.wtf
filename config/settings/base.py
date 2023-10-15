@@ -6,8 +6,8 @@ from pathlib import Path
 import environ
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
-# django_apps/
-APPS_DIR = ROOT_DIR / "django_apps"
+# django_wtf/
+APPS_DIR = ROOT_DIR / "django_wtf"
 env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
@@ -108,9 +108,9 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "django_apps.users",
-    "django_apps.core",
-    "django_apps.theme",
+    "django_wtf.users",
+    "django_wtf.core",
+    "django_wtf.theme",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = (
@@ -120,7 +120,7 @@ INSTALLED_APPS = (
 # MIGRATIONS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#migration-modules
-MIGRATION_MODULES = {"sites": "django_apps.contrib.sites.migrations"}
+MIGRATION_MODULES = {"sites": "django_wtf.contrib.sites.migrations"}
 
 # AUTHENTICATION
 # ------------------------------------------------------------------------------
@@ -219,7 +219,7 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                "django_apps.utils.context_processors.settings_context",
+                "django_wtf.utils.context_processors.settings_context",
                 "constance.context_processors.config",
             ],
         },
@@ -320,9 +320,9 @@ ACCOUNT_EMAIL_REQUIRED = True
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_ADAPTER = "django_apps.users.adapters.AccountAdapter"
+ACCOUNT_ADAPTER = "django_wtf.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_ADAPTER = "django_apps.users.adapters.SocialAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "django_wtf.users.adapters.SocialAccountAdapter"
 
 
 # Your stuff...
@@ -346,15 +346,15 @@ CONSTANCE_CONFIG = {
         "The number of days since we calculate the trending repos and devs.",
     ),
 }
-TAILWIND_APP_NAME = "django_apps.theme"
+TAILWIND_APP_NAME = "django_wtf.theme"
 
 SHELL_PLUS_MODEL_IMPORTS_RESOLVER = (
     "django_extensions.collision_resolvers.AppNameSuffixCustomOrderCR"
 )
 SHELL_PLUS_IMPORTS = [
-    "from django_apps.core.models import RepositoryType",
-    "from django_apps.core.views import trending_repositories",
-    "from django_apps.core.tasks import *",
+    "from django_wtf.core.models import RepositoryType",
+    "from django_wtf.core.views import trending_repositories",
+    "from django_wtf.core.tasks import *",
     "from watson import search as watson",
 ]
 

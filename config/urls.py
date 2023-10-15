@@ -11,7 +11,7 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.contrib.sitemaps.views import Sitemap as wagtail_sitemap_view
 from wagtail.documents import urls as wagtaildocs_urls
 
-from django_apps.core.sitemap_views import sitemaps as core_sitemaps
+from django_wtf.core.sitemap_views import sitemaps as core_sitemaps
 
 sitemaps = {**core_sitemaps, "blog": wagtail_sitemap_view}
 
@@ -20,7 +20,7 @@ urlpatterns: list[Any] = [
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
-    path("users/", include("django_apps.users.urls", namespace="users")),
+    path("users/", include("django_wtf.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Health checks
     path("health/", include("health_check.urls")),
@@ -33,7 +33,7 @@ urlpatterns: list[Any] = [
         name="django.contrib.sitemaps.views.sitemap",
     ),
     path("blog/", include(wagtail_urls)),
-    path("", include("django_apps.core.urls")),
+    path("", include("django_wtf.core.urls")),
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's serving mechanism
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

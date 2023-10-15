@@ -1,8 +1,8 @@
 from django.contrib.sitemaps.views import sitemap
 from django.urls import path
 
-from django_apps.core.search_view import SearchView
-from django_apps.core.views import (
+from django_wtf.core.search_view import SearchView
+from django_wtf.core.views import (
     CategoryView,
     IndexView,
     SocialMediaNewsView,

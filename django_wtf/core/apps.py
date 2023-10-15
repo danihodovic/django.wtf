@@ -6,7 +6,7 @@ from .search_adapter import RepositorySearchAdapter
 
 class CoreConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "django_apps.core"
+    name = "django_wtf.core"
 
     def ready(self):
         try:
@@ -15,6 +15,6 @@ class CoreConfig(AppConfig):
             watson.register(qs, RepositorySearchAdapter)
 
             # pylint: disable=unused-import,import-outside-toplevel
-            import django_apps.core.signals
+            import django_wtf.core.signals
         except ImportError:
             pass

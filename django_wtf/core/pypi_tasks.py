@@ -5,7 +5,7 @@ from requests.exceptions import HTTPError
 from superrequests import Session
 
 from config import celery_app as app
-from django_apps.core.models import PypiProject, PypiRelease, Repository
+from django_wtf.core.models import PypiProject, PypiRelease, Repository
 
 from .utils import log_action
 

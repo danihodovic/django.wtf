@@ -1,8 +1,8 @@
 import pytest
 import responses
 
-from django_apps.users.models import User
-from django_apps.users.tests.factories import UserFactory
+from django_wtf.users.models import User
+from django_wtf.users.tests.factories import UserFactory
 
 
 @pytest.fixture(autouse=True)

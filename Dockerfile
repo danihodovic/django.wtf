@@ -33,8 +33,8 @@ RUN poetry config virtualenvs.create false && poetry install --no-interaction #!
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONBREAKPOINT pudb.set_trace
 
-COPY django_apps/theme/static_src/package.json django_apps/theme/static_src/package-lock.json /app/django_apps/theme/static_src/
-RUN cd /app/django_apps/theme/static_src && npm install
+COPY django_wtf/theme/static_src/package.json django_wtf/theme/static_src/package-lock.json /app/django_wtf/theme/static_src/
+RUN cd /app/django_wtf/theme/static_src && npm install
 
 COPY . /app/
 
