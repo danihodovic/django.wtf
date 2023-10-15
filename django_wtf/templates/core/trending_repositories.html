@@ -1,62 +1,62 @@
 {% extends "core/base.html" %}
 {% load humanize user_agents wtf_tags %}
 {% block content %}
-<div class="flex flex-col items-center self-center w-full p-4 lg:p-6 lg:w-11/12">
-  <div class="flex flex-wrap self-start mt-3 mb-10 text-sm lg:text-lg gap-2">
-    <div class="badge badge-lg badge-primary">Trending repositories</div>
-    {% if request|is_mobile or request|is_tablet %}
-    <div class="badge badge-lg badge-primary">Repositories with the most stars</div>
-    {% else %}
-    <div class="badge badge-lg badge-primary">
-      Repositories with proportionally largest increase in stars for the last
-      {{ config.DAYS_SINCE_TRENDING | apnumber }} days
-    </div>
-    {% endif %}
-  </div>
-  <table class="table w-full mb-5 leading-6">
-    <thead>
-      <tr>
-        <th class="hidden xl:block">Rank</th>
-        <th>Name</th>
-        <th class="hidden xl:block">Description</th>
-        {% if request|is_mobile or request|is_tablet %}
-        <th>Stars</th>
-        {% else %}
-        <th>% stars increase (new stars)</th>
-        {% endif %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for repo in page_obj %}
-      <tr class="hover">
-        {% with url=repo.github_url %}
-        <td class="hidden xl:table-cell">
-          <a class="font-bold" href="{{ url }}" target="_blank">{{ page_obj.start_index|add:forloop.counter0 }}</a>
-        </td>
-        <td>
-          <a href="{{ url }}" target="_blank">
+    <div class="flex flex-col items-center self-center w-full p-4 lg:p-6 lg:w-11/12">
+        <div class="flex flex-wrap self-start mt-3 mb-10 text-sm lg:text-lg gap-2">
+            <div class="badge badge-lg badge-primary">Trending repositories</div>
             {% if request|is_mobile or request|is_tablet %}
-            {{ repo.full_name|truncatechars:25 }}
+                <div class="badge badge-lg badge-primary">Repositories with the most stars</div>
             {% else %}
-            {{ repo.full_name }}
+                <div class="badge badge-lg badge-primary">
+                    Repositories with proportionally largest increase in stars for the last
+                    {{ config.DAYS_SINCE_TRENDING | apnumber }} days
+                </div>
             {% endif %}
-          </a>
-        </td>
-        <td class="hidden xl:table-cell">
-          <a href="{{ url }}" target="_blank">{{ repo.truncated_description|truncatechars:50 }}</a>
-        </td>
-        <td class="text-right">
-          <a href="{{ url }}" target="_blank">
-            <strong>{{ repo.stars_quota | to_percent }}</strong> ({{ repo.stars_lately }})
-          </a>
-        </td>
-        {% endwith %}
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% include "core/components/pagination.html" %}
-</div>
+        </div>
+        <table class="table w-full mb-5 leading-6">
+            <thead>
+                <tr>
+                    <th class="hidden xl:block">Rank</th>
+                    <th>Name</th>
+                    <th class="hidden xl:block">Description</th>
+                    {% if request|is_mobile or request|is_tablet %}
+                        <th>Stars</th>
+                    {% else %}
+                        <th>% stars increase (new stars)</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for repo in page_obj %}
+                    <tr class="hover">
+                        {% with url=repo.github_url %}
+                            <td class="hidden xl:table-cell">
+                                <a class="font-bold" href="{{ url }}" target="_blank">{{ page_obj.start_index|add:forloop.counter0 }}</a>
+                            </td>
+                            <td>
+                                <a href="{{ url }}" target="_blank">
+                                    {% if request|is_mobile or request|is_tablet %}
+                                        {{ repo.full_name|truncatechars:25 }}
+                                    {% else %}
+                                        {{ repo.full_name }}
+                                    {% endif %}
+                                </a>
+                            </td>
+                            <td class="hidden xl:table-cell">
+                                <a href="{{ url }}" target="_blank">{{ repo.truncated_description|truncatechars:50 }}</a>
+                            </td>
+                            <td class="text-right">
+                                <a href="{{ url }}" target="_blank">
+                                    <strong>{{ repo.stars_quota | to_percent }}</strong> ({{ repo.stars_lately }})
+                                </a>
+                            </td>
+                        {% endwith %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% include "core/components/pagination.html" %}
+    </div>
 {% endblock content %}
 {% block stars_column_header %}
 {% endblock stars_column_header %}
