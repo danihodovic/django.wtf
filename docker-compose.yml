@@ -1,11 +1,11 @@
 ---
-version: '2.4'
+version: "2.4"
 services:
   postgres:
-    image: postgres:14
+    image: postgres:15
     network_mode: host
     environment:
-      POSTGRES_DB: django-apps
+      POSTGRES_DB: django-wtf
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:

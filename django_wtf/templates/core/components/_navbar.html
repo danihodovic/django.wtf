@@ -1,0 +1,72 @@
+{% load static %}
+<div class="navbar bg-neutral">
+    <div class="dropdown">
+        <label tabindex="0" class="btn btn-circle lg:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="w-5 h-5"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+            </svg>
+        </label>
+        <ul tabindex="0"
+            class="p-2 mt-3 shadow menu menu-compact dropdown-content bg-primary-content rounded-box w-52">
+            <li>
+                <a href="{% url 'core:top-repositories' %}">Best apps</a>
+            </li>
+            <li>
+                <a href="{% url 'core:trending-repositories' %}">Trending apps</a>
+            </li>
+            <li>
+                <a href="{% url 'core:top-profiles' %}">Best profiles</a>
+            </li>
+            <li>
+                <a href="{% url 'core:trending-profiles' %}">Trending profiles</a>
+            </li>
+            <li>
+                <a href="{% url 'core:social-media-news' %}">Social media news</a>
+            </li>
+        </ul>
+    </div>
+    <a class="w-32 lg:ml-6" href="/">
+        <img src="{% static 'images/logo.png' %}" alt="Django.wtf">
+    </a>
+    <div class="hidden ml-12 lg:flex form-control">
+        <form id="search-form" action="{% url 'core:search' %}">
+            <input type="text"
+                   name="q"
+                   value="{{ request.GET.q }}"
+                   placeholder="Search"
+                   class="input input-bordered">
+        </form>
+        <script>
+            const form = document.querySelector("#search-form");
+            const input = form.querySelector("input");
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    form.submit();
+                }
+            });
+        </script>
+    </div>
+    <div class="hidden ml-10 lg:flex">
+        <ul class="p-0 text-white uppercase menu menu-horizontal">
+            <li>
+                <a href="{% url 'core:top-repositories' %}">Best apps</a>
+            </li>
+            <li>
+                <a href="{% url 'core:trending-repositories' %}">Trending apps</a>
+            </li>
+            <li>
+                <a href="{% url 'core:top-profiles' %}">Best profiles</a>
+            </li>
+            <li>
+                <a href="{% url 'core:trending-profiles' %}">Trending profiles</a>
+            </li>
+            <li>
+                <a href="{% url 'core:social-media-news' %}">Social media news</a>
+            </li>
+        </ul>
+    </div>
+</div>

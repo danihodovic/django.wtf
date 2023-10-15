@@ -1,26 +1,26 @@
-from typing import Any, List
+from typing import Any
 
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap as sitemap_view
-from django.urls import include, path, re_path
+from django.urls import include, path
 from django.views import defaults as default_views
 from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.contrib.sitemaps.views import Sitemap as wagtail_sitemap_view
 from wagtail.documents import urls as wagtaildocs_urls
 
-from django_apps.core.sitemap_views import sitemaps as core_sitemaps
+from django_wtf.core.sitemap_views import sitemaps as core_sitemaps
 
 sitemaps = {**core_sitemaps, "blog": wagtail_sitemap_view}
 
 
-urlpatterns: List[Any] = [
+urlpatterns: list[Any] = [
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
-    path("users/", include("django_apps.users.urls", namespace="users")),
+    path("users/", include("django_wtf.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Health checks
     path("health/", include("health_check.urls")),
@@ -32,13 +32,11 @@ urlpatterns: List[Any] = [
         {"sitemaps": sitemaps},
         name="django.contrib.sitemaps.views.sitemap",
     ),
-    re_path(r"^blog/", include(wagtail_urls)),
-    re_path("", include("django_apps.core.urls")),
+    path("blog/", include(wagtail_urls)),
+    path("", include("django_wtf.core.urls")),
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's serving mechanism
-] + static(  # type: ignore
-    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
-)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 if settings.DEBUG:

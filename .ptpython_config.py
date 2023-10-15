@@ -4,7 +4,6 @@ Configuration example for ``ptpython``.
 
 Copy this file to ~/.ptpython/config.py
 """
-from __future__ import unicode_literals
 
 from prompt_toolkit.filters import ViNavigationMode
 from prompt_toolkit.key_binding.key_processor import KeyPress

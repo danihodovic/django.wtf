@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.3-labs
-FROM python:3.10.8
+FROM python:3.11
 
 # Base apt dependencies
 RUN <<EOF
@@ -33,8 +33,8 @@ RUN poetry config virtualenvs.create false && poetry install --no-interaction #!
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONBREAKPOINT pudb.set_trace
 
-COPY django_apps/theme/static_src/package.json django_apps/theme/static_src/package-lock.json /app/django_apps/theme/static_src/
-RUN cd /app/django_apps/theme/static_src && npm install
+COPY django_wtf/theme/static_src/package.json django_wtf/theme/static_src/package-lock.json /app/django_wtf/theme/static_src/
+RUN cd /app/django_wtf/theme/static_src && npm install
 
 COPY . /app/
 
@@ -44,6 +44,17 @@ export DJANGO_SETTINGS_MODULE=config.settings.test DATABASE_URL=postgres://postg
 export CELERY_BROKER_URL= REDIS_URL=
 
 python manage.py tailwind build --no-input
+EOF
+
+RUN <<EOF
+set -e
+export DJANGO_SETTINGS_MODULE=config.settings.production DATABASE_URL=postgres://postgres:5432/postgres
+export CELERY_BROKER_URL= REDIS_URL=
+export DJANGO_SECRET_KEY=test DJANGO_ADMIN_URL=test
+export DJANGO_AWS_ACCESS_KEY_ID= DJANGO_AWS_SECRET_ACCESS_KEY=
+export DJANGO_AWS_STORAGE_BUCKET_NAME=
+
+python manage.py collectstatic --no-input
 EOF
 
 # Install the app itself so we can import from it

@@ -24,8 +24,8 @@ if __name__ == "__main__":
         raise
 
     # This allows easy placement of apps within the interior
-    # django_apps directory.
+    # django_wtf directory.
     current_path = Path(__file__).parent.resolve()
-    sys.path.append(str(current_path / "django_apps"))
+    sys.path.append(str(current_path / "django_wtf"))
 
     execute_from_command_line(sys.argv)

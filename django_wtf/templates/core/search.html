@@ -1,0 +1,26 @@
+{% extends "core/base.html" %}
+{% block content %}
+    <div class="mb-3">
+        {% for object in object_list %}
+            <div class="mb-1 rounded">
+                <div class="shadow-xl card bg-base-100">
+                    <div class="pb-2 card-body">
+                        <a target="_blank" href="{{ object.github_url }}">
+                            <h2 class="flex justify-between card-title">
+                                <span>{{ object.full_name }}</span>
+                                <span class="text-sm">⭐ {{ object.stars }}</span>
+                            </h2>
+                        </a>
+                        <p>
+                            {% for topic in object.topics|slice:"0:5" %}
+                                <a class="p-3 mr-1 text-xs badge badge-outline hover:brightness-125"
+                                   href="{% url 'core:search' %}?q={{ topic }}">{{ topic|truncatechars:30 }}</a>
+                            {% endfor %}
+                        </p>
+                        <p class="mt-2">{{ object.description }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

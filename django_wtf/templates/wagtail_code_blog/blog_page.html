@@ -1,0 +1,9 @@
+{% extends "core/base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block head %}
+    {{ block.super }}
+    {% include "wagtail_code_blog/blog_page_head.html" %}
+{% endblock head %}
+{% block content %}
+    <div class="flex justify-center bg-white pt-4 md:pt-7">{% include "wagtail_code_blog/blog_page_body.html" %}</div>
+{% endblock content %}

@@ -14,7 +14,7 @@ indent_size = 4
 
 [*.py]
 line_length = 88
-known_first_party = django_apps,config
+known_first_party = django_wtf,config
 multi_line_output = 3
 default_section = THIRDPARTY
 recursive = true
