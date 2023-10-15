@@ -85,6 +85,7 @@ THIRD_PARTY_APPS = [
     "django_user_agents",
     "django_json_ld",
     "django_custom_error_views",
+    "health_check",
     "meta",
     "modelcluster",
     "tailwind",
