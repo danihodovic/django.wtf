@@ -24,6 +24,7 @@ urlpatterns: list[Any] = [
     path("accounts/", include("allauth.urls")),
     # Health checks
     path("health/", include("health_check.urls")),
+    path("prometheus/", include("django_prometheus.urls")),
     path("cms/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path(

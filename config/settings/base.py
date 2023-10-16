@@ -39,6 +39,7 @@ LOCALE_PATHS = [str(ROOT_DIR / "locale")]
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {"default": env.db("DATABASE_URL")}
+DATABASES["default"]["ENGINE"] = "django_prometheus.db.backends.postgresql"
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 # https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-DEFAULT_AUTO_FIELD
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -416,3 +417,6 @@ MATTERMOST_TOKEN = env.str("MATTERMOST_TOKEN", default="")
 MATTERMOST_CHANNEL_ID = env.str("MATTERMOST_CHANNEL_ID", default="")
 
 WAGTAILADMIN_BASE_URL = "https://django.wtf"
+
+# Django-prometheus
+PROMETHEUS_EXPORT_MIGRATIONS = env.bool("PROMETHEUS_EXPORT_MIGRATIONS", True)

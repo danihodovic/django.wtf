@@ -49,6 +49,7 @@ mattermostdriver = "^7.3.2"
 django-storages = {extras = ["boto3"], version = "^1.13.2"}
 django-webhook = "^0.0.7"
 django-custom-error-views = "0.2.3"
+django-prometheus = "^2.3.1"
 
 [tool.poetry.group.dev.dependencies]
 pudb = "^2022.1.3"
