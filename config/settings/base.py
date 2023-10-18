@@ -162,6 +162,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
+    "django_prometheus.middleware.PrometheusBeforeMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -176,6 +177,7 @@ MIDDLEWARE = [
     # TODO: What does this do?
     "watson.middleware.SearchContextMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
+    "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
 # STATIC
