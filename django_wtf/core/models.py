@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 import hanzidentifier
 from cacheops import cached_as
+from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
@@ -11,6 +12,8 @@ from django.db.models import Q
 from django.urls.base import reverse
 from django.utils.text import Truncator
 from model_utils.models import TimeStampedModel
+
+User = get_user_model()
 
 
 class UserType(models.TextChoices):
@@ -262,3 +265,9 @@ class SocialNews(models.Model):
         type = self.type  # pylint: disable=redefined-builtin
         title = (self.title[:25] + "..") if len(self.title) > 25 else self.title
         return f"<SocialNews {type=} {title=}>"
+
+
+class EmailSubscriber(TimeStampedModel):
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="subscriber"
+    )

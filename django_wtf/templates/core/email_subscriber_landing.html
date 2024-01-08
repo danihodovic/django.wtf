@@ -1,0 +1,50 @@
+{% extends "core/base.html" %}
+{% load static %}
+load
+{% block content %}
+    <img class="hidden lg:block object-cover w-8/12 mx-auto h-96 rounded-md"
+         alt="django.wtf"
+         src="{% static 'images/django-wtf-dall-e-trending.png' %}">
+    <div class="hero">
+        <div class="w-full text-left hero-content">
+            <div class="w-full lg:w-7/12">
+                <h1 class="text-3xl font-bold">Keep up with Django OSS</h1>
+                <p class="py-3">
+                    I built this site to discover new Django projects in the open source world. I
+                    previously relied on Github newsletters, but Github notified me of projects that
+                    had nothing to do with Django.
+                </p>
+                <p class="pb-3">
+                    Django.WTF sends emails every other week that contain trending and popular
+                    repositories from the Django world. The project also scrapes <u>Hacker News</u>
+                    and <u>Reddit</u> for upvoted posts.
+                </p>
+                <p class="pb-1">
+                    Every two weeks an email is sent out with:
+                    <ul class="pb-3 font-bold list-disc list-inside">
+                        <li>Top trending projects by growth %</li>
+                        <li>Trending social media news</li>
+                        <li>The engineers that maintain the most popular projects</li>
+                    </ul>
+                </p>
+                <p class="pb-5">
+                    I use it to
+                    keep up on what's happening and so could you.
+                </p>
+                <div class="text-center py-4">
+                    {% if not request.user.subscriber %}
+                        <form action="{% url 'core:subscriber-create' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Subscribe</button>
+                        </form>
+                    {% else %}
+                        <button disabled="disabled" class="btn btn-primary">
+                            You're already
+                            subscribed
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

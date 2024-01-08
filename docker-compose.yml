@@ -16,5 +16,9 @@ services:
     image: redis:6
     network_mode: host
 
+  mailpit:
+    image: axllent/mailpit:v1.12
+    network_mode: host
+
 volumes:
   pgdata:
