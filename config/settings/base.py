@@ -106,6 +106,7 @@ THIRD_PARTY_APPS = [
     "wagtailmetadata",
     "wagtail_code_blog",
     "watson",
+    "waffle",
     "widget_tweaks",
 ]
 
@@ -134,7 +135,7 @@ AUTHENTICATION_BACKENDS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
-LOGIN_REDIRECT_URL = "users:redirect"
+LOGIN_REDIRECT_URL = "core:index"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "account_login"
 
@@ -177,6 +178,7 @@ MIDDLEWARE = [
     # TODO: What does this do?
     "watson.middleware.SearchContextMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
+    "waffle.middleware.WaffleMiddleware",
     "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 

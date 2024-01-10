@@ -1,6 +1,10 @@
 from django.contrib.sitemaps.views import sitemap
 from django.urls import path
 
+from django_wtf.core.email_subscribe_views import (
+    create_email_subscriber_view,
+    email_subscriber_landing_view,
+)
 from django_wtf.core.search_view import SearchView
 from django_wtf.core.views import (
     CategoryView,
@@ -40,6 +44,16 @@ urlpatterns = [
     ),
     path("category/<slug:name>/", view=CategoryView.as_view(), name="category-detail"),
     path("search/", view=SearchView.as_view(), name="search"),
+    path(
+        "newsletter/",
+        view=email_subscriber_landing_view,
+        name="subscriber-landing",
+    ),
+    path(
+        "subscriber-create/",
+        view=create_email_subscriber_view,
+        name="subscriber-create",
+    ),
     path(
         "sitemap.xml",
         sitemap,
