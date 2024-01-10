@@ -5,6 +5,7 @@ from watson.admin import SearchAdmin
 from .filters import HasReadmeListFilter
 from .models import (
     Category,
+    EmailSubscriber,
     Profile,
     ProfileFollowers,
     PypiProject,
@@ -102,3 +103,9 @@ class PypiProjectAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         return [f.name for f in self.model._meta.fields]
+
+
+@admin.register(EmailSubscriber)
+class EmailSubscriberAdmin(admin.ModelAdmin):
+    list_display = ("user",)
+    readonly_fields = ("user",)
