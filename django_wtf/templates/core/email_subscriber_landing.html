@@ -32,7 +32,10 @@ load
                     keep up on what's happening and so could you.
                 </p>
                 <div class="text-center py-4">
-                    {% if not request.user.subscriber %}
+                    {% if not request.user.is_authenticated %}
+                        <a href="{% url "account_signup" %}?next={{ request.path }}"
+                           class="btn btn-primary">Sign up</a>
+                    {% elif not request.user.subscriber %}
                         <form action="{% url 'core:subscriber-create' %}" method="post">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-primary">Subscribe</button>
