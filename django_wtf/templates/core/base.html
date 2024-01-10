@@ -1,7 +1,6 @@
 {% load tailwind_tags %}
 <!DOCTYPE html>
 <html lang="en-US">
-
     <head>
         {% block head %}
             <title>
@@ -27,9 +26,17 @@
                   rel="stylesheet">
         {% endblock head %}
     </head>
-
     <body class="flex flex-col w-screen lg:w-full content-center justify-start min-h-screen font-roboto">
         {% include "core/components/_navbar.html" %}
+        {% if messages %}
+            <div class="mt-3 mx-auto">
+                {% for message in messages %}
+                    <div role="alert" class="alert alert-{{ message.tags }}">
+                        <span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
         <div class="flex flex-col content-center self-center mt-3 w-full lg:w-9/12">
             {% block content %}
             {% endblock content %}
@@ -44,5 +51,4 @@
                     src="https://s.depode.com/ingress/7ca0f5ff-8ef2-45fb-9718-37d34cddfe79/script.js"></script>
         {% endif %}
     </body>
-
 </html>
