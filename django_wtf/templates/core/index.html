@@ -1,16 +1,16 @@
 {% extends "core/base.html" %}
 {% load user_agents %}
 {% block content %}
-    <div class="lg:flex flex-col content-center self-center lg:mt-5 mb-5 w-full lg:w-11/12">
-        <div class="mt-5 mb-5 lg:rounded-lg bg-neutral">
+    <div class="mb-5 w-full flex-col content-center self-center lg:mt-5 lg:flex lg:w-7/12">
+        <div class="bg-neutral mb-5 mt-5 lg:rounded-lg">
             <div class="p-6">
                 <h3 class="text-lg text-white">Categories</h3>
-                <div class="flex flex-wrap mt-3 gap-2">
+                <div class="mt-3 flex flex-wrap gap-2">
                     {% if request|is_mobile or request|is_tablet %}
                         {% for category in categories|slice:"6" %}
                             <a href="{% url 'core:category-detail' name=category.name %}"
                                class="btn btn-primary">
-                                <span class="uppercase font-normal">{{ category.name }}
+                                <span class="font-normal uppercase">{{ category.name }}
                                     <span class="text-sm">({{ category.total_repositories }})</span>
                                 </span>
                             </a>
@@ -19,7 +19,7 @@
                         {% for category in categories %}
                             <a href="{% url 'core:category-detail' name=category.name %}"
                                class="btn btn-primary">
-                                <span class="uppercase font-normal">{{ category.name }}
+                                <span class="font-normal uppercase">{{ category.name }}
                                     <span class="text-sm">({{ category.total_repositories }})</span>
                                 </span>
                             </a>
@@ -28,16 +28,16 @@
                 </div>
             </div>
         </div>
-        <div class="flex flex-col lg:flex-row gap-4">
-            <div class="p-4 lg:p-6 lg:rounded-lg lg:basis-1/2">
+        <div class="flex flex-col gap-4 lg:flex-row">
+            <div class="p-4 lg:basis-1/2 lg:rounded-lg lg:p-6">
                 <a href="{% url 'core:trending-repositories' %}"
                    class="hover:brightness-125">
-                    <div class="pb-2 border-b-2 border-neutral-100">
+                    <div class="border-b-2 border-neutral-100 pb-2">
                         <h3 class="text-lg font-bold">Trending Packages</h3>
                     </div>
                 </a>
-                <div class="overflow-x-auto mt-2">
-                    <table class="table table-zebra w-full">
+                <div class="mt-2 overflow-x-auto">
+                    <table class="table-zebra table w-full">
                         <tbody>
                             {% for repo in trending_apps %}
                                 <tr>
@@ -57,11 +57,11 @@
                     </table>
                 </div>
             </div>
-            <div class="p-4 lg:p-6 lg:rounded-lg lg:basis-1/2">
+            <div class="p-4 lg:basis-1/2 lg:rounded-lg lg:p-6">
                 <a href="{% url 'core:trending-profiles' %}"
                    class="hover:brightness-125">
-                    <div class="pb-2 flex justify-between border-b-2 border-gray-100">
-                        <h3 class="text-lg font-bold self-center">Trending Engineers</h3>
+                    <div class="flex justify-between border-b-2 border-gray-100 pb-2">
+                        <h3 class="self-center text-lg font-bold">Trending Engineers</h3>
                         <div class="avatar-group -space-x-6 justify-self-end">
                             {% if request|is_mobile or request|is_tablet %}
                                 {% for profile in trending_developers|slice:":3" %}
@@ -81,15 +81,15 @@
                                 {% endfor %}
                             {% endif %}
                             <div class="avatar placeholder">
-                                <div class="w-7 bg-neutral-focus text-sm text-neutral-content">
+                                <div class="bg-neutral-focus text-neutral-content w-7 text-sm">
                                     <span>+99</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </a>
-                <div class="overflow-x-auto mt-2">
-                    <table class="table table-zebra w-full">
+                <div class="mt-2 overflow-x-auto">
+                    <table class="table-zebra table w-full">
                         <tbody>
                             {% for profile in trending_developers %}
                                 <tr>
@@ -110,15 +110,15 @@
                 </div>
             </div>
         </div>
-        <div class="flex flex-col lg:flex-row gap-4 mt-4 mb-5">
-            <div class="p-4 lg:p-6 lg:rounded-lg lg:basis-1/2">
+        <div class="mb-5 mt-4 flex flex-col gap-4 lg:flex-row">
+            <div class="p-4 lg:basis-1/2 lg:rounded-lg lg:p-6">
                 <a href="{% url 'core:top-repositories' %}" class="hover:brightness-125">
-                    <div class="pb-2 border-b-2 border-gray-100 ">
+                    <div class="border-b-2 border-gray-100 pb-2 ">
                         <h3 class="text-lg font-bold">Top Packages</h3>
                     </div>
                 </a>
-                <div class="overflow-x-auto mt-2">
-                    <table class="table table-zebra w-full">
+                <div class="mt-2 overflow-x-auto">
+                    <table class="table-zebra table w-full">
                         <tbody>
                             {% for repo in top_apps %}
                                 <tr>
@@ -138,15 +138,15 @@
                     </table>
                 </div>
             </div>
-            <div class="p-4 lg:p-6 lg:rounded-lg lg:basis-1/2">
+            <div class="p-4 lg:basis-1/2 lg:rounded-lg lg:p-6">
                 <a href="{% url 'core:social-media-news' %}"
                    class="hover:brightness-125">
-                    <div class="pb-2 border-b-2 border-gray-100 ">
+                    <div class="border-b-2 border-gray-100 pb-2 ">
                         <h3 class="text-lg font-bold">Social Media News</h3>
                     </div>
                 </a>
-                <div class="overflow-x-auto mt-2">
-                    <table class="table table-zebra w-full">
+                <div class="mt-2 overflow-x-auto">
+                    <table class="table-zebra table w-full">
                         <tbody>
                             {% for post in social_news %}
                                 <tr>

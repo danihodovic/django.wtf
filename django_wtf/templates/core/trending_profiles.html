@@ -2,8 +2,8 @@
 {% load humanize %}
 {% load user_agents %}
 {% block content %}
-    <div class="flex flex-col self-center items-center p-4 lg:p-6 w-full lg:w-11/12">
-        <div class="flex flex-wrap self-start mt-3 mb-10 text-sm lg:text-lg gap-2">
+    <div class="flex w-full flex-col items-center self-center p-4 lg:w-7/12 lg:p-6">
+        <div class="mb-10 mt-3 flex flex-wrap gap-2 self-start text-sm lg:text-lg">
             <div class="badge badge-lg badge-primary">Trending profiles</div>
             {% if not request|is_mobile and not request|is_tablet %}
                 <div class="badge badge-lg badge-primary">
@@ -11,7 +11,7 @@
                 </div>
             {% endif %}
         </div>
-        <table class="table w-full mb-5">
+        <table class="mb-5 table w-full">
             <thead>
                 <tr>
                     <th class="hidden xl:block">Rank</th>
@@ -33,15 +33,15 @@
                             </td>
                             <td>
                                 <a class="flex items-center" href="{{ url }}">
-                                    <img class="w-10 mr-2 rounded-full"
+                                    <img class="mr-2 w-10 rounded-full"
                                          alt="{{ profile.login }}"
                                          src="{{ profile.avatar_url }}">
                                     {{ profile.login }}
                                 </a>
                             </td>
-                            <td class="text-sm hidden xl:table-cell">
+                            <td class="hidden text-sm xl:table-cell">
                                 {% for contribution in profile.top_contributions|slice:"0:2" %}
-                                    <a class="p-3 ml-2 badge badge-outline hover:brightness-125"
+                                    <a class="badge badge-outline ml-2 p-3 hover:brightness-125"
                                        href="{{ contribution.repository.github_url }}">
                                         {{ contribution.repository.full_name|truncatechars:30 }}
                                         <span class="ml-1">({{ contribution.contributions }})</span>

@@ -2,11 +2,11 @@
 {% load static %}
 load
 {% block content %}
-    <img class="hidden lg:block object-cover w-8/12 mx-auto h-96 rounded-md"
+    <img class="mx-auto mt-10 hidden h-96 w-7/12 rounded-lg object-cover lg:block"
          alt="django.wtf"
          src="{% static 'images/django-wtf-dall-e-trending.png' %}">
-    <div class="hero">
-        <div class="w-full text-left hero-content">
+    <div class="hero mb-5 mt-5">
+        <div class="hero-content w-full text-left">
             <div class="w-full lg:w-7/12">
                 <h1 class="text-3xl font-bold">Keep up with Django OSS</h1>
                 <p class="py-3">
@@ -21,7 +21,7 @@ load
                 </p>
                 <p class="pb-1">
                     Every two weeks an email is sent out with:
-                    <ul class="pb-3 font-bold list-disc list-inside">
+                    <ul class="list-inside list-disc pb-3 font-bold">
                         <li>Top trending projects by growth %</li>
                         <li>Trending social media news</li>
                         <li>The engineers that maintain the most popular projects</li>
@@ -31,7 +31,7 @@ load
                     I use it to
                     keep up on what's happening and so could you.
                 </p>
-                <div class="text-center py-4">
+                <div class="py-4 text-center">
                     {% if not request.user.is_authenticated %}
                         <a href="{% url "account_signup" %}?next={{ request.path }}"
                            class="btn btn-primary">Sign up</a>
