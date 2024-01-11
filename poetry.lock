@@ -3831,23 +3831,23 @@ testing = ["Jinja2 (>=3.0,<3.2)", "azure-mgmt-cdn (>=12.0,<13.0)", "azure-mgmt-f
 
 [[package]]
 name = "wagtail-code-blog"
-version = "0.4.1"
+version = "0.5.0"
 description = "A wagtail code blog"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "wagtail_code_blog-0.4.1-py3-none-any.whl", hash = "sha256:46cbf2519e801d5703a0f821ab9c8b3518e7521767dbc97f9b151ef378de5bd9"},
-    {file = "wagtail_code_blog-0.4.1.tar.gz", hash = "sha256:555cf2417486b251bc69583501eac7a173a0e0bd0ed1e907f14ce76cd47640fb"},
+    {file = "wagtail_code_blog-0.5.0-py3-none-any.whl", hash = "sha256:e46f3c4537a10f67e97cd30002523201b3cc40edcf4393ceaaa53fe1650e9852"},
+    {file = "wagtail_code_blog-0.5.0.tar.gz", hash = "sha256:5220c16a1bd69765baf021e828a3668e794cd91a1dcbb01f04d3b99a31abcb99"},
 ]
 
 [package.dependencies]
-beautifulsoup4 = "4.8"
-django = ">=4.0.0,<5.0.0"
+beautifulsoup4 = ">=4,<5"
+django = "==4.*"
 django-json-ld = ">=0.0.5,<0.0.6"
 django-model-utils = ">=4.2.0,<5.0.0"
 readtime = ">=1.1.1,<2.0.0"
-wagtail = ">=5.0.0,<6.0.0"
-wagtail-metadata = ">=4.0.0,<5.0.0"
+wagtail = "==5.*"
+wagtail-metadata = "==5.*"
 
 [[package]]
 name = "wagtail-markdown"
@@ -3867,17 +3867,17 @@ Wagtail = ">=2.15"
 
 [[package]]
 name = "wagtail-metadata"
-version = "4.0.3"
+version = "5.0.0"
 description = "A tool to assist with metadata for social media."
 optional = false
 python-versions = ">=3"
 files = [
-    {file = "wagtail-metadata-4.0.3.tar.gz", hash = "sha256:c9a297ffe14ec9f1ce269ba6f11127d55f3af0c3ad0b92d66d69727c48c38c46"},
-    {file = "wagtail_metadata-4.0.3-py2.py3-none-any.whl", hash = "sha256:e993c60b2dbc868f1fae9153d278a85997ba16cb9c6add6a7b88c5d557d29db2"},
+    {file = "wagtail-metadata-5.0.0.tar.gz", hash = "sha256:3b9109928bad53306b21b64cf9205d84cbb88fc625bac0a38305bebb9c26e64a"},
+    {file = "wagtail_metadata-5.0.0-py2.py3-none-any.whl", hash = "sha256:fcc2bbb71e83b353ceef05d69a4cde3f2fbe645c9e5035e46f7829fc234a6405"},
 ]
 
 [package.dependencies]
-wagtail = ">=3.0"
+wagtail = ">=5.0"
 
 [[package]]
 name = "wcwidth"
@@ -4146,4 +4146,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "ef7e723d79b46c842ed20b245d20f48a17dec6433826b535b3fd8fab6161c884"
+content-hash = "2671fb9dcedae84bb9a0a94770706fe81159ecb54768b9c174547cb5358f80ca"
