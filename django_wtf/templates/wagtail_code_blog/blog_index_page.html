@@ -4,8 +4,19 @@
     {% include "wagtail_code_blog/blog_index_page_head.html" %}
     {{ block.super }}
     {{ tailwind_css }}
+    <style>
+        h3,
+        h4,
+        p {
+            color: black;
+        }
+
+        .intro-info>small {
+            color: white !important;
+        }
+    </style>
 {% endblock head %}
 {% block content %}
     {{ block.super }}
-    <div class="mb-20">{% include "wagtail_code_blog/blog_index_page_body.html" %}</div>
+    <div class="mb-20 w-full bg-white">{% include "wagtail_code_blog/blog_index_page_body.html" %}</div>
 {% endblock content %}

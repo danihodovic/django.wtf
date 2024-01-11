@@ -1,11 +1,11 @@
 {% extends "core/base.html" %}
 {% load user_agents %}
 {% block content %}
-    <div class="flex flex-col self-center items-center p-4 lg:p-6 w-full lg:w-11/12">
-        <div class="flex flex-wrap self-start mt-3 mb-10 text-sm lg:text-lg gap-2">
+    <div class="flex w-full flex-col items-center self-center p-4 lg:w-7/12 lg:p-6">
+        <div class="mb-10 mt-3 flex flex-wrap gap-2 self-start text-sm lg:text-lg">
             <div class="badge badge-lg badge-primary">Trending social media news</div>
         </div>
-        <table class="table w-full leading-6 mb-5">
+        <table class="mb-5 table w-full leading-6">
             <thead>
                 <tr>
                     <th class="hidden xl:block">Rank</th>
@@ -39,7 +39,7 @@
                                     </span>
                                 </a>
                             </td>
-                            <td class="text-sm hidden xl:table-cell">
+                            <td class="hidden text-sm xl:table-cell">
                                 <a href="{{ url }}">{{ news.created_at }}</a>
                             </td>
                             <td>
