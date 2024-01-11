@@ -30,7 +30,16 @@ def test_create_email_subscriberview(user_client, mailoutbox):
     mail = mailoutbox[0]
     assert mail.subject == "Subscription confirmed to Django.WTF"
     assert mail.to == ["bob@gmail.com"]
-    assert mail.body == "Woohoo"
+    assert (
+        mail.body
+        == """Woohoo!
+
+I'll update you with trending projects and news from the Django world every two weeks.
+
+Thanks,
+The people behind Django.WTF
+"""
+    )
 
     messages = list(get_messages(res.wsgi_request))
     assert (
