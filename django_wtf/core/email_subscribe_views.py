@@ -22,13 +22,18 @@ class CreateEmailSubscriberView(LoginRequiredMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         user = self.request.user
-        # TODO: Send email subscribed.
         _, _ = EmailSubscriber.objects.get_or_create(user=self.request.user)
         emailaddress = user.emailaddress_set.get(primary=True)  # type: ignore
         email = EmailMessage(
             subject="Subscription confirmed to Django.WTF",
-            body="""Woohoo""",
-            from_email="from@example.com",
+            body="""Woohoo!
+
+I'll update you with trending projects and news from the Django world every two weeks.
+
+Thanks,
+The people behind Django.WTF
+""",
+            from_email="noreply@django.wtf",
             to=[emailaddress.email],
             reply_to=["noreply@django.wtf"],
         )
