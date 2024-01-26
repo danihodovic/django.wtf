@@ -30,12 +30,12 @@ from .utils import log_action
 
 @app.task(soft_time_limit=30 * 60)
 def index_repositories_by_topic():
-    index_repositories(search_repos_by_topic_url)
+    index_repositories(search_repos_by_topic_url())
 
 
 @app.task(soft_time_limit=30 * 60)
 def index_repositories_by_keyword():
-    index_repositories(search_repos_by_keyword_url)
+    index_repositories(search_repos_by_keyword_url())
 
 
 def index_repositories(url):
