@@ -95,7 +95,7 @@ def _update_or_create_repo(repository_data):
         )
         log_action(repository_stars, created)
     except DataError:
-        logging.exception(f"DataError for {repository=}")
+        logging.exception(f"DataError for {repository_data=}")
 
 
 @app.task()
