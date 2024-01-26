@@ -58,7 +58,7 @@ def test_index_repositories(mocked_responses):
         ],
     )
 
-    index_repositories(search_repos_by_topic_url)
+    index_repositories(search_repos_by_topic_url())
     category = Category(name="monitoring", emoji="m")
     category.save()
     Repository.objects.get(full_name="danihodovic/celery-exporter").categories.add(

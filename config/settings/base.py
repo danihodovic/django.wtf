@@ -360,6 +360,13 @@ CONSTANCE_CONFIG = {
         14,
         "The number of days since we calculate the trending repos and devs.",
     ),
+    "GITHUB_REPO_LAST_UPDATED_IN_DAYS": (
+        720,
+        (
+            "The cutoff date for Github repo push updates. "
+            "Repos that don't have updates since the number of days are not scraped."
+        ),
+    ),
 }
 TAILWIND_APP_NAME = "django_wtf.theme"
 
