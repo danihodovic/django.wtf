@@ -1,6 +1,7 @@
 """
 Base settings to build other settings files upon.
 """
+
 from pathlib import Path
 
 import environ
@@ -60,6 +61,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 # APPS
 # ------------------------------------------------------------------------------
 DJANGO_APPS = [
+    "daphne",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -87,6 +89,7 @@ THIRD_PARTY_APPS = [
     "django_user_agents",
     "django_json_ld",
     "django_custom_error_views",
+    "django_admin_shellx",
     "health_check",
     "meta",
     "modelcluster",
@@ -437,3 +440,15 @@ WAGTAILADMIN_BASE_URL = "https://django.wtf"
 
 # Django-prometheus
 PROMETHEUS_EXPORT_MIGRATIONS = env.bool("PROMETHEUS_EXPORT_MIGRATIONS", True)
+
+ASGI_APPLICATION = "config.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [env("REDIS_URL")],
+        },
+    },
+}
+
+DJANGO_WEB_REPL_SUPERUSER_ONLY = True

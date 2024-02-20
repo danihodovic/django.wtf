@@ -158,7 +158,7 @@ def trending_repositories(**filters):
         )
         if stars_in_the_last_week > 0:
             setattr(repo, "stars_lately", stars_in_the_last_week)
-            setattr(repo, "stars_quota", repo.stars_lately / repo.stars)
+            setattr(repo, "stars_quota", repo.stars_lately / repo.stars)  # type: ignore
             trending.append(repo)
 
     return sorted(trending, key=lambda e: e.stars_quota, reverse=True)
