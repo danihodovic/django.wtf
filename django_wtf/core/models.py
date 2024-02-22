@@ -40,8 +40,8 @@ class ProfileContributesToValidProjectsManager(models.Manager):
 
 
 class Profile(TimeStampedModel):
-    objects = models.Manager()  # type: ignore
-    contributes_to_valid_repos = ProfileContributesToValidProjectsManager()  # type: ignore
+    objects = models.Manager()
+    contributes_to_valid_repos = ProfileContributesToValidProjectsManager()
     github_id = models.PositiveIntegerField()
     login = models.CharField(max_length=100, unique=True)
     type = models.CharField(
@@ -104,8 +104,8 @@ class RepositoryManager(models.Manager):
 
 
 class Repository(TimeStampedModel):
-    objects = models.Manager()  # type: ignore
-    valid = RepositoryManager()  # type: ignore
+    objects = models.Manager()
+    valid = RepositoryManager()
     github_id = models.PositiveIntegerField()
     owner = models.ForeignKey(
         Profile,

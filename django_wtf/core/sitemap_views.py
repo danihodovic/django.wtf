@@ -23,7 +23,7 @@ class StaticSitemap(Sitemap):
 
 
 category_sitemap = GenericSitemap(  # type: ignore
-    {"queryset": Category.objects.all(), "changefreq": "daily"}
+    {"queryset": Category.objects.all(), "changefreq": "daily"}  # type: ignore
 )
 
 
