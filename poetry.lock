@@ -958,13 +958,13 @@ six = ">=1.9.0,<2.0.0"
 
 [[package]]
 name = "django-admin-shellx"
-version = "0.0.7"
+version = "0.0.8"
 description = "A Django Admin Shell"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "django_admin_shellx-0.0.7-py3-none-any.whl", hash = "sha256:815fa5854cc78670292f8cb4306660eb9a0d44645fdaf9e320881e0f9532ef61"},
-    {file = "django_admin_shellx-0.0.7.tar.gz", hash = "sha256:ebc8e7752a762d23682886ef66891747c31c9ae62c413822d2f1265c99b347ea"},
+    {file = "django_admin_shellx-0.0.8-py3-none-any.whl", hash = "sha256:3810bb8010436a00f1eff0ea90f23bb66d8a18a5474a43f19c334c6600d2a8b4"},
+    {file = "django_admin_shellx-0.0.8.tar.gz", hash = "sha256:4e5b273f3074e4cfd71ea85a9cbde9837cc0ae6e7dcd3e929ab886fe0cdab5f6"},
 ]
 
 [package.dependencies]
@@ -4569,4 +4569,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "6dc648c9aa35f5cb94c7fd4469fc50abc429eb0ff1debd9618ca9cd17b3ac513"
+content-hash = "68b4047af4529b2d71cfeac8287694501fb3d1f09e242596bbd74f2aaa5d1910"
