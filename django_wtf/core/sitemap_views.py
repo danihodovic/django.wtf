@@ -1,7 +1,7 @@
 from django.contrib.sitemaps import GenericSitemap, Sitemap
 from django.urls import reverse
 
-from .models import Category
+from .models import Category, Repository
 
 
 class StaticSitemap(Sitemap):
@@ -26,8 +26,13 @@ category_sitemap = GenericSitemap(  # type: ignore
     {"queryset": Category.objects.all(), "changefreq": "daily"}  # type: ignore
 )
 
+detail_sitemap = GenericSitemap(  # type: ignore
+    {"queryset": Repository.valid.all(), "changefreq": "daily"}  # type: ignore
+)
+
 
 sitemaps = {
     "static": StaticSitemap,
     "categories": category_sitemap,
+    "repos": detail_sitemap,
 }
