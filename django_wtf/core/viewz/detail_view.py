@@ -14,7 +14,7 @@ class RepoDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         obj = self.get_object()
         stars_since_1m = obj.stars_since(td=timedelta(days=30))
-        context["stars_increase_monthly_percent"] = stars_since_1m / obj.stars * 1.0
+        context["stars_increase_monthly_percent"] = stars_since_1m / obj.stars * 100.0
         return context
 
 
