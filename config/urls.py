@@ -11,7 +11,7 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.contrib.sitemaps.views import Sitemap as wagtail_sitemap_view
 from wagtail.documents import urls as wagtaildocs_urls
 
-from django_wtf.core.sitemap_views import sitemaps as core_sitemaps
+from django_wtf.core.views import sitemaps as core_sitemaps
 
 sitemaps = {**core_sitemaps, "blog": wagtail_sitemap_view}
 

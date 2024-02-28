@@ -1,8 +1,8 @@
 import pytest
 from django.urls import reverse_lazy
 
-from .factories import RepositoryFactory
-from .models import Category, RepositoryType
+from django_wtf.core.factories import RepositoryFactory
+from django_wtf.core.models import Category, RepositoryType
 
 pytestmark = pytest.mark.django_db
 url = reverse_lazy("core:index")
