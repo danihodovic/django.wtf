@@ -15,6 +15,7 @@ from django_wtf.core.views import (
     TrendingProfilesView,
     TrendingRepositoriesView,
 )
+from django_wtf.core.viewz.detail_view import repo_detail_view
 
 from .sitemap_views import sitemaps
 
@@ -31,6 +32,7 @@ urlpatterns = [
         view=TopRepositoriesView.as_view(),
         name="top-repositories",
     ),
+    path("repo/<path:full_name>", view=repo_detail_view, name="repo-detail"),
     path(
         "social-media-news/",
         view=SocialMediaNewsView.as_view(),

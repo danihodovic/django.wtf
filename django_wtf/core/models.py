@@ -128,6 +128,9 @@ class Repository(TimeStampedModel):
     )
     readme_html = models.TextField(null=True)
 
+    def get_absolute_url(self):
+        return reverse("core:repo-detail", args=[self.full_name])
+
     @property
     def github_url(self):
         return f"https://github.com/{self.full_name}"
