@@ -30,7 +30,7 @@
                     </div>
                     <div class="stat-title">Stars</div>
                     <div class="stat-value text-info">{{ object.stars }}</div>
-                    <div class="stat-desc">{{ stars_increase_monthly_percent }}% more than last month</div>
+                    <div class="stat-desc">{{ stars_increase_monthly_percent | floatformat:2 }}% more than last month</div>
                 </div>
                 <div class="stat">
                     <div class="stat-figure text-primary">
