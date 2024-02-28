@@ -1,7 +1,7 @@
 from django.contrib.sitemaps import GenericSitemap, Sitemap
 from django.urls import reverse
 
-from .models import Category, Repository
+from django_wtf.core.models import Category, Repository
 
 
 class StaticSitemap(Sitemap):
