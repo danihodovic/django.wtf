@@ -379,7 +379,7 @@ SHELL_PLUS_MODEL_IMPORTS_RESOLVER = (
 )
 SHELL_PLUS_IMPORTS = [
     "from django_wtf.core.models import RepositoryType",
-    "from django_wtf.core.views import trending_repositories",
+    "from django_wtf.core.views.trending_repositories_view import trending_repositories",
     "from django_wtf.core.tasks import *",
     "from watson import search as watson",
 ]
