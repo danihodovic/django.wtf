@@ -82,5 +82,12 @@
                 </div>
             </div>
         </div>
+        <style>
+.parsedown h1 {
+    @apply mt-8 text-2xl
+}
+
+        </style>
+        <div class="parsedown">{{ object.readme_html | safe }}</div>
     </div>
 {% endblock content %}

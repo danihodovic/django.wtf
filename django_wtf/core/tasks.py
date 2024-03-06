@@ -3,6 +3,7 @@ from celery import current_app as app
 from django.core.management import call_command
 
 from .github_tasks import (
+    download_markdown_html,
     index_contributors,
     index_followers,
     index_repositories_by_keyword,

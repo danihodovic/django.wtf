@@ -224,6 +224,37 @@ def categorize_repository(repo_full_name):
     repo.save()
 
 
+@app.task()
+def download_markdown_html():
+    import base64
+
+    repo = "danihodovic/celery-exporter"
+    token = ""
+
+    http = http_client()
+    headers = {"Authorization": f"Bearer {token}" "X-GitHub-Api-Version: 2022-11-28"}
+
+    res = http.get(
+        f"https://api.github.com/repos/{repo}/contents/README.md",
+        headers=headers,
+    )
+
+    base64_content = res.json()["content"]
+    content = base64.b64decode(base64_content).decode("utf-8")
+
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {token}",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "Content-Type": "application/x-www-form-urlencoded",
+    }
+
+    res = http.post(
+        "https://api.github.com/markdown", headers=headers, json={"text": content}
+    )
+    return res
+
+
 def find_appconfig_files(repo_full_name):
     params = urlencode(
         {"q": f"repo:{repo_full_name} AppConfig in:file AppConfig language:python"}
