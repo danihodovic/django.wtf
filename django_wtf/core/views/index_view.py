@@ -17,6 +17,21 @@ class IndexView(MetadataMixin, TemplateView):
         "Django.WTF lists popular Django projects, apps and tools. "
         "The latest and greatest news in the Django community."
     )
+    keywords = [
+        "django",
+        "apps",
+        "packages",
+        "repositories",
+        "python",
+        "web",
+        "framework",
+        "apps",
+        "tools",
+        "news",
+    ]
+    use_schemaorg = True
+    use_og = True
+    use_twitter = True
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
