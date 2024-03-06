@@ -3,16 +3,6 @@
 <html lang="en-US">
     <head>
         {% block head %}
-            <title>
-                {% block title %}
-                    {{ title }}
-                {% endblock title %}
-            </title>
-            <meta name="description"
-                  content="{% block description %}{{ description }}{% endblock description %}">
-            <meta name="keywords"
-                  content="{% block keywords %}{{ keywords }}{% endblock keywords %}">
-            <meta charset="UTF-8">
             {% include "meta/meta.html" %}
             {% tailwind_css %}
             <meta name="viewport" content="width=device-width, initial-scale=1">
