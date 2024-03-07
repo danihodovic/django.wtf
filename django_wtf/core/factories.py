@@ -49,6 +49,11 @@ class RepositoryFactory(DjangoModelFactory):
                 self.categories.add(category)
 
 
+class ValidRepositoryFactory(RepositoryFactory):
+    type = RepositoryType.APP
+    stars = 100
+
+
 class RepositoryStarsFactory(DjangoModelFactory):
     class Meta:
         model = RepositoryStars
