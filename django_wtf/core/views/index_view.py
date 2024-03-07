@@ -36,7 +36,7 @@ class IndexView(MetadataMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["categories"] = self.categories_ordered_by_total_repositories()
-        context["trending_apps"] = trending_repositories()[0:5]
+        context["trending_apps"] = trending_repositories(days_since=14)[0:5]
         context["trending_developers"] = trending_profiles()[0:5]
         context["social_news"] = SocialNews.objects.filter(
             created_at__gt=one_week_ago

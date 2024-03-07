@@ -1,9 +1,19 @@
 # pylint: disable=redefined-outer-name
 import pytest
 import responses
+from pytest_factoryboy import register
 
+from django_wtf.core.factories import (
+    RepositoryFactory,
+    RepositoryStarsFactory,
+    ValidRepositoryFactory,
+)
 from django_wtf.users.models import User
 from django_wtf.users.tests.factories import UserFactory
+
+register(RepositoryFactory)
+register(ValidRepositoryFactory)
+register(RepositoryStarsFactory)
 
 
 @pytest.fixture(autouse=True)

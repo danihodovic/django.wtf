@@ -8,14 +8,16 @@ from django_wtf.core.models import Contributor, Profile, Repository, RepositoryS
 
 one_week_ago = datetime.today().date() - timedelta(days=7)
 
+cache_time = 60 * 60 * 24
+# TODO: Make this dynamic
+# cache_time = 1
 
-@cached_as(RepositoryStars, Constance, timeout=60 * 60 * 24)
-def trending_repositories(**filters):
+
+@cached_as(RepositoryStars, Constance, timeout=cache_time)
+def trending_repositories(days_since, **filters):
     trending = []
     for repo in Repository.valid.filter(stars__gte=20, **filters):
-        stars_in_the_last_week = repo.stars_since(
-            timedelta(days=config.DAYS_SINCE_TRENDING)
-        )
+        stars_in_the_last_week = repo.stars_since(timedelta(days=days_since))
         if stars_in_the_last_week > 0:
             setattr(repo, "stars_lately", stars_in_the_last_week)
             setattr(repo, "stars_quota", repo.stars_lately / repo.stars)  # type: ignore
