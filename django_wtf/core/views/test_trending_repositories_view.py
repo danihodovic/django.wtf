@@ -24,7 +24,7 @@ def test_trending_by_week(
     res = user_client.get(url + "?trending=7")
     assert res.context["object_list"][0] == more_popular
     assert res.context["object_list"][1] == less_popular
-    assert res.context["object_list"][0].stars_lately == 30
-    assert res.context["object_list"][0].stars_quota == 0.9375
-    assert res.context["object_list"][1].stars_lately == 30
-    assert res.context["object_list"][1].stars_quota == 0.75
+    assert res.context["object_list"][0].stars_gained == 30
+    assert res.context["object_list"][0].percentage_increase == 1500.0
+    assert res.context["object_list"][1].stars_gained == 30
+    assert res.context["object_list"][1].percentage_increase == 300

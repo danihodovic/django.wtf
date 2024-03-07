@@ -6,5 +6,7 @@ register = template.Library()
 @register.filter
 def to_percent(obj):
     if obj:
-        return f"{obj:.2%}"
-    return obj
+        if obj > 10:
+            return f"{obj:.0f}%"
+        return f"{obj:.2f}%"
+    return ""

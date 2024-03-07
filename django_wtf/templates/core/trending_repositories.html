@@ -57,7 +57,7 @@
                             </td>
                             <td class="text-right">
                                 <a href="{{ url }}" target="_blank">
-                                    <strong>{{ repo.stars_quota | to_percent }}</strong> ({{ repo.stars_lately }})
+                                    <strong>{{ repo.percentage_increase | to_percent }}</strong> ({{ repo.stars_gained }})
                                 </a>
                             </td>
                         {% endwith %}
