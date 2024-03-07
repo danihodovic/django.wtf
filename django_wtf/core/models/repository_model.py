@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+# pylint: disable=redefined-outer-name
+from datetime import date, datetime, timedelta
 
 import hanzidentifier
 from django.contrib.postgres.fields import ArrayField
@@ -65,17 +66,31 @@ class Repository(TimeStampedModel):
     def __str__(self):
         return self.__repr__()
 
-    def stars_since(self, td: timedelta, date=None):
+    def stars_since(self, since: timedelta, date=None):
         if date is None:
             date = datetime.today().date()
-        previous_date = date - td
+        previous_date = date - since
+        return self.stars - self.stars_at(previous_date)
+
+    def stars_at(self, date: date):
         try:
             previous_stars = RepositoryStars.objects.get(
-                created_at=previous_date, repository=self
+                created_at=date, repository=self
             )
         except ObjectDoesNotExist:
             return 0
-        return self.stars - previous_stars.stars
+        return previous_stars.stars
+
+    def stars_relative_increase(self, since: timedelta):
+        """
+        Return the relative increase in stars going back `since` timedelta.
+        Useful for calculating the percentage increase in stars.
+        """
+        before = datetime.today().date() - since
+        try:
+            return (self.stars - self.stars_at(before)) / self.stars_at(before)
+        except ZeroDivisionError:
+            return 0
 
     @property
     def truncated_description(self):

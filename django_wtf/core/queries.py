@@ -17,13 +17,16 @@ cache_time = 60 * 60 * 24
 def trending_repositories(days_since, **filters):
     trending = []
     for repo in Repository.valid.filter(stars__gte=20, **filters):
-        stars_in_the_last_week = repo.stars_since(timedelta(days=days_since))
-        if stars_in_the_last_week > 0:
-            setattr(repo, "stars_lately", stars_in_the_last_week)
-            setattr(repo, "stars_quota", repo.stars_lately / repo.stars)  # type: ignore
+        delta = timedelta(days=days_since)
+        stars_gained = repo.stars_since(delta)
+        if stars_gained > 0:
+            setattr(repo, "stars_gained", stars_gained)
+            setattr(
+                repo, "percentage_increase", repo.stars_relative_increase(delta) * 100
+            )
             trending.append(repo)
 
-    return sorted(trending, key=lambda e: e.stars_quota, reverse=True)
+    return sorted(trending, key=lambda e: e.percentage_increase, reverse=True)
 
 
 @cached_as(Contributor, timeout=60 * 60 * 24)
