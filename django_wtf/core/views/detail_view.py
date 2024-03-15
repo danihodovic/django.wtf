@@ -13,7 +13,7 @@ class RepoDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         obj = self.get_object()
-        stars_since_1m = obj.stars_since(td=timedelta(days=30))
+        stars_since_1m = obj.stars_since(since=timedelta(days=30))
         context["stars_increase_monthly_percent"] = stars_since_1m / obj.stars * 100.0
         return context
 
