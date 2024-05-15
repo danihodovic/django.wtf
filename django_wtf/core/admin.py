@@ -107,5 +107,6 @@ class PypiProjectAdmin(admin.ModelAdmin):
 
 @admin.register(EmailSubscriber)
 class EmailSubscriberAdmin(admin.ModelAdmin):
-    list_display = ("user",)
-    readonly_fields = ("user",)
+    list_display = ("user", "created", "modified")
+    readonly_fields = ("user", "created", "modified")
+    list_filter = ("created",)
