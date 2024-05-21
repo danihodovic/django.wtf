@@ -185,6 +185,7 @@ MIDDLEWARE = [
     "watson.middleware.SearchContextMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
     "waffle.middleware.WaffleMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
