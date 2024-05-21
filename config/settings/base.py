@@ -78,6 +78,7 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "allauth.socialaccount.providers.github",
     "cacheops",
     "constance",
     "constance.backends.database",
