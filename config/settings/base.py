@@ -347,7 +347,7 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 SOCIALACCOUNT_PROVIDERS = {
     "github": {
-        "SCOPE": ["read:user"],
+        "SCOPE": ["read:user", "user:email"],
     }
 }
 
