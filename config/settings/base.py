@@ -344,6 +344,12 @@ ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = reverse_lazy(
 )
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
+SOCIALACCOUNT_PROVIDERS = {
+    "github": {
+        "SCOPE": ["read:user"],
+    }
+}
+
 # Your stuff...
 # ------------------------------------------------------------------------------
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
