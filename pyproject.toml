@@ -90,7 +90,6 @@ python_files = "tests.py test_*.py"
 norecursedirs = ".git */migrations/* */static/* venv .venv .poetry .virtualenv node_modules"
 
 [tool.black]
-skip_numeric_underscore_normalization = true
 exclude = ".*(venv|virtualenv|.poetry|migrations|node_modules)"
 
 [tool.isort]
