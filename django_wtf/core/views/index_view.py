@@ -1,6 +1,7 @@
 from django.templatetags.static import static
 from django.views.generic.base import TemplateView
 from meta.views import MetadataMixin
+from watson import search as watson
 
 from django_wtf.core.models import Category, Repository, SocialNews
 from django_wtf.core.queries import (

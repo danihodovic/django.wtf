@@ -91,6 +91,7 @@ THIRD_PARTY_APPS = [
     "django_json_ld",
     "django_custom_error_views",
     "django_admin_shellx",
+    "django_htmx",
     "health_check",
     "meta",
     "modelcluster",
@@ -181,6 +182,7 @@ MIDDLEWARE = [
     "django_user_agents.middleware.UserAgentMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_htmx.middleware.HtmxMiddleware",
     # TODO: What does this do?
     "watson.middleware.SearchContextMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
