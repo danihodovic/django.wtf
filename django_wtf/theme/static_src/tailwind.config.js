@@ -52,7 +52,8 @@ module.exports = {
         DEFAULT: {
           css: {
             img: {
-              margin: "0",
+              "margin-bottom": "0.2rem",
+              "margin-top": "0.2rem",
               display: "unset",
             },
           },

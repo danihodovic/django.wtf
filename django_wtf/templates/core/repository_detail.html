@@ -8,8 +8,8 @@
 {% endblock head %}
 
 {% block content %}
-    <div class="flex-col content-center self-center w-full mb-5 lg:mt-5 lg:flex lg:w-7/12">
-        <div class="flex mt-10 mb-10">
+    <div class="flex-col content-center self-center mb-5 lg:mt-5 lg:flex w-11/12 lg:w-7/12">
+        <div class="lg:flex mt-10 mb-10">
             <div>
                 <a class="mt-6 text-4xl link link-hover" href="{{ object.github_url }}">{{ object.full_name }}</a>
                 <p class="mt-3 text-xl">{{ object.description }}</p>
@@ -18,11 +18,11 @@
                 </div>
                 <div class="divider"></div>
                 <div>
-                    <article class="prose">{{ object.readme_html | safe }}</article>
+                    <article class="prose max-w-none">{{ object.readme_html | safe }}</article>
                 </div>
             </div>
             <div>
-                <div class="ml-6 stats stats-vertical">
+                <div class="lg:ml-6 stats stats-vertical">
                     <div class="stat">
                         <div class="stat-figure text-info">
                             <svg xmlns="http://www.w3.org/2000/svg"
