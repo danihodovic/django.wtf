@@ -1,4 +1,12 @@
 {% extends "core/base.html" %}
+{% load static %}
+{% block head %}
+    {{ block.super }}
+    <link rel="stylesheet"
+          type="text/css"
+          href="{% static 'css/pygments.css' %}" />
+{% endblock head %}
+
 {% block content %}
     <div class="flex-col content-center self-center w-full mb-5 lg:mt-5 lg:flex lg:w-7/12">
         <div class="flex mt-10 mb-10">
@@ -8,77 +16,83 @@
                 <div class="my-3">
                     {% for topic in object.topics %}<div class="ml-1 badge badge-outline">{{ topic }}</div>{% endfor %}
                 </div>
+                <div class="divider"></div>
+                <div>
+                    <article class="prose">{{ object.readme_html | safe }}</article>
+                </div>
             </div>
-            <div class="ml-6 shadow stats stats-vertical">
-                <div class="stat">
-                    <div class="stat-figure text-info">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             class="icon icon-tabler icon-tabler-star"
-                             width="24"
-                             height="24"
-                             viewBox="0 0 24 24"
-                             stroke-width="1.5"
-                             stroke="currentColor"
-                             fill="none"
-                             stroke-linecap="round"
-                             stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
-                        </svg>
+            <div>
+                <div class="ml-6 stats stats-vertical">
+                    <div class="stat">
+                        <div class="stat-figure text-info">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="icon icon-tabler icon-tabler-star"
+                                 width="24"
+                                 height="24"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="1.5"
+                                 stroke="currentColor"
+                                 fill="none"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
+                            </svg>
+                        </div>
+                        <div class="stat-title">Stars</div>
+                        <div class="stat-value text-info">{{ object.stars }}</div>
+                        <div class="stat-desc">{{ stars_increase_monthly_percent | floatformat:2 }}% more than last month</div>
                     </div>
-                    <div class="stat-title">Stars</div>
-                    <div class="stat-value text-info">{{ object.stars }}</div>
-                    <div class="stat-desc">{{ stars_increase_monthly_percent | floatformat:2 }}% more than last month</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-figure text-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             class="icon icon-tabler icon-tabler-git-fork"
-                             width="24"
-                             height="24"
-                             viewBox="0 0 24 24"
-                             stroke-width="1.5"
-                             stroke="currentColor"
-                             fill="none"
-                             stroke-linecap="round"
-                             stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M12 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                            <path d="M7 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                            <path d="M17 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                            <path d="M7 8v2a2 2 0 0 0 2 2h6a2 2 0 0 0 2 -2v-2" />
-                            <path d="M12 12l0 4" />
-                        </svg>
+                    <div class="stat">
+                        <div class="stat-figure text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="icon icon-tabler icon-tabler-git-fork"
+                                 width="24"
+                                 height="24"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="1.5"
+                                 stroke="currentColor"
+                                 fill="none"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M12 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                                <path d="M7 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                                <path d="M17 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                                <path d="M7 8v2a2 2 0 0 0 2 2h6a2 2 0 0 0 2 -2v-2" />
+                                <path d="M12 12l0 4" />
+                            </svg>
+                        </div>
+                        <div class="stat-title">Forks</div>
+                        <div class="stat-value text-primary">{{ object.forks }}</div>
                     </div>
-                    <div class="stat-title">Forks</div>
-                    <div class="stat-value text-primary">{{ object.forks }}</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-figure text-error">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             class="icon icon-tabler icon-tabler-bug"
-                             width="24"
-                             height="24"
-                             viewBox="0 0 24 24"
-                             stroke-width="1.5"
-                             stroke="currentColor"
-                             fill="none"
-                             stroke-linecap="round"
-                             stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M9 9v-1a3 3 0 0 1 6 0v1" />
-                            <path d="M8 9h8a6 6 0 0 1 1 3v3a5 5 0 0 1 -10 0v-3a6 6 0 0 1 1 -3" />
-                            <path d="M3 13l4 0" />
-                            <path d="M17 13l4 0" />
-                            <path d="M12 20l0 -6" />
-                            <path d="M4 19l3.35 -2" />
-                            <path d="M20 19l-3.35 -2" />
-                            <path d="M4 7l3.75 2.4" />
-                            <path d="M20 7l-3.75 2.4" />
-                        </svg>
+                    <div class="stat">
+                        <div class="stat-figure text-error">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="icon icon-tabler icon-tabler-bug"
+                                 width="24"
+                                 height="24"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="1.5"
+                                 stroke="currentColor"
+                                 fill="none"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M9 9v-1a3 3 0 0 1 6 0v1" />
+                                <path d="M8 9h8a6 6 0 0 1 1 3v3a5 5 0 0 1 -10 0v-3a6 6 0 0 1 1 -3" />
+                                <path d="M3 13l4 0" />
+                                <path d="M17 13l4 0" />
+                                <path d="M12 20l0 -6" />
+                                <path d="M4 19l3.35 -2" />
+                                <path d="M20 19l-3.35 -2" />
+                                <path d="M4 7l3.75 2.4" />
+                                <path d="M20 7l-3.75 2.4" />
+                            </svg>
+                        </div>
+                        <div class="stat-title">Open Issues</div>
+                        <div class="stat-value text-error">{{ object.open_issues }}</div>
                     </div>
-                    <div class="stat-title">Open Issues</div>
-                    <div class="stat-value text-error">{{ object.open_issues }}</div>
                 </div>
             </div>
         </div>

@@ -12,19 +12,19 @@ module.exports = {
      */
 
     /*  Templates within theme app (<tailwind_app_name>/templates), e.g. base.html. */
-    '../templates/**/*.html',
+    "../templates/**/*.html",
 
     /*
      * Main templates directory of the project (BASE_DIR/templates).
      * Adjust the following line to match your project structure.
      */
-    '../../templates/**/*.html',
+    "../../templates/**/*.html",
 
     /*
      * Templates in other django apps (BASE_DIR/<any_app_name>/templates).
      * Adjust the following line to match your project structure.
      */
-    '../../**/templates/**/*.html',
+    "../../**/templates/**/*.html",
 
     /**
      * JS: If you use Tailwind CSS in JavaScript, uncomment the following lines and make sure
@@ -44,11 +44,21 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'open-sans': ['"Open Sans"', 'sans-serif'],
-        'roboto': ['"Roboto"', 'sans-serif'],
-        'akshar': ['"Akshar"', 'sans-serif'],
-      }
-    }
+        "open-sans": ['"Open Sans"', "sans-serif"],
+        roboto: ['"Roboto"', "sans-serif"],
+        akshar: ['"Akshar"', "sans-serif"],
+      },
+      typography: (theme) => ({
+        DEFAULT: {
+          css: {
+            img: {
+              margin: "0",
+              display: "unset",
+            },
+          },
+        },
+      }),
+    },
   },
   plugins: [
     /**
@@ -56,11 +66,11 @@ module.exports = {
      * for forms. If you don't like it or have own styling for forms,
      * comment the line below to disable '@tailwindcss/forms'.
      */
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/line-clamp'),
-    require('@tailwindcss/aspect-ratio'),
-    require('daisyui'),
+    require("@tailwindcss/forms"),
+    require("@tailwindcss/typography"),
+    require("@tailwindcss/line-clamp"),
+    require("@tailwindcss/aspect-ratio"),
+    require("daisyui"),
   ],
   daisyui: {
     styled: true,
@@ -68,7 +78,7 @@ module.exports = {
       {
         dark: {
           ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
-          "primary": "#0369a1",
+          primary: "#0369a1",
         },
       },
     ],
@@ -79,10 +89,5 @@ module.exports = {
     prefix: "",
     darkTheme: "dark",
   },
-  safelist: [
-    'alert-info',
-    'alert-success',
-    'alert-warning',
-    'alert-error',
-  ],
-}
+  safelist: ["alert-info", "alert-success", "alert-warning", "alert-error"],
+};
