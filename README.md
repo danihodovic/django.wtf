@@ -1,5 +1,7 @@
 # django_wtf
 
+The Django Package Index.
+
 ### Project setup
 
 Install [Docker](https://docs.docker.com/get-docker/) since we dockerize external services such as Postgres and Redis.
