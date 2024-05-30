@@ -1,7 +1,7 @@
 {% extends "core/base.html" %}
 {% block content %}
-    <div class="mb-5 w-full flex-col content-center self-center lg:mt-5 lg:flex lg:w-7/12">
-        <form class="form flex justify-between">
+    <div class="mb-5 flex-col self-center w-11/12 lg:mt-5 lg:flex lg:w-7/12">
+        <form class="form lg:flex lg:justify-between">
             <label class="form-control">
                 <div class="label">
                     <span class="label-text">Search</span>
@@ -14,7 +14,7 @@
                        hx-push-url="true"
                        hx-target="#search_table"
                        hx-trigger="keyup changed delay:0.5s"
-                       class="input input-bordered input-sm min-w-64" />
+                       class="input input-bordered min-w-64" />
             </label>
             <div class="flex gap-4">
                 <label class="form-control">
@@ -39,6 +39,6 @@
                 </label>
             </div>
         </form>
-        <div id="search_table" class="table table-sm mt-7">{% include "core/search_table.html" %}</div>
+        <div id="search_table" class="mt-7">{% include "core/search_table.html" %}</div>
     </div>
 {% endblock content %}
