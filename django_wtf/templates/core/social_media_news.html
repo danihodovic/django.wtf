@@ -22,7 +22,7 @@
                                 <a class="font-bold" href="{{ url }}">{{ page_obj.start_index|add:forloop.counter0 }}</a>
                             </td>
                             <td>
-                                <a href="{{ url }}" target="_blank">
+                                <a href="{{ url }}" target="_blank" class="font-bold whitespace-normal">
                                     {% if news.type == 'Reddit' %}
                                         <i class="fa-brands fa-reddit text-2xl"></i>
                                     {% elif news.type == 'Hacker News' %}
