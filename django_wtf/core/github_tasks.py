@@ -119,8 +119,11 @@ def index_repository_readme(repo_full_name):
         raise ex
 
     markdown_text = b64decode(res.json()["content"]).decode("utf-8")
+
     repo = Repository.objects.get(full_name=repo_full_name)
-    repo.readme_html = markdown.markdown(markdown_text)
+    repo.readme_html = markdown.markdown(
+        markdown_text, extensions=["extra", "codehilite"]
+    )
     repo.save()
 
 
