@@ -16,7 +16,8 @@
                 <div class="my-3">
                     {% for topic in object.topics %}<div class="ml-1 badge badge-outline">{{ topic }}</div>{% endfor %}
                 </div>
-                <div class="mt-10">
+                <div class="divider"></div>
+                <div>
                     <article class="prose">{{ object.readme_html | safe }}</article>
                 </div>
             </div>
