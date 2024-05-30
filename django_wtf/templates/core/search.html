@@ -9,11 +9,12 @@
                 <input type="text"
                        name="q"
                        value="{{ request.GET.q }}"
-                       class="input input-bordered input-sm min-w-64"
+                       hx-include="[name='category']"
                        hx-get="{% url 'core:search' %}"
+                       hx-push-url="true"
                        hx-target="#search_table"
                        hx-trigger="keyup changed delay:1s"
-                       hx-push-url="true" />
+                       class="input input-bordered input-sm min-w-64" />
             </label>
             <div class="flex gap-4">
                 <label class="form-control">
@@ -22,18 +23,22 @@
                     </div>
                     <select name="category"
                             class="select select-bordered"
-                            hx-get="{% url 'core:search' %}"
-                            hx-target="#search_table"
                             hx-trigger="change"
-                            hx-push-url="true">
-                        <option selected>All</option>
-                        {% for category in categories %}<option value="{{ category.name }}">{{ category.name }}</option>{% endfor %}
+                            hx-include="[name='q']"
+                            hx-get="{% url 'core:search' %}"
+                            hx-push-url="true"
+                            hx-target="#search_table">
+                        <option>All</option>
+                        {% for category in categories %}
+                            <option value="{{ category.name }}"
+                                    {% if category.name == request.GET.category %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
                     </select>
                 </label>
             </div>
         </form>
-        <table id="search_table" class="table table-sm mt-7">
-            {% include "core/search_table.html" %}
-        </table>
+        <div id="search_table" class="table table-sm mt-7">{% include "core/search_table.html" %}</div>
     </div>
 {% endblock content %}
