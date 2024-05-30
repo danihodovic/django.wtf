@@ -1,26 +1,44 @@
 {% extends "core/base.html" %}
 {% block content %}
-    <div class="mb-3">
-        {% for object in object_list %}
-            <div class="mb-1 rounded">
-                <div class="shadow-xl card bg-base-100">
-                    <div class="pb-2 card-body">
-                        <a target="_blank" href="{{ object.github_url }}">
-                            <h2 class="flex justify-between card-title">
-                                <span>{{ object.full_name }}</span>
-                                <span class="text-sm">⭐ {{ object.stars }}</span>
-                            </h2>
-                        </a>
-                        <p>
-                            {% for topic in object.topics|slice:"0:5" %}
-                                <a class="p-3 mr-1 text-xs badge badge-outline hover:brightness-125"
-                                   href="{% url 'core:search' %}?q={{ topic }}">{{ topic|truncatechars:30 }}</a>
-                            {% endfor %}
-                        </p>
-                        <p class="mt-2">{{ object.description }}</p>
-                    </div>
+    <div class="mb-5 w-full flex-col content-center self-center lg:mt-5 lg:flex lg:w-7/12">
+        <form class="form flex justify-between">
+            <label class="form-control">
+                <div class="label">
+                    <span class="label-text">Search</span>
                 </div>
+                <input type="text"
+                       name="q"
+                       value="{{ request.GET.q }}"
+                       hx-include="[name='category']"
+                       hx-get="{% url 'core:search' %}"
+                       hx-push-url="true"
+                       hx-target="#search_table"
+                       hx-trigger="keyup changed delay:0.5s"
+                       class="input input-bordered input-sm min-w-64" />
+            </label>
+            <div class="flex gap-4">
+                <label class="form-control">
+                    <div class="label">
+                        <span class="label-text">Category</span>
+                    </div>
+                    <select name="category"
+                            class="select select-bordered"
+                            hx-trigger="change"
+                            hx-include="[name='q']"
+                            hx-get="{% url 'core:search' %}"
+                            hx-push-url="true"
+                            hx-target="#search_table">
+                        <option>All</option>
+                        {% for category in categories %}
+                            <option value="{{ category.name }}"
+                                    {% if category.name == request.GET.category %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </label>
             </div>
-        {% endfor %}
+        </form>
+        <div id="search_table" class="table table-sm mt-7">{% include "core/search_table.html" %}</div>
     </div>
 {% endblock content %}

@@ -1,4 +1,4 @@
-{% load tailwind_tags %}
+{% load tailwind_tags django_htmx %}
 <!DOCTYPE html>
 <html lang="en-US">
     <head>
@@ -40,5 +40,7 @@
             <script defer
                     src="https://s.depode.com/ingress/7ca0f5ff-8ef2-45fb-9718-37d34cddfe79/script.js"></script>
         {% endif %}
+        <script src="https://unpkg.com/htmx.org@1.9.11"></script>
+        {% django_htmx_script %}
     </body>
 </html>

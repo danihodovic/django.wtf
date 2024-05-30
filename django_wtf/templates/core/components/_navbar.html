@@ -37,45 +37,38 @@
 <a class="w-32 lg:ml-6" href="/">
     <img src="{% static 'images/logo.png' %}" alt="Django.wtf">
 </a>
-<div class="hidden ml-12 lg:flex form-control">
-    <form id="search-form" action="{% url 'core:search' %}">
-        <input type="text"
-               name="q"
-               value="{{ request.GET.q }}"
-               placeholder="Search"
-               class="input input-bordered">
-    </form>
-    <script>
-        const form = document.querySelector("#search-form");
-        const input = form.querySelector("input");
-        input.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                form.submit();
-            }
-        });
-    </script>
-</div>
-<div class="hidden ml-10 lg:flex">
-    <ul class="p-0 text-white uppercase menu menu-horizontal">
+<div class="hidden lg:flex gap-6">
+    <div class="hidden ml-16 lg:flex form-control">
+        {% if request.path != "/search/" %}
+            <form id="search-form" action="{% url 'core:search' %}">
+                <input type="text"
+                       name="q"
+                       value="{{ request.GET.q }}"
+                       placeholder="Search"
+                       class="input input-bordered text-sm">
+            </form>
+        {% endif %}
+    </div>
+    <ul class="text-white uppercase menu menu-horizontal menu-xs gap-4">
         {% flag "newsletter" %}
         <li class="btn btn-outline btn-accent">
-            <a href="{% url 'core:subscriber-landing' %}">Newsletter</a>
+            <a class="text-sm" href="{% url 'core:subscriber-landing' %}">Newsletter</a>
         </li>
     {% endflag %}
     <li>
-        <a href="{% url 'core:top-repositories' %}">Best apps</a>
+        <a class="text-sm" href="{% url 'core:top-repositories' %}">Best apps</a>
     </li>
     <li>
-        <a href="{% url 'core:trending-repositories' %}">Trending apps</a>
+        <a class="text-sm" href="{% url 'core:trending-repositories' %}">Trending apps</a>
     </li>
     <li>
-        <a href="{% url 'core:top-profiles' %}">Best profiles</a>
+        <a class="text-sm" href="{% url 'core:top-profiles' %}">Best profiles</a>
     </li>
     <li>
-        <a href="{% url 'core:trending-profiles' %}">Trending profiles</a>
+        <a class="text-sm" href="{% url 'core:trending-profiles' %}">Trending profiles</a>
     </li>
     <li>
-        <a href="{% url 'core:social-media-news' %}">Social media news</a>
+        <a class="text-sm" href="{% url 'core:social-media-news' %}">Social media news</a>
     </li>
 </ul>
 </div>
