@@ -5,7 +5,8 @@
         <div class="my-4 rounded">
             <div class="shadow-xl card bg-base-200">
                 <div class="pb-2 card-body">
-                    <a target="_blank" href="{{ object.github_url }}">
+                    <a target="_blank"
+                       href="{% url 'core:repo-detail' full_name=object.full_name %}">
                         <h2 class="flex justify-between card-title">
                             <span>{{ object.full_name }}</span>
                             <span class="text-sm">⭐ {{ object.stars }}</span>
