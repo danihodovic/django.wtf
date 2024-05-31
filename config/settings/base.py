@@ -460,5 +460,3 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
-DJANGO_WEB_REPL_SUPERUSER_ONLY = True
