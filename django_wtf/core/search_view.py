@@ -1,4 +1,3 @@
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from watson import search as watson
 from watson.views import SearchView as OriginalSearchView
 

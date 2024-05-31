@@ -78,16 +78,11 @@ module.exports = {
     themes: [
       {
         dark: {
-          ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
+          ...require("daisyui/src/theming/themes")["dark"],
           primary: "#0369a1",
         },
       },
     ],
-    base: true,
-    utils: true,
-    logs: true,
-    rtl: false,
-    prefix: "",
     darkTheme: "dark",
   },
   safelist: ["alert-info", "alert-success", "alert-warning", "alert-error"],
