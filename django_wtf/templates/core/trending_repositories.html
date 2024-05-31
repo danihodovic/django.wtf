@@ -39,28 +39,27 @@
             <tbody>
                 {% for repo in page_obj %}
                     <tr class="hover">
-                        {% with url=repo.github_url %}
-                            <td class="hidden xl:table-cell">
-                                <a class="font-bold whitespace-normal" href="{{ url }}" target="_blank">{{ page_obj.start_index|add:forloop.counter0 }}</a>
-                            </td>
-                            <td>
-                                <a href="{{ url }}" target="_blank">
-                                    {% if request|is_mobile or request|is_tablet %}
-                                        {{ repo.full_name|truncatechars:25 }}
-                                    {% else %}
-                                        {{ repo.full_name }}
-                                    {% endif %}
-                                </a>
-                            </td>
-                            <td class="hidden xl:table-cell">
-                                <a href="{{ url }}" target="_blank" class="whitespace-normal">{{ repo.truncated_description|truncatechars:50 }}</a>
-                            </td>
-                            <td class="text-right">
-                                <a href="{{ url }}" target="_blank">
-                                    <strong>{{ repo.percentage_increase | to_percent }}</strong> ({{ repo.stars_gained }})
-                                </a>
-                            </td>
-                        {% endwith %}
+                        {% url 'core:repo-detail' full_name=repo.full_name as url %}
+                        <td class="hidden xl:table-cell">
+                            <a class="font-bold whitespace-normal" href="{{ url }}" target="_blank">{{ page_obj.start_index|add:forloop.counter0 }}</a>
+                        </td>
+                        <td>
+                            <a href="{{ url }}" target="_blank">
+                                {% if request|is_mobile or request|is_tablet %}
+                                    {{ repo.full_name|truncatechars:25 }}
+                                {% else %}
+                                    {{ repo.full_name }}
+                                {% endif %}
+                            </a>
+                        </td>
+                        <td class="hidden xl:table-cell">
+                            <a href="{{ url }}" target="_blank" class="whitespace-normal">{{ repo.truncated_description|truncatechars:50 }}</a>
+                        </td>
+                        <td class="text-right">
+                            <a href="{{ url }}" target="_blank">
+                                <strong>{{ repo.percentage_increase | to_percent }}</strong> ({{ repo.stars_gained }})
+                            </a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

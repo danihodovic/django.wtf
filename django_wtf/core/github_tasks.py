@@ -3,6 +3,7 @@ from base64 import b64decode
 from datetime import date
 
 import markdown
+import pypandoc
 import superrequests
 from constance import config
 from django.db.utils import DataError
@@ -112,13 +113,25 @@ def index_repository_readme(repo_full_name):
         res = http.get(
             f"https://api.github.com/repos/{repo_full_name}/contents/README.md"
         )
+        markdown_text = b64decode(res.json()["content"]).decode("utf-8")
     except HTTPError as ex:
         if ex.response.status_code == 404:
             logging.info(f"{repo_full_name} has no README.md file")
-            return
-        raise ex
+            logging.info("Trying README.rst")
 
-    markdown_text = b64decode(res.json()["content"]).decode("utf-8")
+            try:
+                res = http.get(
+                    f"https://api.github.com/repos/{repo_full_name}/contents/README.rst"
+                )
+                rst_text = b64decode(res.json()["content"]).decode("utf-8")
+                markdown_text = pypandoc.convert_text(rst_text, "md", format="rst")
+                return
+            except HTTPError as rst_ex:
+                if ex.response.status_code == 404:
+                    logging.info(f"{repo_full_name} has no README.rst file")
+                    return
+                raise rst_ex
+        raise ex
 
     repo = Repository.objects.get(full_name=repo_full_name)
     repo.readme_html = markdown.markdown(
