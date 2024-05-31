@@ -23,7 +23,7 @@
             </div>
         </div>
     {% endfor %}
-    {% if blog_pages.paginator.num_pages > 1 %}
+    {% if paginator.num_pages > 1 %}
         <div class="flex w-100 justify-center mt-10 mb-5">
             <div class="join">
                 {% if page_obj.has_previous %}
