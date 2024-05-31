@@ -36,8 +36,9 @@
                             {% for repo in trending_apps %}
                                 <tr>
                                     <td>
+                        {% url 'core:repo-detail' full_name=repo.full_name as url %}
                                         <a class="flex justify-between hover:brightness-125"
-                                           href="{{ repo.github_url }}">
+                                           href="{{ url }}">
                                             <p>{{ repo.full_name }}</p>
                                             <p>
                                                 {{ repo.stars_lately }}
@@ -117,8 +118,9 @@
                             {% for repo in top_apps %}
                                 <tr>
                                     <td>
+                        {% url 'core:repo-detail' full_name=repo.full_name as url %}
                                         <a class="flex justify-between hover:brightness-125"
-                                           href="{{ repo.github_url }}">
+                                           href="{{ url }}">
                                             <p>{{ repo.full_name }}</p>
                                             <p>
                                                 {{ repo.stars }}

@@ -55,6 +55,7 @@ django-admin-shellx = "0.2.6"
 channels-redis = "^4.2.0"
 django-htmx = "^1.17.3"
 pygments = "^2.18.0"
+pypandoc-binary = "^1.13"
 
 [tool.poetry.group.dev.dependencies]
 pudb = "^2022.1.3"
