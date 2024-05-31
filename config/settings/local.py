@@ -77,7 +77,7 @@ if env("USE_DOCKER", default="no") == "yes":
 DEV_FILTERED_EVENTS = ["request_started"]
 
 
-class DevelopmentFilter(logging.Filter):
+class DevelopmentFilter(logging.Filter):  # pylint: disable=too-few-public-methods
     """Filter out events in development so they don't clutter the console"""
 
     def filter(self, record):
@@ -88,7 +88,7 @@ class DevelopmentFilter(logging.Filter):
         return True
 
 
-LOGGING["handlers"]["console"]["filters"] = [DevelopmentFilter()]
+LOGGING["handlers"]["console"]["filters"] = [DevelopmentFilter()]  # type: ignore
 
 # Celery
 # ------------------------------------------------------------------------------
