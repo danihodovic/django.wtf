@@ -6,7 +6,7 @@ from django_wtf.core.views.index_view import categories_ordered_by_total_reposit
 
 
 class SearchView(OriginalSearchView):
-    paginate_by = 20
+    paginate_by = 10
     models = (Repository,)
 
     def get_template_names(self):  # pyright: ignore [reportIncompatibleMethodOverride]

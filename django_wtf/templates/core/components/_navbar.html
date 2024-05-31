@@ -49,26 +49,25 @@
             </form>
         {% endif %}
     </div>
-    <ul class="text-white uppercase menu menu-horizontal menu-xs gap-4">
+    <ul class="text-white uppercase menu menu-horizontal menu-sm gap-4 items-center">
         {% flag "newsletter" %}
-        <li class="btn btn-outline btn-accent">
-            <a class="text-sm" href="{% url 'core:subscriber-landing' %}">Newsletter</a>
-        </li>
+        <a class="btn btn-sm btn-outline btn-accent"
+           href="{% url 'core:subscriber-landing' %}">Newsletter</a>
     {% endflag %}
     <li>
-        <a class="text-sm" href="{% url 'core:top-repositories' %}">Best apps</a>
+        <a href="{% url 'core:top-repositories' %}">Best apps</a>
     </li>
     <li>
-        <a class="text-sm" href="{% url 'core:trending-repositories' %}">Trending apps</a>
+        <a href="{% url 'core:trending-repositories' %}">Trending apps</a>
     </li>
     <li>
-        <a class="text-sm" href="{% url 'core:top-profiles' %}">Best profiles</a>
+        <a href="{% url 'core:top-profiles' %}">Best profiles</a>
     </li>
     <li>
-        <a class="text-sm" href="{% url 'core:trending-profiles' %}">Trending profiles</a>
+        <a href="{% url 'core:trending-profiles' %}">Trending profiles</a>
     </li>
     <li>
-        <a class="text-sm" href="{% url 'core:social-media-news' %}">Social media news</a>
+        <a href="{% url 'core:social-media-news' %}">Social media news</a>
     </li>
 </ul>
 </div>
