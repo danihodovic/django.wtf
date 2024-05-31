@@ -5,6 +5,7 @@ Base settings to build other settings files upon.
 from pathlib import Path
 
 import environ
+import structlog
 from django.urls import reverse_lazy
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
@@ -92,6 +93,7 @@ THIRD_PARTY_APPS = [
     "django_custom_error_views",
     "django_admin_shellx",
     "django_htmx",
+    "django_structlog",
     "health_check",
     "meta",
     "modelcluster",
@@ -171,6 +173,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
+    "django_structlog.middlewares.RequestMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -283,23 +286,121 @@ MANAGERS = ADMINS
 # https://docs.djangoproject.com/en/dev/ref/settings/#logging
 # See https://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
+DJANGO_ROOT_LOG_LEVEL = env("DJANGO_ROOT_LOG_LEVEL", default="WARNING")
+DJANGO_LOG_LEVEL = env("DJANGO_LOG_LEVEL", default="INFO")
+DJANGO_REQUEST_LOG_LEVEL = env("DJANGO_REQUEST_LOG_LEVEL", default="INFO")
+DJANGO_CELERY_LOG_LEVEL = env("DJANGO_CELERY_LOG_LEVEL", default="INFO")
+DJANGO_DATABASE_LOG_LEVEL = env("DJANGO_DATABASE_LOG_LEVEL", default="CRITICAL")
+DJANGO_STRUCTLOG_CELERY_ENABLED = True
+
+
+shared_structlog_processors = [
+    structlog.contextvars.merge_contextvars,
+    structlog.stdlib.add_logger_name,
+    structlog.stdlib.add_log_level,
+    # Perform %-style formatting.
+    structlog.stdlib.PositionalArgumentsFormatter(),
+    # Add a timestamp in ISO 8601 format.
+    structlog.processors.TimeStamper(fmt="iso"),
+    structlog.processors.StackInfoRenderer(),
+    # If some value is in bytes, decode it to a unicode str.
+    structlog.processors.UnicodeDecoder(),
+    # Add callsite parameters.
+    structlog.processors.CallsiteParameterAdder(
+        {
+            structlog.processors.CallsiteParameter.FILENAME,
+            structlog.processors.CallsiteParameter.FUNC_NAME,
+            structlog.processors.CallsiteParameter.LINENO,
+        }
+    ),
+]
+
+# Logging filtering is handled by the logging library itself
+base_structlog_processors = shared_structlog_processors + [
+    structlog.stdlib.filter_by_level,
+]
+
+base_structlog_formatter = [structlog.stdlib.ProcessorFormatter.wrap_for_formatter]
+
+structlog.configure(
+    processors=base_structlog_processors + base_structlog_formatter,  # type: ignore
+    logger_factory=structlog.stdlib.LoggerFactory(),
+    wrapper_class=structlog.stdlib.BoundLogger,
+    cache_logger_on_first_use=True,
+)
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s "
-            "%(process)d %(thread)d %(message)s"
-        }
+        "colored_console": {
+            "()": structlog.stdlib.ProcessorFormatter,
+            "processor": structlog.dev.ConsoleRenderer(colors=True),
+            "foreign_pre_chain": shared_structlog_processors,
+        },
+        "json_formatter": {
+            "()": structlog.stdlib.ProcessorFormatter,
+            "processor": structlog.processors.JSONRenderer(),
+            "foreign_pre_chain": shared_structlog_processors,
+        },
     },
     "handlers": {
         "console": {
-            "level": "DEBUG",
             "class": "logging.StreamHandler",
-            "formatter": "verbose",
-        }
+            "formatter": "colored_console",
+        },
+        "json": {
+            "class": "logging.StreamHandler",
+            "formatter": "json_formatter",
+        },
+        "null": {
+            "class": "logging.NullHandler",
+        },
     },
-    "root": {"level": "INFO", "handlers": ["console"]},
+    "root": {
+        "handlers": ["console"],
+        "level": DJANGO_ROOT_LOG_LEVEL,
+    },
+    "loggers": {
+        "django_structlog": {
+            "level": DJANGO_LOG_LEVEL,
+        },
+        # Django Structlog request middlewares
+        "django_structlog.middlewares": {
+            "level": DJANGO_REQUEST_LOG_LEVEL,
+        },
+        # Django Structlog Celery receivers
+        "django_structlog.celery": {
+            "level": DJANGO_CELERY_LOG_LEVEL,
+        },
+        "your_app": {
+            "level": DJANGO_LOG_LEVEL,
+        },
+        # DB logs
+        "django.db.backends": {
+            "level": DJANGO_DATABASE_LOG_LEVEL,
+        },
+        # Use structlog middleware
+        "django.server": {
+            "handlers": ["null"],
+            "propagate": False,
+        },
+        # Use structlog middleware
+        "django.request": {
+            "handlers": ["null"],
+            "propagate": False,
+        },
+        # Use structlog middleware
+        "django.channels.server": {
+            "handlers": ["null"],
+            "propagate": False,
+        },
+        # Use structlog middleware
+        "werkzeug": {
+            "handlers": ["null"],
+            "propagate": False,
+        },
+    },
 }
 
 # Celery
