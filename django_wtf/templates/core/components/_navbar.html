@@ -11,11 +11,10 @@
             </svg>
         </label>
         <ul tabindex="0"
-            class="p-2 mt-3 shadow menu menu-compact dropdown-content bg-primary-content rounded-box w-52">
+            class="p-4 mt-4 shadow menu text-white menu-compact dropdown-content bg-info-content rounded-box w-52">
             {% flag "newsletter" %}
-            <li class="btn btn-outline btn-accent">
-                <a href="{% url 'core:subscriber-landing' %}">Best apps</a>
-            </li>
+            <a class="btn btn-sm btn-outline btn-accent"
+               href="{% url 'core:subscriber-landing' %}">Newsletter</a>
         {% endflag %}
         <li>
             <a href="{% url 'core:top-repositories' %}">Best apps</a>
@@ -34,7 +33,7 @@
         </li>
     </ul>
 </div>
-<a class="w-32 lg:ml-6" href="/">
+<a class="w-32 ml-6" href="/">
     <img src="{% static 'images/logo.png' %}" alt="Django.wtf">
 </a>
 <div class="hidden lg:flex gap-6">
