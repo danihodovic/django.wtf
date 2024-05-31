@@ -373,7 +373,7 @@ LOGGING = {
         "django_structlog.celery": {
             "level": DJANGO_CELERY_LOG_LEVEL,
         },
-        "your_app": {
+        "django_wtf": {
             "level": DJANGO_LOG_LEVEL,
         },
         # DB logs
