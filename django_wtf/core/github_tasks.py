@@ -125,13 +125,13 @@ def index_repository_readme(repo_full_name):
                 )
                 rst_text = b64decode(res.json()["content"]).decode("utf-8")
                 markdown_text = pypandoc.convert_text(rst_text, "md", format="rst")
-                return
             except HTTPError as rst_ex:
                 if ex.response.status_code == 404:
                     logging.info(f"{repo_full_name} has no README.rst file")
                     return
                 raise rst_ex
-        raise ex
+        else:
+            raise ex
 
     repo = Repository.objects.get(full_name=repo_full_name)
     repo.readme_html = markdown.markdown(
