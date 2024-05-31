@@ -17,8 +17,8 @@
                     {% for topic in object.topics %}<div class="ml-1 badge badge-outline">{{ topic }}</div>{% endfor %}
                 </div>
                 <div class="divider"></div>
-                <div>
-                    <article class="prose max-w-none">{{ object.readme_html | safe }}</article>
+                <div class="grid">
+                    <article class="prose min-w-0 max-w-full">{{ object.readme_html | safe }}</article>
                 </div>
             </div>
             <div>
