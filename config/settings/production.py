@@ -140,42 +140,29 @@ ANYMAIL = {
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
-    "formatters": {
-        "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s "
-            "%(process)d %(thread)d %(message)s"
-        }
-    },
-    "handlers": {
-        "mail_admins": {
-            "level": "ERROR",
-            "filters": ["require_debug_false"],
-            "class": "django.utils.log.AdminEmailHandler",
-        },
-        "console": {
-            "level": "DEBUG",
-            "class": "logging.StreamHandler",
-            "formatter": "verbose",
-        },
-    },
-    "root": {"level": "INFO", "handlers": ["console"]},
-    "loggers": {
-        "django.request": {
-            "handlers": ["mail_admins"],
-            "level": "ERROR",
-            "propagate": True,
-        },
-        "django.security.DisallowedHost": {
-            "level": "ERROR",
-            "handlers": ["console", "mail_admins"],
-            "propagate": True,
-        },
-    },
-}
+DJANGO_REQUEST_LOG_LEVEL = env("DJANGO_REQUEST_LOG_LEVEL", default="WARNING")
+
+production_structlog_processors = [
+    structlog.processors.dict_tracebacks,
+]
+
+production_shared_structlog_processors = (
+    shared_structlog_processors + production_structlog_processors
+)
+
+structlog.configure(
+    processors=base_structlog_processors
+    + production_structlog_processors
+    + base_structlog_formatter,  # type: ignore
+    logger_factory=structlog.stdlib.LoggerFactory(),
+    cache_logger_on_first_use=True,
+)
+
+LOGGING["root"]["handlers"] = ["json"]  # type: ignore
+LOGGING["loggers"]["django_structlog.middlewares"]["level"] = DJANGO_REQUEST_LOG_LEVEL  # type: ignore
+
+# Add dict tracebacks to the JSON formatter
+LOGGING["formatters"]["json_formatter"]["foreign_pre_chain"] = production_shared_structlog_processors  # type: ignore
 
 # Your stuff...
 # ------------------------------------------------------------------------------

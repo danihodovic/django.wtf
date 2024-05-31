@@ -1,4 +1,6 @@
 # pylint: disable=wildcard-import,unused-wildcard-import
+import logging
+
 from .base import *
 from .base import env
 
@@ -64,6 +66,29 @@ if env("USE_DOCKER", default="no") == "yes":
 
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
+
+# LOGGING
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#logging
+# See https://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
+# pylint: disable=duplicate-code
+
+DEV_FILTERED_EVENTS = ["request_started"]
+
+
+class DevelopmentFilter(logging.Filter):  # pylint: disable=too-few-public-methods
+    """Filter out events in development so they don't clutter the console"""
+
+    def filter(self, record):
+        if DEBUG and isinstance(record.msg, dict):
+            event = record.msg.get("event")
+            if event in DEV_FILTERED_EVENTS:
+                return False
+        return True
+
+
+LOGGING["handlers"]["console"]["filters"] = [DevelopmentFilter()]  # type: ignore
 
 # Celery
 # ------------------------------------------------------------------------------
