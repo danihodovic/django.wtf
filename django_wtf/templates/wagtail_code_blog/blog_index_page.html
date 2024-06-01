@@ -1,9 +1,8 @@
 {% extends "core/base.html" %}
 {% load static %}
 {% block head %}
-    {% include "wagtail_code_blog/blog_index_page_head.html" %}
     {{ block.super }}
-    {{ tailwind_css }}
+    {% include "wagtail_code_blog/blog_index_page_head.html" %}
     <style>
         h3,
         h4,

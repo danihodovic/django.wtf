@@ -2,9 +2,8 @@
 {% load tailwind_tags %}
 {% load wagtailcore_tags wagtailimages_tags %}
 {% block head %}
-    {% include "wagtail_code_blog/blog_page_head.html" %}
     {{ block.super }}
-    {{ tailwind_css }}
+    {% include "wagtail_code_blog/blog_page_head.html" %}
 {% endblock head %}
 {% block content %}
     <div class="flex w-full justify-center bg-white pb-5 md:pb-7 md:pt-7">
