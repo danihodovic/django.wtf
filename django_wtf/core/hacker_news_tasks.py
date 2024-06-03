@@ -9,7 +9,7 @@ from .models import SocialNews, SocialNewsType
 from .utils import log_action
 
 
-@app.task
+@app.task(soft_time_limit=30 * 60)
 def index_hn_submissions():
     # https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty
     client = superrequests.Session()
