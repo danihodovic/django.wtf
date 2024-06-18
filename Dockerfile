@@ -14,7 +14,7 @@ apt update
 apt-get install -y postgresql-client-15
 rm -rf /var/lib/apt/lists/*
 
-curl -sL https://deb.nodesource.com/setup_20.x | bash - && apt install -y nodejs #!COMMIT
+curl -sL https://deb.nodesource.com/setup_22.x | bash - && apt install -y nodejs #!COMMIT
 
 # Fix locales
 echo "LC_ALL=en_US.UTF-8" >> /etc/environment
