@@ -97,6 +97,7 @@ THIRD_PARTY_APPS = [
     "health_check",
     "meta",
     "modelcluster",
+    "slippers",
     "tailwind",
     "taggit",
     "wagtail.contrib.forms",
