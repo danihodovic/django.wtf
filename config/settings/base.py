@@ -442,6 +442,9 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_ADAPTER = "django_wtf.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 SOCIALACCOUNT_ADAPTER = "django_wtf.users.adapters.SocialAccountAdapter"
+# https://github.com/danihodovic/django-allauth-ui?tab=readme-ov-file#configuration
+ALLAUTH_UI_THEME = "business"
+
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = reverse_lazy(
     "core:subscriber-landing"
 )
