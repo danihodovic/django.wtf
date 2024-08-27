@@ -275,3 +275,5 @@ django_wtf/media/
 .ipython/
 .env
 .envs/*
+
+.direnv
