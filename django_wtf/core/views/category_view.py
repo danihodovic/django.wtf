@@ -23,7 +23,7 @@ class CategoryView(MetadataMixin, DetailView):
         return context
 
     def get_meta_title(self, context=None):
-        return f"django.wtf: projects providing {self.category_name}"
+        return f"Django.WTF | {self.category_name}"
 
     def get_meta_description(self, context=None):
         repos = self.matching_repositories()
