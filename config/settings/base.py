@@ -37,6 +37,8 @@ USE_I18N = True
 USE_TZ = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#locale-paths
 LOCALE_PATHS = [str(ROOT_DIR / "locale")]
+# https://docs.djangoproject.com/en/5.0/ref/settings/#std-setting-SILENCED_SYSTEM_CHECKS
+SILENCED_SYSTEM_CHECKS = ["slippers.E001"]
 
 # DATABASES
 # ------------------------------------------------------------------------------
@@ -441,6 +443,9 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_ADAPTER = "django_wtf.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 SOCIALACCOUNT_ADAPTER = "django_wtf.users.adapters.SocialAccountAdapter"
+# https://github.com/danihodovic/django-allauth-ui?tab=readme-ov-file#configuration
+ALLAUTH_UI_THEME = "business"
+
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = reverse_lazy(
     "core:subscriber-landing"
 )
