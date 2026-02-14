@@ -24,7 +24,7 @@ def categories_ordered_by_total_repositories():
 
 class IndexView(MetadataMixin, TemplateView):
     template_name = "core/index.html"
-    title = "Django.WTF: The Django package index"
+    title = "Django.WTF: Trending Django packages"
     description = (
         "Django.WTF lists popular Django projects, apps and tools. "
         "The latest and greatest news in the Django community."
