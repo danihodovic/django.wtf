@@ -1,14 +1,16 @@
-import logging
-from datetime import datetime
+from datetime import UTC, datetime
 
 import praw
-import pytz
 from celery import current_app as app
 from constance import config
 from django.db import DataError
+from django_o11y.logging.utils import get_logger
+from django_wtf.core.task_metrics import record_indexing_event
 
 from .models import SocialNews, SocialNewsType
 from .utils import log_action
+
+logger = get_logger()
 
 
 def create_client():
@@ -22,7 +24,7 @@ def create_client():
 @app.task(soft_time_limit=30 * 60)
 def index_top_weekly_submissions():
     period = "week"
-    logging.info(f"Indexing top Reddit posts by {period=}")
+    logger.info("reddit_index_started", period=period)
     subreddit = create_client().subreddit("django")
     for submission in subreddit.top(period):
         try:
@@ -33,13 +35,18 @@ def index_top_weekly_submissions():
                     "title": submission.title,
                     "upvotes": submission.ups,
                     "created_at": datetime.fromtimestamp(
-                        submission.created_utc, tz=pytz.utc
+                        submission.created_utc, tz=UTC
                     ),
                 },
             )
         except DataError as ex:
             permalink = submission.permalink
-            logging.warning(f"Failed to index {permalink} - {ex.args}")
+            logger.warning(
+                "reddit_submission_index_failed",
+                permalink=permalink,
+                error_args=ex.args,
+            )
+            record_indexing_event("reddit_submission", "error")
             continue
 
         log_action(obj, created)

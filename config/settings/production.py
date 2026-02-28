@@ -134,35 +134,21 @@ ANYMAIL = {
 
 # LOGGING
 # ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#logging
-# See https://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error when DEBUG=False.
 DJANGO_REQUEST_LOG_LEVEL = env("DJANGO_REQUEST_LOG_LEVEL", default="WARNING")
 
-production_structlog_processors = [
-    structlog.processors.dict_tracebacks,
-]
+DJANGO_O11Y = {
+    **DJANGO_O11Y,  # noqa: F405
+    "TRACING": {"ENABLED": True},
+    "CELERY": {"ENABLED": True},
+    "PROFILING": {"ENABLED": True},
+    "LOGGING": {
+        "FORMAT": "json",
+        "REQUEST_LEVEL": DJANGO_REQUEST_LOG_LEVEL,
+        "FILE_ENABLED": False,
+    },
+}
 
-production_shared_structlog_processors = (
-    shared_structlog_processors + production_structlog_processors
-)
-
-structlog.configure(
-    processors=base_structlog_processors
-    + production_structlog_processors
-    + base_structlog_formatter,  # type: ignore
-    logger_factory=structlog.stdlib.LoggerFactory(),
-    cache_logger_on_first_use=True,
-)
-
-LOGGING["root"]["handlers"] = ["json"]  # type: ignore
-LOGGING["loggers"]["django_structlog.middlewares"]["level"] = DJANGO_REQUEST_LOG_LEVEL  # type: ignore
-
-# Add dict tracebacks to the JSON formatter
-LOGGING["formatters"]["json_formatter"]["foreign_pre_chain"] = production_shared_structlog_processors  # type: ignore
+LOGGING = build_logging_dict(extra=EXTRA_LOGGING)  # noqa: F405
 
 # Your stuff...
 # ------------------------------------------------------------------------------

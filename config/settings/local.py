@@ -74,6 +74,19 @@ if env("USE_DOCKER", default="no") == "yes":
 # more details on how to customize your logging configuration.
 # pylint: disable=duplicate-code
 
+DJANGO_O11Y = {
+    **DJANGO_O11Y,  # noqa: F405
+    "TRACING": {"ENABLED": True},
+    "CELERY": {"ENABLED": True},
+    "PROFILING": {"ENABLED": True},
+    "LOGGING": {
+        "FORMAT": "console",
+        "FILE_ENABLED": True,
+    },
+}
+
+LOGGING = build_logging_dict(extra=EXTRA_LOGGING)  # noqa: F405
+
 DEV_FILTERED_EVENTS = ["request_started"]
 
 

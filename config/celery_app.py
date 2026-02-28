@@ -6,7 +6,6 @@ from celery import Celery, bootsteps
 from celery.schedules import crontab
 from celery.signals import setup_logging, worker_ready, worker_shutdown
 from django.conf import settings
-from django_structlog.celery.steps import DjangoStructLogInitStep
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.production")
@@ -18,8 +17,6 @@ app = Celery("django_wtf")
 # - namespace='CELERY' means all celery-related configuration keys
 #   should have a `CELERY_` prefix.
 app.config_from_object("django.conf:settings", namespace="CELERY")
-
-app.steps["worker"].add(DjangoStructLogInitStep)
 
 
 @setup_logging.connect
@@ -34,9 +31,7 @@ READINESS_FILE = Path("/tmp/worker_ready")
 class LivenessProbe(bootsteps.StartStopStep):
     requires = {"celery.worker.components:Timer"}
 
-    def __init__(
-        self, worker, **kwargs
-    ):  # pylint: disable=unused-argument,super-init-not-called
+    def __init__(self, worker, **kwargs):  # pylint: disable=unused-argument,super-init-not-called
         self.requests = []
         self.tref = None
 
@@ -51,9 +46,7 @@ class LivenessProbe(bootsteps.StartStopStep):
     def stop(self, worker):  # pylint: disable=unused-argument,arguments-renamed
         HEARTBEAT_FILE.unlink(missing_ok=True)
 
-    def update_heartbeat_file(
-        self, worker
-    ):  # pylint: disable=unused-argument,arguments-renamed
+    def update_heartbeat_file(self, worker):  # pylint: disable=unused-argument,arguments-renamed
         HEARTBEAT_FILE.touch()
 
 

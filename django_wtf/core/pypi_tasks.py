@@ -1,15 +1,16 @@
-import logging
-
 from dateutil import parser
+from django_o11y.logging.utils import get_logger
 from requests.exceptions import HTTPError
 from superrequests import Session
 
 from config import celery_app as app
 from django_wtf.core.models import PypiProject, PypiRelease, Repository
+from django_wtf.core.task_metrics import observe_external_api, record_indexing_event
 
 from .utils import log_action
 
 http = Session()
+logger = get_logger()
 
 
 @app.task(soft_time_limit=30 * 60)
@@ -21,13 +22,16 @@ def index_pypi_projects():
 @app.task
 def index_pypi_project(repo_full_name):
     repo = Repository.objects.get(full_name=repo_full_name)
-    logging.info(f"Indexing {repo=}")
+    logger.info("pypi_project_index_started", repository=repo.full_name)
     try:
-        res = http.get(f"https://pypi.org/pypi/{repo.name}/json")
+        with observe_external_api("pypi", "project_metadata"):
+            res = http.get(f"https://pypi.org/pypi/{repo.name}/json")
     except HTTPError as ex:
         if ex.response.status_code == 404:
-            logging.info(f"404 - failed to index {repo=}")
+            logger.info("pypi_project_not_found", repository=repo.full_name)
+            record_indexing_event("pypi_project", "not_found")
             return
+        record_indexing_event("pypi_project", "error")
         raise ex
     data = res.json()
     info = data["info"]
@@ -48,7 +52,12 @@ def index_pypi_project(repo_full_name):
 
     for version, release_obj in data["releases"].items():
         if not release_obj:
-            logging.info(f"No release data found for {repo=} {version=}")
+            logger.info(
+                "pypi_release_data_missing",
+                repository=repo.full_name,
+                version=version,
+            )
+            record_indexing_event("pypi_release", "missing_data")
             continue
 
         release_data = release_obj[0]

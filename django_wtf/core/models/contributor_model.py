@@ -1,8 +1,9 @@
 from django.db import models
+from django_prometheus.models import ExportModelOperationsMixin
 from model_utils.models import TimeStampedModel
 
 
-class Contributor(TimeStampedModel):
+class Contributor(ExportModelOperationsMixin("contributor"), TimeStampedModel):
     profile = models.ForeignKey(
         "core.Profile",
         on_delete=models.CASCADE,

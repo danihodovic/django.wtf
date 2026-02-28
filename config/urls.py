@@ -6,6 +6,8 @@ from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap as sitemap_view
 from django.urls import include, path
 from django.views import defaults as default_views
+from django_o11y import get_urls as o11y_urls
+from health_check.views import HealthCheckView
 from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.contrib.sitemaps.views import Sitemap as wagtail_sitemap_view
@@ -23,8 +25,7 @@ urlpatterns: list[Any] = [
     path("users/", include("django_wtf.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Health checks
-    path("health/", include("health_check.urls")),
-    path("prometheus/", include("django_prometheus.urls")),
+    path("health/", HealthCheckView.as_view(), name="health_check_home"),
     path("cms/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path(
@@ -35,6 +36,7 @@ urlpatterns: list[Any] = [
     ),
     path("blog/", include(wagtail_urls)),
     path("", include("django_wtf.core.urls")),
+    *o11y_urls(),
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's serving mechanism
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

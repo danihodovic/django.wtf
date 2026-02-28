@@ -1,11 +1,14 @@
 # pylint: disable=import-outside-toplevel,too-few-public-methods
-import logging
 from datetime import datetime, timedelta
 
 from cacheops import cached_as
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django_o11y.logging.utils import get_logger
+from django_prometheus.models import ExportModelOperationsMixin
 from model_utils.models import TimeStampedModel
+
+logger = get_logger()
 
 
 class UserType(models.TextChoices):
@@ -28,7 +31,7 @@ class ProfileContributesToValidProjectsManager(models.Manager):
         )
 
 
-class Profile(TimeStampedModel):
+class Profile(ExportModelOperationsMixin("profile"), TimeStampedModel):
     objects = models.Manager()
     contributes_to_valid_repos = ProfileContributesToValidProjectsManager()
     github_id = models.PositiveIntegerField()
@@ -66,13 +69,17 @@ class Profile(TimeStampedModel):
                 created_at=previous_date, profile=self
             )
         except ObjectDoesNotExist:
-            logging.debug(f"ProfileFollowers at {previous_date=} does not exist")
+            logger.debug(
+                "profile_followers_snapshot_missing",
+                profile=self.login,
+                previous_date=str(previous_date),
+            )
             return 0
         assert self.followers
         return self.followers - previous_followers.followers
 
 
-class ProfileFollowers(models.Model):
+class ProfileFollowers(ExportModelOperationsMixin("profile_followers"), models.Model):
     profile = models.ForeignKey(
         Profile,
         on_delete=models.CASCADE,
