@@ -5,7 +5,6 @@ Base settings to build other settings files upon.
 from pathlib import Path
 
 import environ
-from django_o11y.logging.setup import build_logging_dict
 from django.urls import reverse_lazy
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
@@ -211,6 +210,7 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
 
+
 # MEDIA
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-root
@@ -289,53 +289,21 @@ MANAGERS = ADMINS
 # https://docs.djangoproject.com/en/dev/ref/settings/#logging
 # See https://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
-DJANGO_ROOT_LOG_LEVEL = env("DJANGO_ROOT_LOG_LEVEL", default="WARNING")
-DJANGO_LOG_LEVEL = env("DJANGO_LOG_LEVEL", default="INFO")
-DJANGO_REQUEST_LOG_LEVEL = env("DJANGO_REQUEST_LOG_LEVEL", default="INFO")
-DJANGO_CELERY_LOG_LEVEL = env("DJANGO_CELERY_LOG_LEVEL", default="INFO")
-DJANGO_DATABASE_LOG_LEVEL = env("DJANGO_DATABASE_LOG_LEVEL", default="CRITICAL")
-PROMETHEUS_EXPORT_MIGRATIONS = env.bool("PROMETHEUS_EXPORT_MIGRATIONS", True)
-
 DJANGO_O11Y = {
     "SERVICE_NAME": env("OTEL_SERVICE_NAME", default="django-wtf"),
     "SERVICE_VERSION": env("OTEL_SERVICE_VERSION", default="0.0.0"),
     "SERVICE_INSTANCE_ID": env("OTEL_SERVICE_INSTANCE_ID", default="local"),
     "ENVIRONMENT": env("DJANGO_O11Y_ENVIRONMENT", default="local"),
     "NAMESPACE": env("DJANGO_O11Y_NAMESPACE", default="web"),
-    "TRACING": {
-        "ENABLED": env.bool("DJANGO_O11Y_TRACING_ENABLED", default=False),
-    },
-    "LOGGING": {
-        "LEVEL": DJANGO_LOG_LEVEL,
-        "REQUEST_LEVEL": DJANGO_REQUEST_LOG_LEVEL,
-        "DATABASE_LEVEL": DJANGO_DATABASE_LOG_LEVEL,
-        "CELERY_LEVEL": DJANGO_CELERY_LOG_LEVEL,
-    },
     "METRICS": {
         "PROMETHEUS_ENABLED": True,
-        "PROMETHEUS_ENDPOINT": "/prometheus/",
-        "EXPORT_MIGRATIONS": PROMETHEUS_EXPORT_MIGRATIONS,
     },
-    "CELERY": {
-        "ENABLED": env.bool("DJANGO_O11Y_CELERY_ENABLED", default=False),
-    },
-    "PROFILING": {
-        "ENABLED": env.bool("DJANGO_O11Y_PROFILING_ENABLED", default=False),
-    },
+    "TRACING": {"ENABLED": True},
+    "CELERY": {"ENABLED": True},
+    "PROFILING": {"ENABLED": True},
 }
 
-EXTRA_LOGGING = {
-    "root": {
-        "level": DJANGO_ROOT_LOG_LEVEL,
-    },
-    "loggers": {
-        "django_wtf": {
-            "level": DJANGO_LOG_LEVEL,
-        },
-    },
-}
-
-LOGGING = build_logging_dict(extra=EXTRA_LOGGING)
+EXTRA_LOGGING: dict[str, object] = {}
 
 # Celery
 # ------------------------------------------------------------------------------
@@ -431,7 +399,7 @@ SHELL_PLUS_IMPORTS = [
 # ------------------------------------------------------------------------------
 # only if django version >= 3.0
 X_FRAME_OPTIONS = "SAMEORIGIN"
-SILENCED_SYSTEM_CHECKS = ["security.W019"]
+SILENCED_SYSTEM_CHECKS = ["security.W019", "slippers.E001"]
 # django-meta
 # ------------------------------------------------------------------------------
 META_SITE_DOMAIN = "django.wtf"

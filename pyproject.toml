@@ -54,12 +54,12 @@ dependencies = [
   "django-prometheus @ git+https://github.com/django-commons/django-prometheus.git@master",
   "django-waffle>=5.0.0",
   "django-admin-site-search>=1.1.0",
-  "django-admin-shellx>=0.3.3",
+  "django-admin-shellx>=0.4.0",
   "channels-redis>=4.3.0",
   "django-htmx>=1.27.0",
   "pygments>=2.19.2",
   "pypandoc-binary>=1.16.2",
-  "django-o11y[all]>=0.5.2",
+  "django-o11y[all]>=0.5.8",
 ]
 
 [dependency-groups]
@@ -139,7 +139,25 @@ django_settings_module = "config.settings.test"
 
 [tool.pylint.'MASTER']
 load-plugins = "pylint_django, pylint_celery"
-ignore = "manage.py"
+ignore = [
+  "manage.py",
+  ".venv",
+  "venv",
+  ".direnv",
+  ".virtualenv",
+  ".poetry",
+  "node_modules",
+  "site-packages",
+]
+ignore-paths = [
+  "(^|.*/)\\.venv/",
+  "(^|.*/)venv/",
+  "(^|.*/)\\.direnv/",
+  "(^|.*/)\\.virtualenv/",
+  "(^|.*/)\\.poetry/",
+  "(^|.*/)node_modules/",
+  "(^|.*/)site-packages/",
+]
 
 [tool.pylint.'FORMAT']
 max-line-length = 150

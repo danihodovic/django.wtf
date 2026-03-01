@@ -31,7 +31,7 @@ class ProfileContributesToValidProjectsManager(models.Manager):
         )
 
 
-class Profile(ExportModelOperationsMixin("profile"), TimeStampedModel):
+class Profile(ExportModelOperationsMixin("profile"), TimeStampedModel):  # type: ignore[misc]
     objects = models.Manager()
     contributes_to_valid_repos = ProfileContributesToValidProjectsManager()
     github_id = models.PositiveIntegerField()
@@ -79,7 +79,7 @@ class Profile(ExportModelOperationsMixin("profile"), TimeStampedModel):
         return self.followers - previous_followers.followers
 
 
-class ProfileFollowers(ExportModelOperationsMixin("profile_followers"), models.Model):
+class ProfileFollowers(ExportModelOperationsMixin("profile_followers"), models.Model):  # type: ignore[misc]
     profile = models.ForeignKey(
         Profile,
         on_delete=models.CASCADE,

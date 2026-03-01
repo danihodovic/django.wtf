@@ -1,5 +1,5 @@
 # pylint: disable=wildcard-import,unused-wildcard-import
-import logging
+from django_o11y.logging.setup import build_logging_dict
 
 from .base import *
 from .base import env
@@ -56,7 +56,10 @@ MIDDLEWARE += [
 ]  # noqa F405
 # https://django-debug-toolbar.readthedocs.io/en/latest/configuration.html#debug-toolbar-config
 DEBUG_TOOLBAR_CONFIG = {
-    "DISABLE_PANELS": ["debug_toolbar.panels.redirects.RedirectsPanel"],
+    "DISABLE_PANELS": [
+        "debug_toolbar.panels.redirects.RedirectsPanel",
+        "debug_toolbar.panels.profiling.ProfilingPanel",  # additional one
+    ],
     "SHOW_TEMPLATE_CONTEXT": True,
 }
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#internal-ips
@@ -74,35 +77,12 @@ if env("USE_DOCKER", default="no") == "yes":
 # more details on how to customize your logging configuration.
 # pylint: disable=duplicate-code
 
+DEBUG = True
 DJANGO_O11Y = {
     **DJANGO_O11Y,  # noqa: F405
-    "TRACING": {"ENABLED": True},
-    "CELERY": {"ENABLED": True},
-    "PROFILING": {"ENABLED": True},
-    "LOGGING": {
-        "FORMAT": "console",
-        "FILE_ENABLED": True,
-    },
 }
 
 LOGGING = build_logging_dict(extra=EXTRA_LOGGING)  # noqa: F405
-
-DEV_FILTERED_EVENTS = ["request_started"]
-
-
-class DevelopmentFilter(logging.Filter):  # pylint: disable=too-few-public-methods
-    """Filter out events in development so they don't clutter the console"""
-
-    def filter(self, record):
-        if DEBUG and isinstance(record.msg, dict):
-            event = record.msg.get("event")
-            if event in DEV_FILTERED_EVENTS:
-                return False
-        return True
-
-
-LOGGING["handlers"]["console"]["filters"] = [DevelopmentFilter()]  # type: ignore
-
 # Celery
 # ------------------------------------------------------------------------------
 
@@ -110,7 +90,5 @@ LOGGING["handlers"]["console"]["filters"] = [DevelopmentFilter()]  # type: ignor
 CELERY_TASK_EAGER_PROPAGATES = True
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-always-eager
 CELERY_TASK_ALWAYS_EAGER = True
-# http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-eager-propagates
-CELERY_TASK_EAGER_PROPAGATES = True
 # Your stuff...
 # ------------------------------------------------------------------------------

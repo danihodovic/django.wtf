@@ -7,7 +7,7 @@ class SocialNewsType(models.TextChoices):
     HACKER_NEWS = ("Hacker News", "Hacker News")
 
 
-class SocialNews(ExportModelOperationsMixin("social_news"), models.Model):
+class SocialNews(ExportModelOperationsMixin("social_news"), models.Model):  # type: ignore[misc]
     title = models.CharField(max_length=200)
     url = models.URLField()
     type = models.CharField(

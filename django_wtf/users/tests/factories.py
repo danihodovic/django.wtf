@@ -26,7 +26,7 @@ class UserFactory(DjangoModelFactory):
                 lower_case=True,
             ).evaluate(None, None, extra={"locale": None})
         )
-        self.set_password(password)
+        self.set_password(password)  # type: ignore[attr-defined]
 
     class Meta:
         model = get_user_model()

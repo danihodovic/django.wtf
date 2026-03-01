@@ -25,7 +25,14 @@ urlpatterns: list[Any] = [
     path("users/", include("django_wtf.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Health checks
-    path("health/", HealthCheckView.as_view(), name="health_check_home"),
+    path(
+        "health/",
+        HealthCheckView.as_view(
+            checks=[
+                "health_check.Database",
+            ]
+        ),
+    ),
     path("cms/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path(

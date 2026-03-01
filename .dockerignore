@@ -1,7 +1,62 @@
-.poetry
-venv
+# Virtual environments
 .venv
+venv
 .virtualenv
-*.sql
+.direnv
+ENV/
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+.eggs/
+
+# Type checking / linting caches
 .mypy_cache
+.ruff_cache
+.cache
+
+# Test / coverage
+.coverage
+.coverage.*
+.pytest_cache
+htmlcov/
+.tox/
+.hypothesis/
+
+# Node
+node_modules/
+.npm
+.eslintcache
+
+# Database dumps
+*.sql
+*.tar
+db_dump*
+
+# Dev / local config
+.env
+.envs/
+.envrc
 .drone.jsonnet
+.local/
+
+# Editor
+.vscode/
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docs / misc
+README.md
+*.log

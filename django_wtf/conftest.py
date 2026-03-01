@@ -23,7 +23,7 @@ def media_storage(settings, tmpdir):  # pylint: disable=redefined-outer-name
 
 @pytest.fixture
 def user(db) -> User:  # pylint: disable=unused-argument
-    return UserFactory()
+    return UserFactory()  # type: ignore[return-value]
 
 
 @pytest.fixture

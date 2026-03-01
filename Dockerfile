@@ -23,6 +23,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 ENV UV_LINK_MODE=copy \
   UV_COMPILE_BYTECODE=1 \
+  UV_PYTHON=/usr/local/bin/python3.12 \
   UV_PROJECT_ENVIRONMENT=/opt/venv \
   PATH=/opt/venv/bin:$PATH \
   PYTHONUNBUFFERED=1
@@ -47,7 +48,7 @@ set -e
 export DJANGO_SETTINGS_MODULE=config.settings.test DATABASE_URL=postgres://postgres:5432/postgres
 export CELERY_BROKER_URL= REDIS_URL=redis://test
 
-python manage.py tailwind build --no-input
+python manage.py tailwind build
 EOF
 
 RUN <<EOF
@@ -60,7 +61,7 @@ export DJANGO_AWS_STORAGE_BUCKET_NAME=
 export MAILGUN_API_KEY= MAILGUN_DOMAIN=
 export DJANGO_O11Y_METRICS_EXPORT_MIGRATIONS=false
 
-python manage.py collectstatic --no-input
+python manage.py collectstatic --no-input --ignore allauth_ui/input.css
 EOF
 
 FROM python:3.12-slim

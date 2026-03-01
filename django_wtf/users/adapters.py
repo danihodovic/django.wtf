@@ -7,7 +7,7 @@ from django.http import HttpRequest
 
 
 class AccountAdapter(DefaultAccountAdapter):
-    def is_open_for_signup(self, request: HttpRequest):  # type: ignore[override]
+    def is_open_for_signup(self, request: HttpRequest):
         return bool(getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True))
 
     def send_verification_code_sms(self, user, phone: str, code: str, **kwargs):
@@ -27,7 +27,5 @@ class AccountAdapter(DefaultAccountAdapter):
 
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
-    def is_open_for_signup(  # type: ignore[override]
-        self, request: HttpRequest, sociallogin: Any
-    ):
+    def is_open_for_signup(self, request: HttpRequest, sociallogin: Any):
         return bool(getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True))

@@ -4,7 +4,7 @@ from django_prometheus.models import ExportModelOperationsMixin
 from model_utils.models import TimeStampedModel
 
 
-class Category(ExportModelOperationsMixin("category"), TimeStampedModel):
+class Category(ExportModelOperationsMixin("category"), TimeStampedModel):  # type: ignore[misc]
     name = models.CharField(max_length=50, unique=True)
     emoji = models.CharField(max_length=5)
 

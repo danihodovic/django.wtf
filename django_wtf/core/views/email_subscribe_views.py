@@ -17,7 +17,7 @@ email_subscriber_landing_view = EmailSubscriberLandingView.as_view()
 
 class CreateEmailSubscriberView(LoginRequiredMixin, RedirectView):
     permanent = False
-    url = reverse_lazy("core:index")
+    url = reverse_lazy("core:index")  # type: ignore[assignment]
     query_string = True
 
     def get_redirect_url(self, *args, **kwargs):

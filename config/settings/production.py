@@ -1,4 +1,6 @@
 # pylint: disable=wildcard-import,unused-wildcard-import
+from django_o11y.logging.setup import build_logging_dict
+
 from .base import *  # noqa
 from .base import env
 
@@ -134,18 +136,8 @@ ANYMAIL = {
 
 # LOGGING
 # ------------------------------------------------------------------------------
-DJANGO_REQUEST_LOG_LEVEL = env("DJANGO_REQUEST_LOG_LEVEL", default="WARNING")
-
 DJANGO_O11Y = {
     **DJANGO_O11Y,  # noqa: F405
-    "TRACING": {"ENABLED": True},
-    "CELERY": {"ENABLED": True},
-    "PROFILING": {"ENABLED": True},
-    "LOGGING": {
-        "FORMAT": "json",
-        "REQUEST_LEVEL": DJANGO_REQUEST_LOG_LEVEL,
-        "FILE_ENABLED": False,
-    },
 }
 
 LOGGING = build_logging_dict(extra=EXTRA_LOGGING)  # noqa: F405

@@ -6,7 +6,7 @@ from model_utils.models import TimeStampedModel
 User = get_user_model()
 
 
-class EmailSubscriber(ExportModelOperationsMixin("email_subscriber"), TimeStampedModel):
+class EmailSubscriber(ExportModelOperationsMixin("email_subscriber"), TimeStampedModel):  # type: ignore[misc]
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="subscriber"
     )

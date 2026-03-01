@@ -3,6 +3,8 @@ With these settings, tests run faster.
 """
 
 # pylint: disable=wildcard-import,unused-wildcard-import
+from django_o11y.logging.setup import build_logging_dict
+
 from .base import *  # noqa
 from .base import env
 

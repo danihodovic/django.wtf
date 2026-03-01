@@ -12,10 +12,10 @@ services:
       OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME:-django-wtf}
       OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://host.docker.internal:4317}
       DJANGO_O11Y_PROFILING_PYROSCOPE_URL: ${DJANGO_O11Y_PROFILING_PYROSCOPE_URL:-http://host.docker.internal:4040}
-      PROMETHEUS_MULTIPROC_DIR: /tmp/django-wtf-prom-multiproc
+      DJANGO_O11Y_LOGGING_FILE_PATH: /tmp/django-o11y/django.log
     volumes:
       - .:/app/
-      - ${DJANGO_O11Y_STACK_LOG_MOUNT:-/tmp/django-o11y}:/tmp/django-o11y
+      - ${DJANGO_O11Y_STACK_LOG_MOUNT}:/tmp/django-o11y
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
@@ -54,20 +54,16 @@ services:
       context: .
       args:
         INSTALL_DEV: "true"
-    command: >-
-      /bin/sh -c "mkdir -p /tmp/django-wtf-prom-multiproc &&
-      celery --app config.celery_app worker --loglevel=INFO"
+    command: celery --app config.celery_app worker --loglevel=INFO
     env_file: .env
     environment:
       OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME_CELERY:-django-wtf-celery}
       OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://host.docker.internal:4317}
       DJANGO_O11Y_PROFILING_PYROSCOPE_URL: ${DJANGO_O11Y_PROFILING_PYROSCOPE_URL:-http://host.docker.internal:4040}
-      DJANGO_O11Y_LOGGING_FILE_ENABLED: ${DJANGO_O11Y_LOGGING_FILE_ENABLED:-true}
-      DJANGO_O11Y_LOGGING_FILE_PATH: ${DJANGO_O11Y_LOGGING_FILE_PATH:-/tmp/django-o11y/celery.log}
-      PROMETHEUS_MULTIPROC_DIR: /tmp/django-wtf-prom-multiproc
+      DJANGO_O11Y_LOGGING_FILE_PATH: /tmp/django-o11y/celery.log
     volumes:
       - .:/app/
-      - ${DJANGO_O11Y_STACK_LOG_MOUNT:-/tmp/django-o11y}:/tmp/django-o11y
+      - ${DJANGO_O11Y_STACK_LOG_MOUNT}:/tmp/django-o11y
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:

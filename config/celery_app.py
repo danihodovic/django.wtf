@@ -1,11 +1,9 @@
 import os
-from logging.config import dictConfig
 from pathlib import Path
 
 from celery import Celery, bootsteps
 from celery.schedules import crontab
-from celery.signals import setup_logging, worker_ready, worker_shutdown
-from django.conf import settings
+from celery.signals import worker_ready, worker_shutdown
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.production")
@@ -17,12 +15,6 @@ app = Celery("django_wtf")
 # - namespace='CELERY' means all celery-related configuration keys
 #   should have a `CELERY_` prefix.
 app.config_from_object("django.conf:settings", namespace="CELERY")
-
-
-@setup_logging.connect
-def config_loggers(*args, **kwargs):
-    dictConfig(settings.LOGGING)
-
 
 HEARTBEAT_FILE = Path("/tmp/worker_heartbeat")
 READINESS_FILE = Path("/tmp/worker_ready")
@@ -60,7 +52,9 @@ def worker_shutdown(**_):
     READINESS_FILE.unlink(missing_ok=True)
 
 
-app.steps["worker"].add(LivenessProbe)
+if app.steps is not None:
+    worker_steps = app.steps["worker"]
+    worker_steps.add(LivenessProbe)
 
 app.conf.beat_schedule = {
     "index-repositories-by-topic": {

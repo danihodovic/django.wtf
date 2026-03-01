@@ -3,7 +3,7 @@ from django_prometheus.models import ExportModelOperationsMixin
 from model_utils.models import TimeStampedModel
 
 
-class PypiProject(ExportModelOperationsMixin("pypi_project"), TimeStampedModel):
+class PypiProject(ExportModelOperationsMixin("pypi_project"), TimeStampedModel):  # type: ignore[misc]
     repository = models.OneToOneField("core.Repository", on_delete=models.CASCADE)
     author = models.CharField(max_length=100)
     author_email = models.EmailField()

@@ -729,16 +729,16 @@ wheels = [
 
 [[package]]
 name = "django-admin-shellx"
-version = "0.3.3"
+version = "0.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "channels", extra = ["daphne"] },
     { name = "django" },
     { name = "django-model-utils" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/19/e2/633829f64621453d37622d2a1b94bd3205e8ca052bfacecadda051096ff1/django_admin_shellx-0.3.3.tar.gz", hash = "sha256:33baedb2060a584959a008ac942bec8381688156093d0c1d0cd6a0433c7a0021", size = 99008, upload-time = "2025-04-23T19:04:32.784Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/df/54/fafaac2ea84a92d83298a562711ecaa78e83e44ba20bc459ab80416d7785/django_admin_shellx-0.4.0.tar.gz", hash = "sha256:826d51394338c50045feebc779603cff695bef1c77fcf62ab52cc3273c505b9f", size = 9576029, upload-time = "2026-03-01T12:25:25.37Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d5/7b/8a1fc8de917877da00082cdbd613cb615ba1fbc21a315bdafba4c968e0f0/django_admin_shellx-0.3.3-py3-none-any.whl", hash = "sha256:8b73cc0071242de24b7c18c423aeaee43af2e1b4d5cff9ad955f73f2542dbe76", size = 101115, upload-time = "2025-04-23T19:04:30.787Z" },
+    { url = "https://files.pythonhosted.org/packages/20/ea/4264a3221e19152d3a3b53074b70d6d2bf86befc7410db2eda1e6f568809/django_admin_shellx-0.4.0-py3-none-any.whl", hash = "sha256:0e0dd4ce17851807b31c989bf29f6b3c9ee6e7168d10d50f5799a8cc7e02695e", size = 101401, upload-time = "2026-03-01T12:25:23.632Z" },
 ]
 
 [[package]]
@@ -1032,7 +1032,7 @@ wheels = [
 
 [[package]]
 name = "django-o11y"
-version = "0.5.2"
+version = "0.5.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -1046,14 +1046,15 @@ dependencies = [
     { name = "prometheus-client" },
     { name = "structlog" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/80/55/2d1a50e530ed67153b79e690cd9f4d6e49d46f607079c84de87d3defdf99/django_o11y-0.5.2.tar.gz", hash = "sha256:7043487dad2b0329fae05a861b314333da9b266335642ca9c089349503c19a5e", size = 147874, upload-time = "2026-02-27T21:47:19.156Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/dc/12/1557c7fd2298a99275f6c8967b8d6d08c5b63791e7aba32c82f33fe16a60/django_o11y-0.5.8.tar.gz", hash = "sha256:b6da06436159673ae0a551b5195db06b30e6c4bebd91e30de562aeab60fdcd2a", size = 155370, upload-time = "2026-03-01T15:49:31.328Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fc/20/c6e0b85cafbc80164ca45c8b3700e6107bb193f23194179d771c4356a602/django_o11y-0.5.2-py3-none-any.whl", hash = "sha256:4875cc4adccb1adbfd1fa717d49fc2af23be862e36cc2621b8b4feb3a67cbb7f", size = 42321, upload-time = "2026-02-27T21:47:17.877Z" },
+    { url = "https://files.pythonhosted.org/packages/b8/91/25a151a50df80ee57d14a6583a37f5d1a49c4a6eaedecc6bdb05e60cfb51/django_o11y-0.5.8-py3-none-any.whl", hash = "sha256:b9a3b29dd5c889d56d73c598155c6a9abf626d6f4649849a8e08eb73038aa361", size = 46451, upload-time = "2026-03-01T15:49:29.828Z" },
 ]
 
 [package.optional-dependencies]
 all = [
     { name = "celery" },
+    { name = "django-structlog", extra = ["celery"] },
     { name = "opentelemetry-instrumentation-botocore" },
     { name = "opentelemetry-instrumentation-celery" },
     { name = "opentelemetry-instrumentation-httpx" },
@@ -1134,6 +1135,11 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/72/a9/102f316fb60dbec46642168979c4f57c9d8140fe43624ddca1ca6106274a/django_structlog-10.0.0.tar.gz", hash = "sha256:4e3fa4a930697fb9b649470e389419bb73b916a1ecf4f4bf2f8727f5cbfdb002", size = 23054, upload-time = "2025-10-22T21:20:21.14Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/6c/83/d7245a2a2bb46ae65ecff00686181d632553b131ea0c5cbfcbdb8f89c190/django_structlog-10.0.0-py3-none-any.whl", hash = "sha256:4f9db3cb7b308df6aa4afe1353d9c19d5bac757022ddbbb5c24f3d0d6a91a240", size = 18159, upload-time = "2025-10-22T21:20:19.804Z" },
+]
+
+[package.optional-dependencies]
+celery = [
+    { name = "celery" },
 ]
 
 [[package]]
@@ -1379,7 +1385,7 @@ requires-dist = [
     { name = "channels-redis", specifier = ">=4.3.0" },
     { name = "django", specifier = ">=6.0.2" },
     { name = "django-admin-interface", specifier = ">=0.32.0" },
-    { name = "django-admin-shellx", specifier = ">=0.3.3" },
+    { name = "django-admin-shellx", specifier = ">=0.4.0" },
     { name = "django-admin-site-search", specifier = ">=1.1.0" },
     { name = "django-allauth", specifier = ">=65.14.3" },
     { name = "django-allauth-ui", specifier = ">=1.8.1" },
@@ -1398,7 +1404,7 @@ requires-dist = [
     { name = "django-htmx", specifier = ">=1.27.0" },
     { name = "django-meta", git = "https://github.com/ivanchenkodmitry/django-meta?rev=patch-1" },
     { name = "django-model-utils", specifier = ">=5.0.0" },
-    { name = "django-o11y", extras = ["all"], specifier = ">=0.5.2" },
+    { name = "django-o11y", extras = ["all"], specifier = ">=0.5.8" },
     { name = "django-prometheus", git = "https://github.com/django-commons/django-prometheus.git?rev=master" },
     { name = "django-redis", specifier = ">=6.0.0" },
     { name = "django-storages", extras = ["boto3"], specifier = ">=1.14.6" },

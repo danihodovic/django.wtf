@@ -29,7 +29,7 @@ class RepositoryManager(models.Manager):
         )
 
 
-class Repository(ExportModelOperationsMixin("repository"), TimeStampedModel):
+class Repository(ExportModelOperationsMixin("repository"), TimeStampedModel):  # type: ignore[misc]
     objects = models.Manager()
     valid = RepositoryManager()
     github_id = models.PositiveIntegerField()
@@ -105,7 +105,7 @@ class Repository(ExportModelOperationsMixin("repository"), TimeStampedModel):
         return Truncator(self.description or "").chars(length)
 
 
-class RepositoryStars(ExportModelOperationsMixin("repository_stars"), models.Model):
+class RepositoryStars(ExportModelOperationsMixin("repository_stars"), models.Model):  # type: ignore[misc]
     repository = models.ForeignKey(
         Repository,
         on_delete=models.CASCADE,

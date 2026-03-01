@@ -5,12 +5,26 @@ from superrequests import Session
 
 from config import celery_app as app
 from django_wtf.core.models import PypiProject, PypiRelease, Repository
-from django_wtf.core.task_metrics import observe_external_api, record_indexing_event
+from django_wtf.core.task_metrics import (
+    observe_external_api,
+    record_indexing_event,
+    record_value_truncation,
+)
 
 from .utils import log_action
 
 http = Session()
 logger = get_logger()
+
+
+def _safe_metadata_value(field, value, max_length, *, nullable=False):
+    if value is None:
+        return None if nullable else ""
+    value = str(value)
+    if len(value) > max_length:
+        record_value_truncation("pypi_project", field, max_length)
+        return value[:max_length]
+    return value
 
 
 @app.task(soft_time_limit=30 * 60)
@@ -39,13 +53,17 @@ def index_pypi_project(repo_full_name):
     pypi_project, created = PypiProject.objects.update_or_create(
         repository=repo,
         defaults={
-            "author": info["author"],
-            "author_email": info["author_email"],
-            "homepage": info["home_page"],
-            "summary": info["summary"],
-            "version": info["version"],
-            "requires_python": info["requires_python"],
-            "license": info["license"],
+            "author": _safe_metadata_value("author", info.get("author"), 100),
+            "author_email": _safe_metadata_value(
+                "author_email", info.get("author_email"), 254
+            ),
+            "homepage": _safe_metadata_value("homepage", info.get("home_page"), 200),
+            "summary": _safe_metadata_value("summary", info.get("summary"), 300),
+            "version": _safe_metadata_value("version", info.get("version"), 12),
+            "requires_python": _safe_metadata_value(
+                "requires_python", info.get("requires_python"), 20, nullable=True
+            ),
+            "license": _safe_metadata_value("license", info.get("license"), 70),
         },
     )
     log_action(pypi_project, created)

@@ -21,9 +21,24 @@ EXTERNAL_API_DURATION = histogram(
     labelnames=("provider", "operation"),
 )
 
+VALUE_TRUNCATIONS = counter(
+    "django_wtf_ingestion_value_truncations_total",
+    description="String values truncated before persistence",
+    labelnames=("pipeline", "field", "limit"),
+)
+
 
 def record_indexing_event(pipeline: str, event: str, amount: int = 1) -> None:
     INDEXING_EVENTS.add(amount, {"pipeline": pipeline, "event": event})
+
+
+def record_value_truncation(
+    pipeline: str, field: str, limit: int, amount: int = 1
+) -> None:
+    VALUE_TRUNCATIONS.add(
+        amount,
+        {"pipeline": pipeline, "field": field, "limit": str(limit)},
+    )
 
 
 @contextmanager

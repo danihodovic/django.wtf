@@ -2,7 +2,7 @@ from django.db import models
 from django_prometheus.models import ExportModelOperationsMixin
 
 
-class PypiRelease(ExportModelOperationsMixin("pypi_release"), models.Model):
+class PypiRelease(ExportModelOperationsMixin("pypi_release"), models.Model):  # type: ignore[misc]
     project = models.ForeignKey(
         "core.PypiProject",
         on_delete=models.CASCADE,
