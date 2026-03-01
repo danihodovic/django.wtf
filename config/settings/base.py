@@ -5,7 +5,6 @@ Base settings to build other settings files upon.
 from pathlib import Path
 
 import environ
-import structlog
 from django.urls import reverse_lazy
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
@@ -65,6 +64,7 @@ DJANGO_APPS = [
     "daphne",
     "django.contrib.auth",
     "django.contrib.contenttypes",
+    "django.contrib.postgres",
     "django.contrib.sessions",
     "django.contrib.sites",
     "django.contrib.messages",
@@ -93,7 +93,8 @@ THIRD_PARTY_APPS = [
     "django_custom_error_views",
     "django_admin_shellx",
     "django_htmx",
-    "django_structlog",
+    "django_o11y",
+    "django_prometheus",
     "health_check",
     "meta",
     "modelcluster",
@@ -174,7 +175,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
-    "django_structlog.middlewares.RequestMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -182,6 +182,8 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django_o11y.tracing.middleware.TracingMiddleware",
+    "django_o11y.logging.middleware.LoggingMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django_user_agents.middleware.UserAgentMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -207,6 +209,7 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
+
 
 # MEDIA
 # ------------------------------------------------------------------------------
@@ -286,122 +289,21 @@ MANAGERS = ADMINS
 # https://docs.djangoproject.com/en/dev/ref/settings/#logging
 # See https://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
-DJANGO_ROOT_LOG_LEVEL = env("DJANGO_ROOT_LOG_LEVEL", default="WARNING")
-DJANGO_LOG_LEVEL = env("DJANGO_LOG_LEVEL", default="INFO")
-DJANGO_REQUEST_LOG_LEVEL = env("DJANGO_REQUEST_LOG_LEVEL", default="INFO")
-DJANGO_CELERY_LOG_LEVEL = env("DJANGO_CELERY_LOG_LEVEL", default="INFO")
-DJANGO_DATABASE_LOG_LEVEL = env("DJANGO_DATABASE_LOG_LEVEL", default="CRITICAL")
-DJANGO_STRUCTLOG_CELERY_ENABLED = True
-
-
-shared_structlog_processors = [
-    structlog.contextvars.merge_contextvars,
-    structlog.stdlib.add_logger_name,
-    structlog.stdlib.add_log_level,
-    # Perform %-style formatting.
-    structlog.stdlib.PositionalArgumentsFormatter(),
-    # Add a timestamp in ISO 8601 format.
-    structlog.processors.TimeStamper(fmt="iso"),
-    structlog.processors.StackInfoRenderer(),
-    # If some value is in bytes, decode it to a unicode str.
-    structlog.processors.UnicodeDecoder(),
-    # Add callsite parameters.
-    structlog.processors.CallsiteParameterAdder(
-        {
-            structlog.processors.CallsiteParameter.FILENAME,
-            structlog.processors.CallsiteParameter.FUNC_NAME,
-            structlog.processors.CallsiteParameter.LINENO,
-        }
-    ),
-]
-
-# Logging filtering is handled by the logging library itself
-base_structlog_processors = shared_structlog_processors + [
-    structlog.stdlib.filter_by_level,
-]
-
-base_structlog_formatter = [structlog.stdlib.ProcessorFormatter.wrap_for_formatter]
-
-structlog.configure(
-    processors=base_structlog_processors + base_structlog_formatter,  # type: ignore
-    logger_factory=structlog.stdlib.LoggerFactory(),
-    wrapper_class=structlog.stdlib.BoundLogger,
-    cache_logger_on_first_use=True,
-)
-
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "colored_console": {
-            "()": structlog.stdlib.ProcessorFormatter,
-            "processor": structlog.dev.ConsoleRenderer(colors=True),
-            "foreign_pre_chain": shared_structlog_processors,
-        },
-        "json_formatter": {
-            "()": structlog.stdlib.ProcessorFormatter,
-            "processor": structlog.processors.JSONRenderer(),
-            "foreign_pre_chain": shared_structlog_processors,
-        },
+DJANGO_O11Y = {
+    "SERVICE_NAME": env("OTEL_SERVICE_NAME", default="django-wtf"),
+    "SERVICE_VERSION": env("OTEL_SERVICE_VERSION", default="0.0.0"),
+    "SERVICE_INSTANCE_ID": env("OTEL_SERVICE_INSTANCE_ID", default="local"),
+    "ENVIRONMENT": env("DJANGO_O11Y_ENVIRONMENT", default="local"),
+    "NAMESPACE": env("DJANGO_O11Y_NAMESPACE", default="web"),
+    "METRICS": {
+        "PROMETHEUS_ENABLED": True,
     },
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-            "formatter": "colored_console",
-        },
-        "json": {
-            "class": "logging.StreamHandler",
-            "formatter": "json_formatter",
-        },
-        "null": {
-            "class": "logging.NullHandler",
-        },
-    },
-    "root": {
-        "handlers": ["console"],
-        "level": DJANGO_ROOT_LOG_LEVEL,
-    },
-    "loggers": {
-        "django_structlog": {
-            "level": DJANGO_LOG_LEVEL,
-        },
-        # Django Structlog request middlewares
-        "django_structlog.middlewares": {
-            "level": DJANGO_REQUEST_LOG_LEVEL,
-        },
-        # Django Structlog Celery receivers
-        "django_structlog.celery": {
-            "level": DJANGO_CELERY_LOG_LEVEL,
-        },
-        "django_wtf": {
-            "level": DJANGO_LOG_LEVEL,
-        },
-        # DB logs
-        "django.db.backends": {
-            "level": DJANGO_DATABASE_LOG_LEVEL,
-        },
-        # Use structlog middleware
-        "django.server": {
-            "handlers": ["null"],
-            "propagate": False,
-        },
-        # Use structlog middleware
-        "django.request": {
-            "handlers": ["null"],
-            "propagate": False,
-        },
-        # Use structlog middleware
-        "django.channels.server": {
-            "handlers": ["null"],
-            "propagate": False,
-        },
-        # Use structlog middleware
-        "werkzeug": {
-            "handlers": ["null"],
-            "propagate": False,
-        },
-    },
+    "TRACING": {"ENABLED": True},
+    "CELERY": {"ENABLED": True},
+    "PROFILING": {"ENABLED": True},
 }
+
+EXTRA_LOGGING: dict[str, object] = {}
 
 # Celery
 # ------------------------------------------------------------------------------
@@ -430,11 +332,9 @@ CELERY_TASK_SEND_SENT_EVENT = True
 # ------------------------------------------------------------------------------
 ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_LOGIN_METHODS = {"email"}
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_EMAIL_REQUIRED = True
-# https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
@@ -499,7 +399,7 @@ SHELL_PLUS_IMPORTS = [
 # ------------------------------------------------------------------------------
 # only if django version >= 3.0
 X_FRAME_OPTIONS = "SAMEORIGIN"
-SILENCED_SYSTEM_CHECKS = ["security.W019"]
+SILENCED_SYSTEM_CHECKS = ["security.W019", "slippers.E001"]
 # django-meta
 # ------------------------------------------------------------------------------
 META_SITE_DOMAIN = "django.wtf"
@@ -548,9 +448,6 @@ WAGTAILMARKDOWN = {
 }
 
 WAGTAILADMIN_BASE_URL = "https://django.wtf"
-
-# Django-prometheus
-PROMETHEUS_EXPORT_MIGRATIONS = env.bool("PROMETHEUS_EXPORT_MIGRATIONS", True)
 
 ASGI_APPLICATION = "config.asgi.application"
 CHANNEL_LAYERS = {

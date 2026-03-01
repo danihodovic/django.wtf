@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from cacheops import cached_as
 from constance import config
-from constance.backends.database.models import Constance
+from constance.models import Constance
 
 from django_wtf.core.models import Contributor, Profile, Repository, RepositoryStars
 

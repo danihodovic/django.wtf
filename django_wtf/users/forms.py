@@ -6,7 +6,7 @@ User = get_user_model()
 
 
 class UserCreationForm(admin_forms.UserCreationForm):
-    class Meta(admin_forms.UserCreationForm.Meta):
+    class Meta(admin_forms.UserCreationForm.Meta):  # type: ignore[name-defined]
         model = User
 
         error_messages = {

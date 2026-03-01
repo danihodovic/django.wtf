@@ -22,8 +22,8 @@ def media_storage(settings, tmpdir):  # pylint: disable=redefined-outer-name
 
 
 @pytest.fixture
-def user() -> User:
-    return UserFactory()
+def user(db) -> User:  # pylint: disable=unused-argument
+    return UserFactory()  # type: ignore[return-value]
 
 
 @pytest.fixture
@@ -33,8 +33,7 @@ def mocked_responses():
 
 
 @pytest.fixture
-@pytest.mark.django_db
-def user_client(client, user):
+def user_client(client, user, db):  # pylint: disable=unused-argument
     """
     Creates an authenticated user client.
     """

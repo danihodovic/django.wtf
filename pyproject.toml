@@ -1,113 +1,131 @@
-[tool.poetry]
-name = "project"
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "django-wtf"
 version = "0.0.1"
 description = "django.wtf"
-authors = ["Dani Hodovic <dani-hodovic@example.com>"]
+requires-python = ">=3.12"
+authors = [{ name = "Dani Hodovic", email = "dani-hodovic@example.com" }]
+dependencies = [
+  "psycopg[binary,pool]>=3.3.3",
+  "whitenoise>=6.12.0",
+  "django-anymail>=14.0",
+  "gunicorn>=25.1.0",
+  "django-extensions>=4.1",
+  "django-environ>=0.13.0",
+  "django-model-utils>=5.0.0",
+  "django-meta @ git+https://github.com/ivanchenkodmitry/django-meta@patch-1",
+  "django-health-check>=4.0.6",
+  "django-allauth>=65.14.3",
+  "django-filter>=25.2",
+  "django-debug-toolbar>=6.2.0",
+  "celery>=5.6.2",
+  "Django>=6.0.2",
+  "django-celery-beat @ git+https://github.com/celery/django-celery-beat.git@main",
+  "django-allauth-ui>=1.8.1",
+  "django-widget-tweaks>=1.5.1",
+  "redis>=7.2.1",
+  "requests>=2.32.5",
+  "django-redis>=6.0.0",
+  "ptipython>=1.0.1",
+  "ptpython>=3.0.32",
+  "argon2-cffi>=25.1.0",
+  "django-constance>=4.3.4",
+  "django-toolshed>=0.5.9",
+  "django-tailwind>=4.4.2",
+  "django-browser-reload>=1.21.0",
+  "django-cacheops>=7.2",
+  "django-admin-interface>=0.32.0",
+  "superrequests>=0.1.2",
+  "praw>=7.8.1",
+  "hanzidentifier>=1.3.0",
+  "django-user-agents>=0.4.0",
+  "django-celery-results>=2.6.0",
+  "Markdown>=3.10.2",
+  "django-watson>=1.6.3",
+  "wagtail>=7.3",
+  "wagtail-code-blog>=0.6.2",
+  "wagtail-markdown>=0.13.0",
+  "mattermostdriver>=7.3.2",
+  "django-storages[boto3]>=1.14.6",
+  "django-custom-error-views>=0.3.1",
+  "django-prometheus @ git+https://github.com/django-commons/django-prometheus.git@master",
+  "django-waffle>=5.0.0",
+  "django-admin-site-search>=1.1.0",
+  "django-admin-shellx>=0.4.0",
+  "channels-redis>=4.3.0",
+  "django-htmx>=1.27.0",
+  "pygments>=2.19.2",
+  "pypandoc-binary>=1.16.2",
+  "django-o11y[all]>=0.5.8",
+]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-psycopg2 = "^2.9.3"
-whitenoise = "^6.0.0"
-django-anymail = "^10.3"
-gunicorn = "^20.1.0"
-django-extensions = "^3.1.5"
-django-environ = "^0.8.1"
-django-model-utils = "^4.2.0"
-django-meta = { git = "https://github.com/ivanchenkodmitry/django-meta", rev = "patch-1" }
-django-health-check = "^3.16.5"
-django-allauth = "^0.63.3"
-django-filter = "^24.2"
-django-debug-toolbar = "^3.2.4"
-celery = "^5.2.3"
-Django = "^5.0.6"
-django-celery-beat = "^2.4.0"
-django-allauth-ui = "^1.0.0"
-django-widget-tweaks = "^1.4.12"
-redis = "^4.1.3"
-requests = "^2.27.1"
-django-redis = "^5.2.0"
-ptipython = "^1.0.1"
-ptpython = "^3.0.20"
-argon2-cffi = "^21.3.0"
-django-constance = { extras = ["database"], version = "^2.8.0" }
-django-toolshed = "^0.5.3"
-django-tailwind = "^3.1.1"
-django-browser-reload = "^1.3.0"
-django-cacheops = "^6.0"
-django-admin-interface = "^0.19.0"
-superrequests = "^0.1.1"
-praw = "^7.5.0"
-hanzidentifier = "^1.0.2"
-django-user-agents = "^0.4.0"
-django-celery-results = "^2.3.1"
-Markdown = "^3.3.7"
-django-watson = "^1.6.2"
-wagtail = "^6.1.2"
-wagtail-code-blog = "^0.5.4"
-wagtail-markdown = "^0.10.0"
-mattermostdriver = "^7.3.2"
-django-storages = { extras = ["boto3"], version = "^1.13.2" }
-django-custom-error-views = "^0.2.5"
-django-prometheus = "^2.3.1"
-django-waffle = "^4.1.0"
-django-admin-site-search = "^0.4.0"
-django-admin-shellx = "0.2.6"
-channels-redis = "^4.2.0"
-django-htmx = "^1.17.3"
-pygments = "^2.18.0"
-pypandoc-binary = "^1.13"
-django-structlog = "^8.1.0"
+[dependency-groups]
+dev = [
+  "pudb>=2022.1.3",
+  "pytest>=9.0.2",
+  "pytest-django>=4.12.0",
+  "coverage>=7.13.4",
+  "factory-boy>=3.3.3",
+  "mypy>=1.19.1",
+  "pylint>=4.0.5",
+  "pylint-django>=2.7.0",
+  "pytest-cov>=7.0.0",
+  "django-stubs>=5.2.9",
+  "pylint-celery>=0.3",
+  "Werkzeug>=3.1.3",
+  "django-coverage-plugin>=2.0.4",
+  "responses>=0.25.7",
+  "types-requests>=2.32.4.20260107",
+  "types-python-dateutil>=2.9.0.20250516",
+  "types-Markdown>=3.8.0.20250413",
+  "djlint>=1.36.4",
+  "pytest-factoryboy>=2.7.0",
+  "rich>=14.0.0",
+  "ruff>=0.15.2",
+]
 
-[tool.poetry.group.dev.dependencies]
-pudb = "^2022.1.3"
-pytest = "^7.0.1"
-pytest-django = "^4.5.2"
-black = { extras = ["d"], version = "^24.4.2" }
-isort = "^5.12.0"
-coverage = "^6.3.1"
-factory-boy = "^3.2.1"
-mypy = "^1.6.0"
-pylint = "2.17.5"
-pylint-django = "2.5.3"
-pytest-cov = "^3.0.0"
-django-stubs = "^4.2.3"
-pylint-celery = "^0.3"
-Werkzeug = "^2.0.3"
-django-coverage-plugin = "^2.0.2"
-responses = "^0.18.0"
-types-requests = "^2.27.12"
-types-python-dateutil = "^2.8.15"
-types-Markdown = "^3.3.27"
-pyupgrade = "^3.15.0"
-django-upgrade = "^1.15.0"
-djlint = "^1.34.1"
-pytest-factoryboy = "^2.7.0"
-rich = "^13.7.1"
+[tool.hatch.metadata]
+allow-direct-references = true
 
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+[tool.uv]
+package = false
 
 [tool.pytest.ini_options]
 addopts = "--ds=config.settings.test --reuse-db --pdbcls=pudb.debugger:Debugger"
 python_files = "tests.py test_*.py"
 norecursedirs = ".git */migrations/* */static/* venv .venv .poetry .virtualenv node_modules"
 
-[tool.black]
-exclude = ".*(venv|virtualenv|.poetry|migrations|node_modules)"
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+extend-exclude = ["migrations", "fixtures", "infra"]
 
-[tool.isort]
-skip_glob = "**/migrations/*.py,**/fixtures/*.py,infra/**/*.py"
-# https://github.com/psf/black/issues/251#issuecomment-535187912
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-ensure_newline_before_comments = true
-line_length = 88
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "DJ"]
+ignore = [
+  "E501",
+  "E402",
+  "F401",
+  "F403",
+  "F405",
+  "I001",
+  "B010",
+  "B904",
+  "DJ001",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["django_wtf", "config"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/__init__.py" = ["F401"]
+"manage.py" = ["F401"]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 check_untyped_defs = true
 ignore_missing_imports = true
 warn_unused_ignores = true
@@ -121,7 +139,25 @@ django_settings_module = "config.settings.test"
 
 [tool.pylint.'MASTER']
 load-plugins = "pylint_django, pylint_celery"
-ignore = "manage.py"
+ignore = [
+  "manage.py",
+  ".venv",
+  "venv",
+  ".direnv",
+  ".virtualenv",
+  ".poetry",
+  "node_modules",
+  "site-packages",
+]
+ignore-paths = [
+  "(^|.*/)\\.venv/",
+  "(^|.*/)venv/",
+  "(^|.*/)\\.direnv/",
+  "(^|.*/)\\.virtualenv/",
+  "(^|.*/)\\.poetry/",
+  "(^|.*/)node_modules/",
+  "(^|.*/)site-packages/",
+]
 
 [tool.pylint.'FORMAT']
 max-line-length = 150
@@ -133,13 +169,9 @@ disable = "missing-docstring,invalid-name,logging-fstring-interpolation,fixme,du
 max-parents = 13
 
 [tool.pylint.'SIMILARITIES']
-# Minimum lines number of a similarity.
 min-similarity-lines = 4
-# Ignore comments when computing similarities.
 ignore-comments = "yes"
-# Ignore docstrings when computing similarities.
 ignore-docstrings = "yes"
-# Ignore imports when computing similarities.
 ignore-imports = "yes"
 
 [tool.djlint]

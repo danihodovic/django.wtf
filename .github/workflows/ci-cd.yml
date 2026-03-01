@@ -92,67 +92,32 @@ jobs:
       - uses: actions/setup-python@v4
         id: setup-python
         with:
-          python-version: 3.11
+          python-version: 3.12
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          version: 1.8.3
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          installer-parallel: true
-
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v3
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          enable-cache: true
 
       - name: Install dependencies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: |
-          poetry install --no-interaction --no-root
+        run: uv sync
 
-      - name: Format (black)
+      - name: Lint and format (ruff)
         run: |
-          source .venv/bin/activate
-          black --check $(git ls-files -- '*.py' ':!:**/migrations/*.py')
-
-      - name: Sort imports (isort)
-        run: |
-          source .venv/bin/activate
-          isort --check-only $(git ls-files -- '*.py' ':!:**/migrations/*.py')
+          uv run ruff check .
+          uv run ruff format --check .
 
       - name: Type Check (mypy)
-        run: |
-          source .venv/bin/activate
-          mypy .
+        run: uv run mypy .
 
       - name: Lint (pylint)
-        run: |
-          source .venv/bin/activate
-          pylint $(git ls-files -- '*.py' ':!:**/migrations/*.py')
+        run: uv run pylint $(git ls-files -- '*.py' ':!:**/migrations/*.py')
 
       - name: Validate templates
-        run: |
-          source .venv/bin/activate
-          ./manage.py validate_templates --ignore-app jazzmin
-
-      - name: Python Upgrade (pyupgrade)
-        run: |
-          source .venv/bin/activate
-          pyupgrade $(git ls-files -- '*.py' ':!:**/migrations/*.py') --py311-plus
-
-      - name: Django Upgrade (django-upgrade)
-        run: |
-          source .venv/bin/activate
-          django-upgrade $(git ls-files -- '*.py' ':!:**/migrations/*.py') --target=4.2
+        run: uv run ./manage.py validate_templates --ignore-app jazzmin
 
       - name: Django Template/Html Lint (djlint)
-        run: |
-          source .venv/bin/activate
-          djlint . --check
+        run: uv run djlint . --check
 
   test:
     name: Test
@@ -177,56 +142,35 @@ jobs:
       - uses: actions/setup-python@v4
         id: setup-python
         with:
-          python-version: 3.11
+          python-version: 3.12
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          version: 1.8.3
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          installer-parallel: true
-
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v3
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          enable-cache: true
 
       - name: Install dependencies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: |
-          poetry install --no-interaction --no-root
-          source .venv/bin/activate
+        run: uv sync
 
       - name: Run Migrations
-        run: |
-          source .venv/bin/activate
-          ./manage.py migrate
+        run: uv run ./manage.py migrate
 
       # Some Django checks require migrations to run for full functionality
       # Therefore run migrations first before checking for missing migrations
       - name: Check for Missing Migrations
         if: github.event == 'dont-run'
         run: |
-          source .venv/bin/activate
           DJANGO_SETTINGS_MODULE=config.settings.production \
-            ./manage.py makemigrations --check --dry-run
+            uv run ./manage.py makemigrations --check --dry-run
 
       - name: Django Check
         run: |
-          source .venv/bin/activate
           DJANGO_SETTINGS_MODULE=config.settings.production \
-            ./manage.py check --deploy --fail-level=WARNING
+            uv run ./manage.py check --deploy --fail-level=WARNING
 
       - name: Test Loading Fixtures
         if: github.event == 'dont-run'
-        run: |
-          source .venv/bin/activate
-          ./manage.py load_fixtures
+        run: uv run ./manage.py load_fixtures
 
       - name: Run Pytest
-        run: |
-          source .venv/bin/activate
-          pytest django_wtf --cov django_wtf # --run-concurrent
+        run: uv run pytest django_wtf --cov django_wtf # --run-concurrent

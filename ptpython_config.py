@@ -106,13 +106,13 @@ def configure(repl):
     repl.enable_syntax_highlighting = True
 
     @repl.add_key_binding("q", filter=ViNavigationMode(), eager=True)
-    def _(event):
+    def vi_q_binding(event):
         event.cli.key_processor.feed(KeyPress("b"))
 
     @repl.add_key_binding("Q", filter=ViNavigationMode(), eager=True)
-    def _(event):
+    def vi_q_upper_binding(event):
         event.cli.key_processor.feed(KeyPress("0"))
 
     @repl.add_key_binding("W", filter=ViNavigationMode(), eager=True)
-    def _(event):
+    def vi_w_upper_binding(event):
         event.cli.key_processor.feed_multiple([KeyPress("g"), KeyPress("_")])

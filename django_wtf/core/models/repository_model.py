@@ -8,6 +8,7 @@ from django.db import models
 from django.db.models import Q
 from django.urls.base import reverse
 from django.utils.text import Truncator
+from django_prometheus.models import ExportModelOperationsMixin
 from model_utils.models import TimeStampedModel
 
 
@@ -28,7 +29,7 @@ class RepositoryManager(models.Manager):
         )
 
 
-class Repository(TimeStampedModel):
+class Repository(ExportModelOperationsMixin("repository"), TimeStampedModel):  # type: ignore[misc]
     objects = models.Manager()
     valid = RepositoryManager()
     github_id = models.PositiveIntegerField()
@@ -104,7 +105,7 @@ class Repository(TimeStampedModel):
         return Truncator(self.description or "").chars(length)
 
 
-class RepositoryStars(models.Model):
+class RepositoryStars(ExportModelOperationsMixin("repository_stars"), models.Model):  # type: ignore[misc]
     repository = models.ForeignKey(
         Repository,
         on_delete=models.CASCADE,

@@ -1,4 +1,3 @@
-import logging
 from base64 import b64decode
 from datetime import date
 
@@ -8,6 +7,7 @@ import superrequests
 from constance import config
 from django.db.utils import DataError
 from django.utils.http import urlencode
+from django_o11y.logging.utils import get_logger
 from requests.models import HTTPError
 from urllib3.util.retry import Retry
 
@@ -25,8 +25,11 @@ from django_wtf.core.models import (
     RepositoryStars,
     RepositoryType,
 )
+from django_wtf.core.task_metrics import observe_external_api, record_indexing_event
 
 from .utils import log_action
+
+logger = get_logger()
 
 
 @app.task(soft_time_limit=30 * 60)
@@ -40,9 +43,10 @@ def index_repositories_by_keyword():
 
 
 def index_repositories(url):
-    logging.info(f"GET {url=}")
+    logger.info("github_repositories_page_requested", url=url)
     http = http_client()
-    res = http.get(url)
+    with observe_external_api("github", "search_repositories"):
+        res = http.get(url)
     data = res.json()
     for repository_data in data["items"]:
         _update_or_create_repo(repository_data)
@@ -56,7 +60,8 @@ def index_repositories(url):
 @app.task
 def index_repository(full_name):
     http = http_client()
-    res = http.get(f"https://api.github.com/repos/{full_name}")
+    with observe_external_api("github", "repository_details"):
+        res = http.get(f"https://api.github.com/repos/{full_name}")
     _update_or_create_repo(res.json())
 
 
@@ -96,7 +101,10 @@ def _update_or_create_repo(repository_data):
         )
         log_action(repository_stars, created)
     except DataError:
-        logging.exception(f"DataError for {repository_data=}")
+        logger.exception(
+            "github_repository_upsert_data_error", repository_data=repository_data
+        )
+        record_indexing_event("github_repository", "data_error")
 
 
 @app.task()
@@ -110,24 +118,35 @@ def index_repository_readme(repo_full_name):
     http = http_client()
     try:
         # Use the API since it retrieves the default branch
-        res = http.get(
-            f"https://api.github.com/repos/{repo_full_name}/contents/README.md"
-        )
+        with observe_external_api("github", "repository_readme_markdown"):
+            res = http.get(
+                f"https://api.github.com/repos/{repo_full_name}/contents/README.md"
+            )
         markdown_text = b64decode(res.json()["content"]).decode("utf-8")
     except HTTPError as ex:
         if ex.response.status_code == 404:
-            logging.info(f"{repo_full_name} has no README.md file")
-            logging.info("Trying README.rst")
+            logger.info("github_readme_markdown_missing", repository=repo_full_name)
+            logger.info(
+                "github_readme_restructuredtext_attempt", repository=repo_full_name
+            )
+            record_indexing_event("github_readme", "missing_markdown")
 
             try:
-                res = http.get(
-                    f"https://api.github.com/repos/{repo_full_name}/contents/README.rst"
-                )
+                with observe_external_api(
+                    "github", "repository_readme_restructuredtext"
+                ):
+                    res = http.get(
+                        f"https://api.github.com/repos/{repo_full_name}/contents/README.rst"
+                    )
                 rst_text = b64decode(res.json()["content"]).decode("utf-8")
                 markdown_text = pypandoc.convert_text(rst_text, "md", format="rst")
             except HTTPError as rst_ex:
                 if ex.response.status_code == 404:
-                    logging.info(f"{repo_full_name} has no README.rst file")
+                    logger.info(
+                        "github_readme_restructuredtext_missing",
+                        repository=repo_full_name,
+                    )
+                    record_indexing_event("github_readme", "missing_restructuredtext")
                     return
                 raise rst_ex
         else:
@@ -151,8 +170,9 @@ def index_repo_contributors(repo_id):
     repo = Repository.objects.get(id=repo_id)
     url = f"https://api.github.com/repos/{repo.full_name}/contributors"
     http = http_client()
-    res = http.get(url)
-    logging.info(f"Indexing contributors for {repo=}")
+    with observe_external_api("github", "repository_contributors"):
+        res = http.get(url)
+    logger.info("github_contributors_index_started", repository=repo.full_name)
     for entry in res.json():
         profile, _ = Profile.objects.update_or_create(
             github_id=entry["id"],
@@ -183,10 +203,12 @@ def index_user_followers(user_login):
     for contribution in profile.top_contributions():
         min_stars = 70
         if min_stars > contribution.repository.stars:
-            logging.info(
-                f"Avoiding to retrieve ProfileFollowers for {profile=}. "
-                "No repo they contribute to has more than {min_stars} stars"
+            logger.info(
+                "github_followers_index_skipped_low_stars",
+                profile=profile.login,
+                min_stars=min_stars,
             )
+            record_indexing_event("github_followers", "skipped_low_stars")
             return
 
     data = paginate(
@@ -225,7 +247,7 @@ def paginate(http_client, url):  # pylint: disable=redefined-outer-name
 @app.task()
 def categorize_repository(repo_full_name):
     repo = Repository.objects.get(full_name=repo_full_name)
-    logging.info(f"Categorizing {repo=}")
+    logger.info("github_repository_categorization_started", repository=repo.full_name)
     appconfig_files = find_appconfig_files(repo.full_name)
     pypi_project = PypiProject.objects.filter(repository=repo)
     # Has AppConfig means a Django app is configured somewhere
@@ -235,7 +257,15 @@ def categorize_repository(repo_full_name):
         repo_type = RepositoryType.PROJECT
     else:
         repo_type = None
-    logging.info(f"Categorizing {repo=} as {repo_type}")
+    logger.info(
+        "github_repository_categorized",
+        repository=repo.full_name,
+        repository_type=repo_type,
+    )
+    if repo_type is None:
+        record_indexing_event("github_repository_categorization", "uncategorized")
+    else:
+        record_indexing_event("github_repository_categorization", repo_type.lower())
     repo.type = repo_type
     repo.save()
 
@@ -245,7 +275,8 @@ def find_appconfig_files(repo_full_name):
         {"q": f"repo:{repo_full_name} AppConfig in:file AppConfig language:python"}
     )
     http = http_client()
-    res = http.get("https://api.github.com/search/code", params=params)
+    with observe_external_api("github", "search_code_appconfig"):
+        res = http.get("https://api.github.com/search/code", params=params)
     data = res.json()
     return [item for item in data["items"] if not item["path"].startswith("test")]
 

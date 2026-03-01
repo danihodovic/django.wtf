@@ -1,5 +1,6 @@
 # pylint: disable=too-few-public-methods
 from django.contrib import admin
+from django.contrib.admin.models import LogEntry
 from watson.admin import SearchAdmin
 
 from .filters import HasReadmeListFilter
@@ -110,3 +111,28 @@ class EmailSubscriberAdmin(admin.ModelAdmin):
     list_display = ("user", "created", "modified")
     readonly_fields = ("user", "created", "modified")
     list_filter = ("created",)
+
+
+@admin.register(LogEntry)
+class LogEntryAdmin(admin.ModelAdmin):
+    date_hierarchy = "action_time"
+    list_display = (
+        "action_time",
+        "user",
+        "content_type",
+        "object_repr",
+        "action_flag",
+    )
+    list_filter = ("action_flag", "content_type", "user")
+    search_fields = ("object_repr", "change_message", "user__username")
+    readonly_fields = [field.name for field in LogEntry._meta.fields]
+    ordering = ("-action_time",)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False

@@ -1,11 +1,36 @@
 ---
-version: "2.4"
 services:
-  postgres:
-    image: postgres:15
-    network_mode: host
+  django_wtf: &django_defaults
+    image: django_wtf
+    build:
+      context: .
+      args:
+        INSTALL_DEV: "true"
+    command: ./manage.py runserver_plus 0.0.0.0:8000
+    env_file: .env
     environment:
-      POSTGRES_DB: django-wtf
+      OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME:-django-wtf}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://host.docker.internal:4317}
+      DJANGO_O11Y_PROFILING_PYROSCOPE_URL: ${DJANGO_O11Y_PROFILING_PYROSCOPE_URL:-http://host.docker.internal:4040}
+      DJANGO_O11Y_LOGGING_FILE_PATH: /tmp/django-o11y/django.log
+    volumes:
+      - .:/app/
+      - ${DJANGO_O11Y_STACK_LOG_MOUNT}:/tmp/django-o11y
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - postgres
+      - celery_worker
+
+  postgres:
+    image: postgres:18-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: django_wtf
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
@@ -13,12 +38,39 @@ services:
       - ./db_dump:/tmp/db_dump
 
   redis:
-    image: redis:6
-    network_mode: host
+    image: redis:8-alpine
+    ports:
+      - "6379:6379"
 
   mailpit:
     image: axllent/mailpit:v1.12
-    network_mode: host
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  celery_worker:
+    image: django_wtf_celery
+    build:
+      context: .
+      args:
+        INSTALL_DEV: "true"
+    command: celery --app config.celery_app worker --loglevel=INFO
+    env_file: .env
+    environment:
+      OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME_CELERY:-django-wtf-celery}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://host.docker.internal:4317}
+      DJANGO_O11Y_PROFILING_PYROSCOPE_URL: ${DJANGO_O11Y_PROFILING_PYROSCOPE_URL:-http://host.docker.internal:4040}
+      DJANGO_O11Y_LOGGING_FILE_PATH: /tmp/django-o11y/celery.log
+    volumes:
+      - .:/app/
+      - ${DJANGO_O11Y_STACK_LOG_MOUNT}:/tmp/django-o11y
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8009:8009"
+    depends_on:
+      - redis
+      - postgres
 
 volumes:
   pgdata:

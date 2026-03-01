@@ -21,7 +21,7 @@ class RepositoryFactory(DjangoModelFactory):
 
     @lazy_attribute
     def full_name(self):
-        return self.owner.login + "/" + self.name
+        return self.owner.login + "/" + self.name  # type: ignore[attr-defined]
 
     github_id = Faker("pyint")
     owner = SubFactory(ProfileFactory)
@@ -50,8 +50,8 @@ class RepositoryFactory(DjangoModelFactory):
 
 
 class ValidRepositoryFactory(RepositoryFactory):
-    type = RepositoryType.APP
-    stars = 100
+    type = RepositoryType.APP  # type: ignore[assignment]
+    stars = 100  # type: ignore[assignment]
 
 
 class RepositoryStarsFactory(DjangoModelFactory):
