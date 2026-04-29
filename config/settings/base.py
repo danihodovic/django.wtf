@@ -293,8 +293,6 @@ DJANGO_O11Y = {
     "SERVICE_NAME": env("OTEL_SERVICE_NAME", default="django-wtf"),
     "SERVICE_VERSION": env("OTEL_SERVICE_VERSION", default="0.0.0"),
     "SERVICE_INSTANCE_ID": env("OTEL_SERVICE_INSTANCE_ID", default="local"),
-    "ENVIRONMENT": env("DJANGO_O11Y_ENVIRONMENT", default="local"),
-    "NAMESPACE": env("DJANGO_O11Y_NAMESPACE", default="web"),
     "METRICS": {
         "PROMETHEUS_ENABLED": True,
     },

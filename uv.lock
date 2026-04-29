@@ -1032,7 +1032,7 @@ wheels = [
 
 [[package]]
 name = "django-o11y"
-version = "0.5.8"
+version = "0.7.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -1046,29 +1046,44 @@ dependencies = [
     { name = "prometheus-client" },
     { name = "structlog" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/dc/12/1557c7fd2298a99275f6c8967b8d6d08c5b63791e7aba32c82f33fe16a60/django_o11y-0.5.8.tar.gz", hash = "sha256:b6da06436159673ae0a551b5195db06b30e6c4bebd91e30de562aeab60fdcd2a", size = 155370, upload-time = "2026-03-01T15:49:31.328Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ed/9c/b5ce4a751e3216eb0dd17481697a4b9bddb398894f35a1f1ce46bcd2ac94/django_o11y-0.7.0.tar.gz", hash = "sha256:374c11f7e5cccaaf1bde5524cc278dfd2b0edbc9a05c6ce96d19e3a24c278412", size = 4488598, upload-time = "2026-03-03T22:55:41.23Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b8/91/25a151a50df80ee57d14a6583a37f5d1a49c4a6eaedecc6bdb05e60cfb51/django_o11y-0.5.8-py3-none-any.whl", hash = "sha256:b9a3b29dd5c889d56d73c598155c6a9abf626d6f4649849a8e08eb73038aa361", size = 46451, upload-time = "2026-03-01T15:49:29.828Z" },
+    { url = "https://files.pythonhosted.org/packages/d9/c3/fc148bf209626b9bcb35264ede8a36add57a8bb96b1b81a4ac84eafcf029/django_o11y-0.7.0-py3-none-any.whl", hash = "sha256:1fc85dcdf66d65cb07d93edf95daacedc8d0eab58c492d52bb9bd1ae3f1c177c", size = 48189, upload-time = "2026-03-03T22:55:39.696Z" },
 ]
 
 [package.optional-dependencies]
-all = [
+aws = [
+    { name = "opentelemetry-instrumentation-botocore" },
+]
+celery = [
     { name = "celery" },
     { name = "django-structlog", extra = ["celery"] },
-    { name = "opentelemetry-instrumentation-botocore" },
     { name = "opentelemetry-instrumentation-celery" },
+]
+channels = [
+    { name = "channels", extra = ["daphne"] },
+]
+dev-logging = [
+    { name = "rich" },
+]
+http = [
     { name = "opentelemetry-instrumentation-httpx" },
-    { name = "opentelemetry-instrumentation-psycopg" },
-    { name = "opentelemetry-instrumentation-psycopg2" },
-    { name = "opentelemetry-instrumentation-redis" },
     { name = "opentelemetry-instrumentation-requests" },
-    { name = "opentelemetry-instrumentation-sqlite3" },
     { name = "opentelemetry-instrumentation-urllib" },
     { name = "opentelemetry-instrumentation-urllib3" },
+]
+postgres = [
+    { name = "opentelemetry-instrumentation-psycopg" },
+    { name = "opentelemetry-instrumentation-psycopg2" },
+]
+profiling = [
     { name = "pyroscope-io" },
     { name = "pyroscope-otel" },
+]
+redis = [
+    { name = "django-redis" },
+    { name = "opentelemetry-instrumentation-redis" },
     { name = "redis" },
-    { name = "rich" },
 ]
 
 [[package]]
@@ -1324,7 +1339,7 @@ dependencies = [
     { name = "django-htmx" },
     { name = "django-meta" },
     { name = "django-model-utils" },
-    { name = "django-o11y", extra = ["all"] },
+    { name = "django-o11y", extra = ["aws", "celery", "channels", "dev-logging", "http", "postgres", "profiling", "redis"] },
     { name = "django-prometheus" },
     { name = "django-redis" },
     { name = "django-storages", extra = ["boto3"] },
@@ -1404,7 +1419,7 @@ requires-dist = [
     { name = "django-htmx", specifier = ">=1.27.0" },
     { name = "django-meta", git = "https://github.com/ivanchenkodmitry/django-meta?rev=patch-1" },
     { name = "django-model-utils", specifier = ">=5.0.0" },
-    { name = "django-o11y", extras = ["all"], specifier = ">=0.5.8" },
+    { name = "django-o11y", extras = ["aws", "celery", "channels", "dev-logging", "http", "postgres", "profiling", "redis"], specifier = ">=0.7.0" },
     { name = "django-prometheus", git = "https://github.com/django-commons/django-prometheus.git?rev=master" },
     { name = "django-redis", specifier = ">=6.0.0" },
     { name = "django-storages", extras = ["boto3"], specifier = ">=1.14.6" },
@@ -2475,20 +2490,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/9d/4a/bb9d47d7424fc33aeba75275256ae6e6031f44b6a9a3f778d611c0c3ac27/opentelemetry_instrumentation_requests-0.60b1.tar.gz", hash = "sha256:9a1063c16c44a3ba6e81870c4fa42a0fac3ecef5a4d60a11d0976eec9046f3d4", size = 16366, upload-time = "2025-12-11T13:37:12.456Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f2/7f/969b59a5acccb4c35317421843d63d7853ad7a18078ca3a9b80c248be448/opentelemetry_instrumentation_requests-0.60b1-py3-none-any.whl", hash = "sha256:eec9fac3fab84737f663a2e08b12cb095b4bd67643b24587a8ecfa3cf4d0ca4c", size = 13141, upload-time = "2025-12-11T13:36:23.696Z" },
-]
-
-[[package]]
-name = "opentelemetry-instrumentation-sqlite3"
-version = "0.60b1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "opentelemetry-api" },
-    { name = "opentelemetry-instrumentation" },
-    { name = "opentelemetry-instrumentation-dbapi" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/44/33/fafa354b529a7e9b5a5dc4155953bae1ff71622334a420d19f7e1d65e7cc/opentelemetry_instrumentation_sqlite3-0.60b1.tar.gz", hash = "sha256:d716b9d89d31dc426ccedefcdbf96cba1897dfe020d21e5e5ea82a782d03e1d6", size = 7922, upload-time = "2025-12-11T13:37:13.655Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/d8/64/be1c8a6d17cf2860f41206828cbabe39b71345cc95626b91c84f48e96066/opentelemetry_instrumentation_sqlite3-0.60b1-py3-none-any.whl", hash = "sha256:7666853b9df186b81e587320aaa03da3f1ce46ba9277b62d8ea20a745886031c", size = 9338, upload-time = "2025-12-11T13:36:25.854Z" },
 ]
 
 [[package]]
