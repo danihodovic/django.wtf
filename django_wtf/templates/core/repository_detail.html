@@ -2,122 +2,189 @@
 {% load static %}
 {% block head %}
     {{ block.super }}
-    <link rel="stylesheet"
-          type="text/css"
-          href="{% static 'css/pygments.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/pygments.css' %}" />
 {% endblock head %}
 
 {% block content %}
-    <div class="flex-col content-center self-center mb-5 lg:mt-5 lg:flex w-11/12 lg:w-7/12">
-        <div class="lg:flex mt-10 mb-10">
-            <div>
-                <a class="mt-6 text-4xl link link-hover" href="{{ object.github_url }}">{{ object.full_name }}</a>
-                <p class="mt-3 text-xl">{{ object.description }}</p>
-                <div class="my-3">
-                    {% for topic in object.topics %}<div class="ml-1 badge badge-outline">{{ topic }}</div>{% endfor %}
-                </div>
-                <div class="divider"></div>
-                <div class="grid">
-                    <article class="prose min-w-0 max-w-full">{{ object.readme_html | safe }}</article>
-                </div>
+<div class="w-full max-w-6xl mx-auto px-4 sm:px-6 py-10">
+
+    {# ── Header ── #}
+    <div class="flex flex-col sm:flex-row sm:items-start gap-4 mb-8">
+        {% if object.owner.avatar_url %}
+        <img src="{{ object.owner.avatar_url }}"
+             alt="{{ object.owner.login }}"
+             class="w-16 h-16 rounded-xl shrink-0">
+        {% endif %}
+        <div class="flex-1 min-w-0">
+            <div class="flex flex-wrap items-center gap-2 mb-1">
+                <span class="text-base-content/50 text-sm">{{ object.owner.login }} /</span>
+                {% if object.type %}
+                <div class="badge badge-outline badge-sm capitalize">{{ object.type }}</div>
+                {% endif %}
             </div>
-            <div>
-                <div class="lg:ml-6 stats stats-vertical">
-                    <div class="stat">
-                        <div class="stat-figure text-info">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 class="icon icon-tabler icon-tabler-star"
-                                 width="24"
-                                 height="24"
-                                 viewBox="0 0 24 24"
-                                 stroke-width="1.5"
-                                 stroke="currentColor"
-                                 fill="none"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
-                            </svg>
-                        </div>
-                        <div class="stat-title">Stars</div>
-                        <div class="stat-value text-info">{{ object.stars }}</div>
-                        <div class="stat-desc">{{ stars_increase_monthly_percent | floatformat:2 }}% more than last month</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-figure text-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 class="icon icon-tabler icon-tabler-git-fork"
-                                 width="24"
-                                 height="24"
-                                 viewBox="0 0 24 24"
-                                 stroke-width="1.5"
-                                 stroke="currentColor"
-                                 fill="none"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                                <path d="M7 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                                <path d="M17 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                                <path d="M7 8v2a2 2 0 0 0 2 2h6a2 2 0 0 0 2 -2v-2" />
-                                <path d="M12 12l0 4" />
-                            </svg>
-                        </div>
-                        <div class="stat-title">Forks</div>
-                        <div class="stat-value text-primary">{{ object.forks }}</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-figure text-error">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 class="icon icon-tabler icon-tabler-bug"
-                                 width="24"
-                                 height="24"
-                                 viewBox="0 0 24 24"
-                                 stroke-width="1.5"
-                                 stroke="currentColor"
-                                 fill="none"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M9 9v-1a3 3 0 0 1 6 0v1" />
-                                <path d="M8 9h8a6 6 0 0 1 1 3v3a5 5 0 0 1 -10 0v-3a6 6 0 0 1 1 -3" />
-                                <path d="M3 13l4 0" />
-                                <path d="M17 13l4 0" />
-                                <path d="M12 20l0 -6" />
-                                <path d="M4 19l3.35 -2" />
-                                <path d="M20 19l-3.35 -2" />
-                                <path d="M4 7l3.75 2.4" />
-                                <path d="M20 7l-3.75 2.4" />
-                            </svg>
-                        </div>
-                        <div class="stat-title">Open Issues</div>
-                        <div class="stat-value text-error">{{ object.open_issues }}</div>
-                    </div>
-                </div>
+            <h1 class="text-3xl font-bold tracking-tight mb-2">{{ object.name|default:object.full_name }}</h1>
+            {% if object.description %}
+            <p class="text-base-content/70 text-base leading-relaxed max-w-2xl">{{ object.description }}</p>
+            {% endif %}
+            <div class="flex flex-wrap gap-2 mt-4">
+                {% for topic in object.topics %}
+                <a href="/?topic={{ topic }}" class="badge badge-outline hover:badge-primary transition-colors text-xs">{{ topic }}</a>
+                {% endfor %}
             </div>
         </div>
+        <div class="shrink-0">
+            <a href="{{ object.github_url }}"
+               target="_blank" rel="noopener noreferrer"
+               class="btn btn-primary btn-sm gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+                GitHub
+            </a>
+        </div>
     </div>
+
+    <div class="divider my-0 mb-8"></div>
+
+    {# ── Two-column body ── #}
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-10 items-start">
+
+        {# README #}
+        <div>
+            {% if object.readme_html %}
+            <article class="prose prose-sm lg:prose-base max-w-none min-w-0">
+                {{ object.readme_html|safe }}
+            </article>
+            {% else %}
+            <div class="text-base-content/40 text-sm">No README available.</div>
+            {% endif %}
+        </div>
+
+        {# Sticky sidebar #}
+        <aside class="lg:sticky lg:top-6 flex flex-col gap-4">
+
+            {# Stars card with sparkline #}
+            <div class="card bg-base-200 border border-base-300">
+                <div class="card-body p-5">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-base-content/50 text-xs font-semibold uppercase tracking-widest mb-1">Stars</p>
+                            <p class="text-4xl font-bold tabular-nums">{{ object.stars|floatformat:"0g" }}</p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-400 mt-1" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z"/>
+                        </svg>
+                    </div>
+                    {% if stars_increase_monthly_percent > 0 %}
+                    <p class="text-success text-xs font-semibold mt-1">+{{ stars_increase_monthly_percent|floatformat:1 }}% this month</p>
+                    {% endif %}
+                    {# Sparkline #}
+                    <div class="mt-4 h-12">
+                        <svg id="sparkline" width="100%" height="48" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#0369a1" stop-opacity="0.4"/>
+                                    <stop offset="100%" stop-color="#0369a1" stop-opacity="0"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            {# Other stats #}
+            <div class="card bg-base-200 border border-base-300">
+                <div class="card-body p-5 gap-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2 text-base-content/60 text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M12 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+                                <path d="M7 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+                                <path d="M17 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+                                <path d="M7 8v2a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-2"/>
+                                <path d="M12 12l0 4"/>
+                            </svg>
+                            Forks
+                        </div>
+                        <span class="font-semibold tabular-nums">{{ object.forks|floatformat:"0g" }}</span>
+                    </div>
+                    <div class="divider my-0"></div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2 text-base-content/60 text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none">
+                                <circle cx="12" cy="12" r="9"/>
+                                <line x1="12" y1="8" x2="12" y2="12"/>
+                                <line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                            Open Issues
+                        </div>
+                        <span class="font-semibold tabular-nums">{{ object.open_issues|floatformat:"0g" }}</span>
+                    </div>
+                    <div class="divider my-0"></div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2 text-base-content/60 text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none">
+                                <circle cx="12" cy="12" r="2"/>
+                                <path d="M22 12c-2.667 4.667-6 7-10 7s-7.333-2.333-10-7c2.667-4.667 6-7 10-7s7.333 2.333 10 7"/>
+                            </svg>
+                            Watchers
+                        </div>
+                        <span class="font-semibold tabular-nums">{{ object.watchers|floatformat:"0g" }}</span>
+                    </div>
+                </div>
+            </div>
+
+            {# Links #}
+            <div class="card bg-base-200 border border-base-300">
+                <div class="card-body p-5 gap-2">
+                    <p class="text-base-content/50 text-xs font-semibold uppercase tracking-widest mb-1">Links</p>
+                    <a href="{{ object.github_url }}"
+                       target="_blank" rel="noopener noreferrer"
+                       class="flex items-center gap-2 text-sm hover:text-primary transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
+                        github.com/{{ object.full_name }}
+                    </a>
+                </div>
+            </div>
+
+        </aside>
+    </div>
+</div>
 {% endblock content %}
 
 {% block js %}
-    {{ block.super }}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.6/medium-zoom.min.js"
-            integrity="sha512-N9IJRoc3LaP3NDoiGkcPa4gG94kapGpaA5Zq9/Dr04uf5TbLFU5q0o8AbRhLKUUlp8QFS2u7S+Yti0U7QtuZvQ=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"></script>
-    <script>
-        const images = Array.from(document.querySelectorAll(".prose img"));
-        console.log(images)
-        images.forEach(img => {
-            mediumZoom(img, {
-                margin: 0,
-                /* The space outside the zoomed image */
-                scrollOffset: 40,
-                /* The number of pixels to scroll to close the zoom */
-                container: null,
-                /* The viewport to render the zoom in */
-                template: null /* The template element to display on zoom */
-            });
-        });
-    </script>
+{{ block.super }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.6/medium-zoom.min.js"
+        integrity="sha512-N9IJRoc3LaP3NDoiGkcPa4gG94kapGpaA5Zq9/Dr04uf5TbLFU5q0o8AbRhLKUUlp8QFS2u7S+Yti0U7QtuZvQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+(function () {
+    const data = {{ stars_history_json|safe }};
+    if (!data || data.length < 2) return;
+    const svg = document.getElementById('sparkline');
+    const W = svg.clientWidth || 220;
+    const H = 48;
+    const p = 3;
+    const vals = data.map(d => d.stars);
+    const lo = Math.min(...vals), hi = Math.max(...vals), range = hi - lo || 1;
+    const pts = data.map((d, i) => [
+        p + (i / (data.length - 1)) * (W - p * 2),
+        H - p - ((d.stars - lo) / range) * (H - p * 2)
+    ]);
+    const line = pts.map(([x, y]) => `${x},${y}`).join(' ');
+    const area = `${pts[0][0]},${H} ${line} ${pts.at(-1)[0]},${H}`;
+    svg.insertAdjacentHTML('beforeend', `
+        <polygon points="${area}" fill="url(#sg)"/>
+        <polyline points="${line}" fill="none" stroke="#0369a1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="${pts.at(-1)[0]}" cy="${pts.at(-1)[1]}" r="3" fill="#0369a1"/>
+    `);
+})();
+
+Array.from(document.querySelectorAll('.prose img')).forEach(img =>
+    mediumZoom(img, { scrollOffset: 40 })
+);
+</script>
 {% endblock js %}
