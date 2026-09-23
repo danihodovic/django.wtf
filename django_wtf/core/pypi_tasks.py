@@ -1,10 +1,12 @@
+from constance import config
 from dateutil import parser
 from django_o11y.logging.utils import get_logger
 from requests.exceptions import HTTPError
-from superrequests import Session
 
 from config import celery_app as app
+from django_wtf.core.batching import dispatch_in_batches, run_batch
 from django_wtf.core.models import PypiProject, PypiRelease, Repository
+from django_wtf.core.rate_limit import ThrottledSession
 from django_wtf.core.task_metrics import (
     observe_external_api,
     record_indexing_event,
@@ -13,8 +15,13 @@ from django_wtf.core.task_metrics import (
 
 from .utils import log_action
 
-http = Session()
 logger = get_logger()
+
+BATCH_SIZE = 50
+
+
+def http_client():
+    return ThrottledSession("pypi", config.PYPI_REQUESTS_PER_MINUTE)
 
 
 def _safe_metadata_value(field, value, max_length, *, nullable=False):
@@ -29,12 +36,32 @@ def _safe_metadata_value(field, value, max_length, *, nullable=False):
 
 @app.task(soft_time_limit=30 * 60)
 def index_pypi_projects():
-    for repo in Repository.objects.all():
-        index_pypi_project.delay(repo.full_name)
+    dispatch_in_batches(
+        index_pypi_projects_batch,
+        Repository.objects.order_by("id")
+        .values_list("full_name", flat=True)
+        .iterator(),
+        BATCH_SIZE,
+        "pypi_project",
+    )
+
+
+@app.task(ignore_result=True, soft_time_limit=25 * 60, time_limit=30 * 60)
+def index_pypi_projects_batch(repo_full_names, pipeline):
+    http = http_client()
+    run_batch(
+        lambda full_name: _index_pypi_project(http, full_name),
+        repo_full_names,
+        pipeline,
+    )
 
 
 @app.task
 def index_pypi_project(repo_full_name):
+    _index_pypi_project(http_client(), repo_full_name)
+
+
+def _index_pypi_project(http, repo_full_name):
     repo = Repository.objects.get(full_name=repo_full_name)
     logger.info("pypi_project_index_started", repository=repo.full_name)
     try:

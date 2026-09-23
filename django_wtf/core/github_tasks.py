@@ -3,8 +3,8 @@ from datetime import date
 
 import markdown
 import pypandoc
-import superrequests
 from constance import config
+from django.db.models import Exists, OuterRef
 from django.db.utils import DataError
 from django.utils.http import urlencode
 from django_o11y.logging.utils import get_logger
@@ -12,6 +12,7 @@ from requests.models import HTTPError
 from urllib3.util.retry import Retry
 
 from config import celery_app as app
+from django_wtf.core.batching import dispatch_in_batches, run_batch
 from django_wtf.core.github_api_urls import (
     search_repos_by_keyword_url,
     search_repos_by_topic_url,
@@ -25,6 +26,7 @@ from django_wtf.core.models import (
     RepositoryStars,
     RepositoryType,
 )
+from django_wtf.core.rate_limit import ThrottledSession
 from django_wtf.core.task_metrics import observe_external_api, record_indexing_event
 
 from .utils import log_action
@@ -44,7 +46,7 @@ def index_repositories_by_keyword():
 
 def index_repositories(url):
     logger.info("github_repositories_page_requested", url=url)
-    http = http_client()
+    http = http_client("search")
     with observe_external_api("github", "search_repositories"):
         res = http.get(url)
     data = res.json()
@@ -107,15 +109,39 @@ def _update_or_create_repo(repository_data):
         record_indexing_event("github_repository", "data_error")
 
 
-@app.task()
+CORE_BATCH_SIZE = 50
+# Code search allows far fewer requests, so keep batches small enough to finish
+# within their time limit while waiting on the shared budget.
+CODE_SEARCH_BATCH_SIZE = 5
+FOLLOWERS_MIN_STARS = 70
+
+
+@app.task(soft_time_limit=30 * 60)
 def index_repositories_readme():
-    for repo in Repository.valid.all():
-        index_repository_readme.delay(repo.full_name)
+    dispatch_in_batches(
+        index_repositories_readme_batch,
+        Repository.valid.order_by("id").values_list("full_name", flat=True).iterator(),
+        CORE_BATCH_SIZE,
+        "github_readme",
+    )
+
+
+@app.task(ignore_result=True, soft_time_limit=45 * 60, time_limit=50 * 60)
+def index_repositories_readme_batch(repo_full_names, pipeline):
+    http = http_client()
+    run_batch(
+        lambda full_name: _index_repository_readme(http, full_name),
+        repo_full_names,
+        pipeline,
+    )
 
 
 @app.task()
 def index_repository_readme(repo_full_name):
-    http = http_client()
+    _index_repository_readme(http_client(), repo_full_name)
+
+
+def _index_repository_readme(http, repo_full_name):
     try:
         # Use the API since it retrieves the default branch
         with observe_external_api("github", "repository_readme_markdown"):
@@ -159,17 +185,32 @@ def index_repository_readme(repo_full_name):
     repo.save()
 
 
-@app.task(soft_time_limit=60 * 60)
+@app.task(soft_time_limit=30 * 60)
 def index_contributors():
-    for repo in Repository.valid.all():
-        index_repo_contributors(repo.id)
+    dispatch_in_batches(
+        index_contributors_batch,
+        Repository.valid.order_by("id").values_list("id", flat=True).iterator(),
+        CORE_BATCH_SIZE,
+        "github_contributors",
+    )
+
+
+@app.task(ignore_result=True, soft_time_limit=45 * 60, time_limit=50 * 60)
+def index_contributors_batch(repo_ids, pipeline):
+    http = http_client()
+    run_batch(
+        lambda repo_id: _index_repo_contributors(http, repo_id), repo_ids, pipeline
+    )
 
 
 @app.task()
 def index_repo_contributors(repo_id):
+    _index_repo_contributors(http_client(), repo_id)
+
+
+def _index_repo_contributors(http, repo_id):
     repo = Repository.objects.get(id=repo_id)
     url = f"https://api.github.com/repos/{repo.full_name}/contributors"
-    http = http_client()
     with observe_external_api("github", "repository_contributors"):
         res = http.get(url)
     logger.info("github_contributors_index_started", repository=repo.full_name)
@@ -192,32 +233,53 @@ def index_repo_contributors(repo_id):
 
 @app.task(soft_time_limit=30 * 60)
 def index_followers():
-    for profile in Profile.contributes_to_valid_repos.all():
-        index_user_followers.delay(profile.login)
+    # Profiles with a top contribution to a low-star repository are skipped, so
+    # filter them out here rather than enqueueing work that exits immediately.
+    low_star_contributions = Contributor.objects.filter(
+        profile=OuterRef("pk"),
+        contributions__gte=20,
+        repository__stars__lt=FOLLOWERS_MIN_STARS,
+    )
+    profiles = Profile.contributes_to_valid_repos.all()
+    record_indexing_event(
+        "github_followers",
+        "skipped_low_stars",
+        profiles.filter(Exists(low_star_contributions)).count(),
+    )
+    dispatch_in_batches(
+        index_followers_batch,
+        profiles.exclude(Exists(low_star_contributions))
+        .order_by("login")
+        .values_list("login", flat=True)
+        .iterator(),
+        CORE_BATCH_SIZE,
+        "github_followers",
+    )
+
+
+@app.task(ignore_result=True, soft_time_limit=45 * 60, time_limit=50 * 60)
+def index_followers_batch(user_logins, pipeline):
+    http = http_client()
+    run_batch(
+        lambda profile: _index_profile_followers(http, profile),
+        Profile.objects.filter(login__in=user_logins),
+        pipeline,
+    )
 
 
 @app.task()
 def index_user_followers(user_login):
-    profile = Profile.objects.get(login=user_login)
+    _index_profile_followers(http_client(), Profile.objects.get(login=user_login))
 
-    for contribution in profile.top_contributions():
-        min_stars = 70
-        if min_stars > contribution.repository.stars:
-            logger.info(
-                "github_followers_index_skipped_low_stars",
-                profile=profile.login,
-                min_stars=min_stars,
-            )
-            record_indexing_event("github_followers", "skipped_low_stars")
-            return
 
+def _index_profile_followers(http, profile):
     data = paginate(
-        http_client(),
-        f"https://api.github.com/users/{user_login}/followers?per_page=100",
+        http,
+        f"https://api.github.com/users/{profile.login}/followers?per_page=100",
     )
     followers = len(data)
     profile.followers = followers
-    profile.save()
+    profile.save(update_fields=["followers", "modified"])
     profile_followers, created = ProfileFollowers.objects.update_or_create(
         profile=profile,
         created_at=date.today(),
@@ -226,29 +288,49 @@ def index_user_followers(user_login):
     log_action(profile_followers, created)
 
 
-@app.task(soft_time_limit=60 * 60)
-def categorize_repositories():
-    for repo in Repository.objects.all():
-        categorize_repository.delay(repo.full_name)
-
-
 # TODO: Use a generator
-def paginate(http_client, url):  # pylint: disable=redefined-outer-name
+def paginate(http, url):
     data = []
-    res = http_client.get(url)
+    res = http.get(url)
     while True:
         data.extend(res.json())
         if "next" not in res.links:
             break
-        res = http_client.get(res.links["next"]["url"])
+        res = http.get(res.links["next"]["url"])
     return data
+
+
+@app.task(soft_time_limit=30 * 60)
+def categorize_repositories():
+    dispatch_in_batches(
+        categorize_repositories_batch,
+        Repository.objects.order_by("id")
+        .values_list("full_name", flat=True)
+        .iterator(),
+        CODE_SEARCH_BATCH_SIZE,
+        "github_repository_categorization",
+    )
+
+
+@app.task(ignore_result=True, soft_time_limit=25 * 60, time_limit=30 * 60)
+def categorize_repositories_batch(repo_full_names, pipeline):
+    http = http_client("code_search")
+    run_batch(
+        lambda full_name: _categorize_repository(http, full_name),
+        repo_full_names,
+        pipeline,
+    )
 
 
 @app.task()
 def categorize_repository(repo_full_name):
+    _categorize_repository(http_client("code_search"), repo_full_name)
+
+
+def _categorize_repository(http, repo_full_name):
     repo = Repository.objects.get(full_name=repo_full_name)
     logger.info("github_repository_categorization_started", repository=repo.full_name)
-    appconfig_files = find_appconfig_files(repo.full_name)
+    appconfig_files = find_appconfig_files(http, repo.full_name)
     pypi_project = PypiProject.objects.filter(repository=repo)
     # Has AppConfig means a Django app is configured somewhere
     if pypi_project and len(appconfig_files) > 0:
@@ -270,28 +352,40 @@ def categorize_repository(repo_full_name):
     repo.save()
 
 
-def find_appconfig_files(repo_full_name):
+def find_appconfig_files(http, repo_full_name):
     params = urlencode(
         {"q": f"repo:{repo_full_name} AppConfig in:file AppConfig language:python"}
     )
-    http = http_client()
     with observe_external_api("github", "search_code_appconfig"):
         res = http.get("https://api.github.com/search/code", params=params)
     data = res.json()
     return [item for item in data["items"] if not item["path"].startswith("test")]
 
 
-def http_client():
-    # Github rate limits with 403
+# Half of each GitHub quota, as requests per minute; the constance keys let us
+# tune them without a deploy.
+GITHUB_RATE_LIMITS = {
+    "core": "GITHUB_CORE_REQUESTS_PER_MINUTE",
+    "search": "GITHUB_SEARCH_REQUESTS_PER_MINUTE",
+    "code_search": "GITHUB_CODE_SEARCH_REQUESTS_PER_MINUTE",
+}
+
+
+def http_client(bucket="core"):
+    # Github rate limits with 403. Requests are throttled up front, so these
+    # retries only cover the odd secondary rate limit or server error.
     retry_strategy = Retry(
         connect=3,
         read=3,
-        total=300,
-        status=300,
+        total=5,
         status_forcelist=[403, 429, 500, 502, 503, 504],
         allowed_methods=["HEAD", "GET", "OPTIONS"],
-        backoff_factor=60,
+        backoff_factor=30,
     )
-    s = superrequests.Session(retry_strategy=retry_strategy)
+    s = ThrottledSession(
+        f"github:{bucket}",
+        getattr(config, GITHUB_RATE_LIMITS[bucket]),
+        retry_strategy=retry_strategy,
+    )
     s.auth = ("danihodovic", config.GITHUB_TOKEN)
     return s

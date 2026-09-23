@@ -1,6 +1,7 @@
 # pylint: disable=redefined-outer-name
 import pytest
 import responses
+from django.core.cache import cache
 from pytest_factoryboy import register
 
 from django_wtf.core.factories import (
@@ -19,6 +20,11 @@ register(RepositoryStarsFactory)
 @pytest.fixture(autouse=True)
 def media_storage(settings, tmpdir):  # pylint: disable=redefined-outer-name
     settings.MEDIA_ROOT = tmpdir.strpath
+
+
+@pytest.fixture(autouse=True)
+def clear_cache():
+    cache.clear()
 
 
 @pytest.fixture

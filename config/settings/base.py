@@ -380,6 +380,23 @@ CONSTANCE_CONFIG = {
             "Repos that don't have updates since the number of days are not scraped."
         ),
     ),
+    # Half of GitHub's quotas: 5000/h core, 30/min search, 10/min code search.
+    "GITHUB_CORE_REQUESTS_PER_MINUTE": (
+        41,
+        "Requests per minute to the Github REST API, shared by all workers",
+    ),
+    "GITHUB_SEARCH_REQUESTS_PER_MINUTE": (
+        15,
+        "Requests per minute to the Github search API, shared by all workers",
+    ),
+    "GITHUB_CODE_SEARCH_REQUESTS_PER_MINUTE": (
+        5,
+        "Requests per minute to the Github code search API, shared by all workers",
+    ),
+    "PYPI_REQUESTS_PER_MINUTE": (
+        60,
+        "Requests per minute to the PyPI JSON API, shared by all workers",
+    ),
 }
 TAILWIND_APP_NAME = "django_wtf.theme"
 
