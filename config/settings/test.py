@@ -45,5 +45,10 @@ DJANGO_O11Y = {
 
 LOGGING = build_logging_dict(extra=EXTRA_LOGGING)  # noqa: F405
 
+# Celery
+# ------------------------------------------------------------------------------
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_EAGER_PROPAGATES = True
+
 # Your stuff...
 # ------------------------------------------------------------------------------

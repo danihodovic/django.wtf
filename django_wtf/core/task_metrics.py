@@ -21,6 +21,12 @@ EXTERNAL_API_DURATION = histogram(
     labelnames=("provider", "operation"),
 )
 
+RATE_LIMIT_WAIT = histogram(
+    "django_wtf_rate_limit_wait_seconds",
+    description="Time spent waiting on outbound API rate limits",
+    labelnames=("bucket", "reason"),
+)
+
 VALUE_TRUNCATIONS = counter(
     "django_wtf_ingestion_value_truncations_total",
     description="String values truncated before persistence",
@@ -66,3 +72,7 @@ def observe_external_api(provider: str, operation: str):
                 "operation": operation,
             },
         )
+
+
+def record_rate_limit_wait(bucket: str, reason: str, seconds: float) -> None:
+    RATE_LIMIT_WAIT.record(seconds, {"bucket": bucket, "reason": reason})
