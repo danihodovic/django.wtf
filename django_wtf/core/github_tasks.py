@@ -5,6 +5,7 @@ import markdown
 import pypandoc
 import superrequests
 from constance import config
+from django.db.models import Exists, OuterRef
 from django.db.utils import DataError
 from django.utils.http import urlencode
 from django_o11y.logging.utils import get_logger
@@ -190,34 +191,60 @@ def index_repo_contributors(repo_id):
         log_action(contributor, created)
 
 
+FOLLOWERS_MIN_STARS = 70
+FOLLOWERS_BATCH_SIZE = 50
+
+
 @app.task(soft_time_limit=30 * 60)
 def index_followers():
-    for profile in Profile.contributes_to_valid_repos.all():
-        index_user_followers.delay(profile.login)
+    # Profiles with a top contribution to a low-star repository are skipped, so
+    # filter them out here rather than enqueueing a task that exits immediately.
+    low_star_contributions = Contributor.objects.filter(
+        profile=OuterRef("pk"),
+        contributions__gte=20,
+        repository__stars__lt=FOLLOWERS_MIN_STARS,
+    )
+    profiles = Profile.contributes_to_valid_repos.all()
+    record_indexing_event(
+        "github_followers",
+        "skipped_low_stars",
+        profiles.filter(Exists(low_star_contributions)).count(),
+    )
+    logins = (
+        profiles.exclude(Exists(low_star_contributions))
+        .order_by("login")
+        .values_list("login", flat=True)
+    )
+    batch = []
+    for login in logins.iterator():
+        batch.append(login)
+        if len(batch) == FOLLOWERS_BATCH_SIZE:
+            index_users_followers.delay(batch)
+            batch = []
+    if batch:
+        index_users_followers.delay(batch)
+
+
+@app.task(ignore_result=True, soft_time_limit=55 * 60, time_limit=60 * 60)
+def index_users_followers(user_logins):
+    http = http_client()
+    for profile in Profile.objects.filter(login__in=user_logins):
+        _index_profile_followers(http, profile)
 
 
 @app.task()
 def index_user_followers(user_login):
-    profile = Profile.objects.get(login=user_login)
+    _index_profile_followers(http_client(), Profile.objects.get(login=user_login))
 
-    for contribution in profile.top_contributions():
-        min_stars = 70
-        if min_stars > contribution.repository.stars:
-            logger.info(
-                "github_followers_index_skipped_low_stars",
-                profile=profile.login,
-                min_stars=min_stars,
-            )
-            record_indexing_event("github_followers", "skipped_low_stars")
-            return
 
+def _index_profile_followers(http, profile):
     data = paginate(
-        http_client(),
-        f"https://api.github.com/users/{user_login}/followers?per_page=100",
+        http,
+        f"https://api.github.com/users/{profile.login}/followers?per_page=100",
     )
     followers = len(data)
     profile.followers = followers
-    profile.save()
+    profile.save(update_fields=["followers", "modified"])
     profile_followers, created = ProfileFollowers.objects.update_or_create(
         profile=profile,
         created_at=date.today(),
